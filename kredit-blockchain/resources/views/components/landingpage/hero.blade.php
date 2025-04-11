@@ -25,7 +25,7 @@
             </li>
         </ul>
 
-        <div class="relative inline-flex">
+        <div class="relative inline-flex mt-10">
             <input
                 type="text"
                 class="w-[500px] h-[60px] border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 #c7e7ff focus:ring-blue-500"

@@ -3,7 +3,7 @@
         <li><a href="#"> Home</a></li>
         <li><a href="#"> Compare Lenders</a></li>
         <li><a href="#"> Saving Calculator</a></li>
-        <li><a href="#"> Blogs</a></li>
-        <li><a href="#"> Contact Us</a></li>
+        <li><a href="{{ route('login') }}"> Login</a></li>
+        <li><a href="{{ route('register') }}"> Register</a></li>
     </ul>
 </div>
