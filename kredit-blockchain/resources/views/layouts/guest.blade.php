@@ -15,16 +15,18 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900">
-        <div class="flex bg-gray-100 h-screen">
-            <div class="flex w-1/2 flex-col items-center justify-center">
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-                <h1>Hello World</h1>
+        <div class="flex min-h-screen">
+            <div class="relative flex w-1/2 flex-col items-center justify-center">
+                <x-background class="absolute bg-cover bg-center h-full w-full text-gray-500" />
+                <x-application-logo class="z-10"></x-application-logo>
+                <x-icon class="z-10 h-[380px] mt-10"></x-icon>
+                <h1 class="z-10 mt-10 font-bold text-center text-2xl w-[500px]">Lorem ipsum dolor sit amet consectetur adipisicing elit.</h1>
+                <p class="z-10 text-center mt-5">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
             </div>
 
-            <div class="flex-1 h-screen flex flex-col items-center justify-center bg-orange-100">
-                <h1>Hello World</h1>
+            <div class="flex-1 h-screen flex flex-col items-center justify-center ">
+                <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back to the CreditBlock Application</h1>
+                <x-auth.login-option></x-auth.login-option>
                 {{ $slot }}
             </div>
         </div>
