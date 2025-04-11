@@ -57,7 +57,7 @@
             box-shadow: 0 2px 8px rgba(49, 130, 206, 0.2);
         }
         .sidebar-menu-active:hover {
-            background: #2B6CB0; /* Sedikit lebih gelap saat hover */
+            background: #2B6CB0;
             color: #FFFFFF;
         }
         .navbar-button {
@@ -114,13 +114,10 @@
     <header class="navbar">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 w-auto transition-transform hover:scale-105">
+                <img src="https://via.placeholder.com/150x50?text=Logo" alt="Logo" class="h-10 w-auto transition-transform hover:scale-105">
             </div>
             <div class="flex items-center space-x-6">
-                <form method="POST" action="">
-                    @csrf
-                    <button type="submit" class="navbar-button">Logout</button>
-                </form>
+                <button class="navbar-button">Logout</button>
             </div>
         </div>
     </header>
@@ -149,12 +146,19 @@
                             'Riwayat Pembayaran' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
                             'Kontak Dukungan' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>'
                         ];
-                        // Contoh: Tentukan menu aktif (bisa diganti dengan logika rute Anda)
-                        $activeMenu = 'Dashboard'; // Ganti sesuai halaman saat ini, misalnya dari variabel atau rute
+                        $activeMenu = request()->route() && request()->route()->getName() === 'loan-applications.create' ? 'Ajukan Pinjaman' : 'Dashboard';
+                        $menuRoutes = [
+                            'Dashboard' => 'dashboard',
+                            'Ajukan Pinjaman' => 'loan-applications.create',
+                            'Profil' => null,
+                            'Riwayat Pembayaran' => null,
+                            'Kontak Dukungan' => null
+                        ];
                     @endphp
-                    @foreach (['Dashboard', 'Ajukan Pinjaman', 'Profil', 'Riwayat Pembayaran', 'Kontak Dukungan'] as $menu)
+                    @foreach ($menuRoutes as $menu => $route)
                         <li>
-                            <a href="#" class="sidebar-menu {{ $activeMenu === $menu ? 'sidebar-menu-active' : '' }}">
+                            <a href="{{ $route ? route($route) : 'javascript:void(0)' }}"
+                               class="sidebar-menu {{ $activeMenu === $menu ? 'sidebar-menu-active' : '' }}">
                                 <span class="mr-3 w-5 {{ $activeMenu === $menu ? 'text-white' : 'text-blue-primary' }}">{!! $icons[$menu] !!}</span>
                                 {{ $menu }}
                             </a>
