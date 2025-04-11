@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\AdminLoginRequest;
 
 class LoginController extends Controller
 {
@@ -23,7 +23,7 @@ class LoginController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(AdminLoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
