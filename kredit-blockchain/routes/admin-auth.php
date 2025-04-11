@@ -1,17 +1,21 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Auth\LoginController;
 
-Route::middleware('guest:admin')->group(function () {
+Route::prefix('admin')->middleware('guest:admin')->group(function () {
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::get('login', [LoginController::class, 'create'])->name('admin.login');
+    Route::post('login', [LoginController::class, 'store']);
 
 });
 
-Route::middleware('auth:admin')->group(function () {
+Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    // admin.dashboard
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+
+    Route::post('logout', [LoginController::class, 'destroy'])->name('admin.logout');
 });
