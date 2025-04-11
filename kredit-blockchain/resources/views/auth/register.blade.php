@@ -1,4 +1,7 @@
 <x-guest-layout>
+
+    <h1 class="font-bold text-3xl text-center w-[400px] mb-10">Join & Connect Secure Wallet for Credit</h1>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -7,7 +10,7 @@
             <x-auth.input-label for="name" :value="__('Name')" />
             <x-auth.text-input
                 id="name"
-                class="block mt-1 w-[450px]"
+                class="block mt-1 w-[400px]"
                 type="text"
                 name="name"
                 :value="old('name')"
@@ -61,17 +64,27 @@
             <x-auth.input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a
-                class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                href="{{ route('login') }}"
-            >
-                {{ __('Already registered?') }}
-            </a>
+        <!-- Remember Me and Button Login -->
+        <div class="flex mt-7 relative w-full">
+            <label for="remember_me" class="inline-flex items-center">
+                <input
+                    type="checkbox"
+                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-blue-300"
+                    name="remember"
+                >
+                <span class="ms-2 text-[11px] text-gray-400">{{ __('I accept the terms & Conditions') }}</span>
+            </label>
 
-            <x-auth.primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-auth.primary-button>
+            <div class="ml-auto">
+                <x-auth.primary-button>
+                    {{ __('Sign Up') }}
+                </x-auth.primary-button>
+            </div>
+
+        </div>
+
+        <div class="w-full flex justify-center mt-[50px]">
+            <h1>Own an Account? <a href={{ route('login') }} class="text-blue-400">Jump Right In</a></h1>
         </div>
     </form>
 </x-guest-layout>

@@ -25,8 +25,6 @@
             </div>
 
             <div class="flex-1 h-screen flex flex-col items-center justify-center ">
-                <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back to the CreditBlock Application</h1>
-                <x-auth.login-option></x-auth.login-option>
                 {{ $slot }}
             </div>
         </div>
