@@ -4,17 +4,11 @@
 
     <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back Admin to the CreditBlock Application</h1>
 
-    <div class="flex mt-8 gap-x-5">
+    <div class="mt-8">
         <a href="{{route('login')}}">
             <x-auth.login-option>
                 <img src="{{asset('images/Ileader.png')}}" alt="">
                 <h1 class="text-gray-600 ml-2">Login as User</h1>
-            </x-auth.login-option>
-        </a>
-        <a href="{{route('admin.login')}}">
-            <x-auth.login-option>
-                <img src="{{asset('images/Ileader.png')}}" alt="">
-                <h1 class="text-gray-600 ml-2">Login as Leader</h1>
             </x-auth.login-option>
         </a>
     </div>
