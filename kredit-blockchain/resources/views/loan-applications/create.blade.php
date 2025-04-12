@@ -1,65 +1,3 @@
-{{-- @extends('layouts.app')
-
-@section('title', 'Ajukan Pinjaman')
-
-@section('content')
-    <div class="max-w-7xl mx-auto">
-        <h1 class="text-2xl font-semibold text-gray-900 mb-6">Ajukan Pinjaman</h1>
-        <div class="bg-white p-6 rounded-lg shadow card-hover">
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <form action="{{ route('loan-applications.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- Amount -->
-                    <div>
-                        <label for="amount" class="block text-sm font-medium text-gray-700">Jumlah Pinjaman (IDR)</label>
-                        <input type="number" name="amount" id="amount" value="{{ old('amount') }}" required
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-primary focus:ring-blue-primary sm:text-sm"
-                               placeholder="Masukkan jumlah pinjaman">
-                        @error('amount')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Duration -->
-                    <div>
-                        <label for="duration" class="block text-sm font-medium text-gray-700">Jangka Waktu (Bulan)</label>
-                        <input type="number" name="duration" id="duration" value="{{ old('duration') }}" required
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-primary focus:ring-blue-primary sm:text-sm"
-                               placeholder="Masukkan jangka waktu">
-                        @error('duration')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Document -->
-                    <div>
-                        <label for="document" class="block text-sm font-medium text-gray-700">Dokumen Pendukung</label>
-                        <input type="file" name="document" id="document" required
-                               accept=".pdf,.jpg,.png"
-                               class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-primary file:text-white file:font-medium hover:file:bg-blue-600">
-                        @error('document')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="mt-6">
-                    <button type="submit"
-                            class="inline-flex items-center px-4 py-2 bg-blue-primary text-white font-medium rounded-md hover:bg-blue-600 transition">
-                        Ajukan Pinjaman
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-@endsection --}}
-
 @extends('layouts.app')
 
 @section('title', 'Ajukan Pinjaman')
@@ -85,8 +23,19 @@
                 </div>
             @endif
 
-            <form action="{{ route('loan-applications.store') }}" method="POST" enctype="multipart/form-data">
+            <!-- Error Message -->
+            @if (session('error'))
+                <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            <form id="loanForm" action="{{ route('loan-applications.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="blockchain_loan_id" id="blockchain_loan_id">
                 <div class="space-y-6">
                     <!-- Amount -->
                     <div>
@@ -101,7 +50,7 @@
                             </span>
                             <input type="number" name="amount" id="amount" required
                                    class="pl-12 pr-4 py-3 mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400 shadow-sm focus:border-blue-primary focus:ring-2 focus:ring-blue-primary/30 focus:bg-white sm:text-sm transition-all duration-300 hover:border-gray-300 hover:bg-white group-hover:shadow-md"
-                                   placeholder="5000000">
+                                   placeholder="5000000" min="1000000">
                             <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 text-xs font-medium">
                                 IDR
                             </span>
@@ -124,7 +73,7 @@
                             </span>
                             <input type="number" name="duration" id="duration" required
                                    class="pl-12 pr-16 py-3 mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400 shadow-sm focus:border-blue-primary focus:ring-2 focus:ring-blue-primary/30 focus:bg-white sm:text-sm transition-all duration-300 hover:border-gray-300 hover:bg-white group-hover:shadow-md"
-                                   placeholder="12">
+                                   placeholder="12" min="1" max="60">
                             <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 text-xs font-medium">
                                 Bulan
                             </span>
@@ -151,10 +100,22 @@
                     </div>
                 </div>
 
+                <!-- Connect MetaMask Button -->
+                <div class="mt-6">
+                    <button type="button" id="connectMetaMask"
+                            class="inline-flex items-center px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-12 0 6 6 0 0112 0z"></path>
+                        </svg>
+                        Connect MetaMask
+                    </button>
+                </div>
+
                 <!-- Submit Button -->
                 <div class="mt-8 flex justify-end">
-                    <button type="submit"
-                            class="inline-flex items-center px-6 py-3 bg-blue-primary text-white font-semibold rounded-lg hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <button type="button" id="submitLoan"
+                            class="inline-flex items-center px-6 py-3 bg-blue-primary text-white font-semibold rounded-lg hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            disabled>
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -164,4 +125,37 @@
             </form>
         </div>
     </div>
+
+    <!-- Include app.js -->
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        document.getElementById('connectMetaMask').addEventListener('click', async () => {
+            try {
+                await connectMetaMask();
+                document.getElementById('connectMetaMask').classList.add('hidden');
+                document.getElementById('submitLoan').disabled = false;
+                alert('MetaMask terhubung!');
+            } catch (error) {
+                alert('Gagal menghubungkan MetaMask: ' + error.message);
+            }
+        });
+
+        document.getElementById('submitLoan').addEventListener('click', async () => {
+            const amount = document.getElementById('amount').value;
+            const duration = document.getElementById('duration').value;
+
+            if (!amount || !duration) {
+                alert('Harap isi jumlah dan jangka waktu!');
+                return;
+            }
+
+            try {
+                const loanId = await requestCredit(amount, duration);
+                document.getElementById('blockchain_loan_id').value = loanId;
+                document.getElementById('loanForm').submit();
+            } catch (error) {
+                alert('Gagal mengajukan pinjaman: ' + error.message);
+            }
+        });
+    </script>
 @endsection

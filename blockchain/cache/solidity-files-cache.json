@@ -267,8 +267,8 @@
       ]
     },
     "C:\\laragon\\www\\CreditBlock-Fix\\CreditBlock\\blockchain\\contracts\\CreditSystem.sol": {
-      "lastModificationDate": 1744319199371,
-      "contentHash": "55c1d53afebe50933a255fc542c728cf",
+      "lastModificationDate": 1744443675512,
+      "contentHash": "b7e9a717ba38047b9c47ca68642c7a6f",
       "sourceName": "contracts/CreditSystem.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -301,7 +301,8 @@
         "^0.8.20"
       ],
       "artifacts": [
-        "CreditSystem"
+        "CreditSystem",
+        "IRupiahToken"
       ]
     },
     "C:\\laragon\\www\\CreditBlock-Fix\\CreditBlock\\blockchain\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\IERC20.sol": {
@@ -494,8 +495,8 @@
       ]
     },
     "C:\\laragon\\www\\CreditBlock-Fix\\CreditBlock\\blockchain\\contracts\\RupiahToken.sol": {
-      "lastModificationDate": 1744319199374,
-      "contentHash": "5f96e916e0e24758c05ef2bc01250186",
+      "lastModificationDate": 1744443587389,
+      "contentHash": "cecc4eedbf9a0e21eef1682625a01ede",
       "sourceName": "contracts/RupiahToken.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -522,13 +523,52 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
         "RupiahToken"
+      ]
+    },
+    "C:\\laragon\\www\\CreditBlock-Fix\\CreditBlock\\blockchain\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1744319216920,
+      "contentHash": "f665fc4a91af3170f86727fc49cc091f",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Ownable"
       ]
     }
   }

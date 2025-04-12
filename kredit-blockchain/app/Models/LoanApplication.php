@@ -15,6 +15,7 @@ class LoanApplication extends Model
         'duration',
         'document_path',
         'status',
+        'blockchain_loan_id',
     ];
 
     public function user()
