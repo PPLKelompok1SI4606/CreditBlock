@@ -23,6 +23,15 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
+    Route::get('/loan-applications/create', function () {
+        return view('loan-applications.create');
+    })->name('loan-applications.create');
+
+    Route::post('/loan-applications', function () {
+        // Temporary handler for form submission
+        return redirect()->route('dashboard')->with('success', 'Loan application submitted!');
+    })->name('loan-applications.store');
+
     // LogOut
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
