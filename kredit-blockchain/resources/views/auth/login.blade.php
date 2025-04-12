@@ -59,7 +59,7 @@
 
         </div>
 
-        <div class="w-full flex justify-center mt-[50px]">
+        <div class="w-full flex justify-center mt-[90px]">
             <h1>No Account yet? <a href={{ route('register') }} class="text-blue-400">Sign Up</a></h1>
         </div>
     </form>

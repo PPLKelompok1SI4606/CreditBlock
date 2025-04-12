@@ -20,8 +20,8 @@
                 <x-background class="absolute bg-cover bg-center h-full w-full text-gray-500" />
                 <x-application-logo class="z-10"></x-application-logo>
                 <x-icon class="z-10 h-[380px] mt-10"></x-icon>
-                <h1 class="z-10 mt-10 font-bold text-center text-2xl w-[500px]">Lorem ipsum dolor sit amet consectetur adipisicing elit.</h1>
-                <p class="z-10 text-center mt-5">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                <h1 class="z-10 mt-10 font-bold text-center text-2xl text-[#1167B1] w-[500px]">Lorem ipsum dolor sit amet consectetur adipisicing elit.</h1>
+                <p class="z-10 text-center mt-5 text-[#1167B1]">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
             </div>
 
             <div class="flex-1 h-screen flex flex-col items-center justify-center ">
