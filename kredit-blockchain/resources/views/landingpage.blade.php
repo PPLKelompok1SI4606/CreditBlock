@@ -13,7 +13,7 @@
     <div class="container w-full h-full ">
 
         {{-- Navbar --}}
-        <section class="flex justify-between items-center w-full h-[100px] px-[100px]">
+        <section class="flex justify-between items-center w-full h-[100px] md:px-[30px] lg:px-[100px]">
             <x-landingpage.logoNavbar></x-landingpage.logoNavbar>
             <x-landingpage.nav-item></x-landingpage.nav-item>
             <div class="flex gap-x-3">
@@ -30,7 +30,6 @@
                     </x-landingpage.auth-button>
                 </a>
             </div>
-
         </section>
 
         <div class="w-full h-[1px] bg-[#c7e7ff]"></div>
