@@ -1,9 +1,9 @@
-<div class="px-10">
-    <ul class="flex gap-x-10 text-[#1167B1] font-semibold">
-        <li><a href="#"> Home </a></li>
-        <li><a href="#"> Compare Lenders </a></li>
-        <li><a href="#"> Saving Calculator </a></li>
-        <li><a href="#"> Blog </a></li>
-        <li><a href="#"> Contact Us </a></li>
+<div class="px-10 w-[600px] bg-orange-400">
+    <ul class="flex text-[#1167B1] font-semibold">
+        <li class="mr-5"><a href="#"> Home </a></li>
+        <li class="mr-5"><a href="#"> Compare Lenders </a></li>
+        <li class="mr-5"><a href="#"> Saving Calculator </a></li>
+        <li class="mr-5"><a href="#"> Blog </a></li>
+        <li class="mr-5"><a href="#"> Contact Us </a></li>
     </ul>
 </div>

@@ -13,24 +13,29 @@
     <div class="container w-full h-full ">
 
         {{-- Navbar --}}
-        <section class="flex justify-between items-center w-full h-[100px] px-[100px]">
-            <x-landingpage.logoNavbar></x-landingpage.logoNavbar>
-            <x-landingpage.nav-item></x-landingpage.nav-item>
-            <div class="flex gap-x-3">
-                <a href="{{route('login')}}">
-                    <x-landingpage.auth-button>
-                        <img src="{{asset('images/phone.png')}}" alt="">
-                        <p class="text-white font-bold ml-2"> Login </p>
-                    </x-landingpage.auth-button>
-                </a>
-                <a href="{{route('register')}}">
-                    <x-landingpage.auth-button>
-                        <img src="{{asset('images/phone.png')}}" alt="">
-                        <p class="text-white font-bold ml-2">Sign Up </p>
-                    </x-landingpage.auth-button>
-                </a>
+        <section class="flex justify-center items-center w-full h-[100px] px-[50px]">
+            <img src="{{asset('images/logoCB.png')}}" alt="">
+            <div class="px-5 w-[600px]">
+                <ul class="flex text-[#1167B1] font-semibold">
+                    <li class="ml-10"><a href="#"> Home </a></li>
+                    <li class="ml-5 mr-5"><a href="#"> Compare Lenders </a></li>
+                    <li class="mr-5"><a href="#"> Saving Calculator </a></li>
+                    <li class="mr-5"><a href="#"> Blog </a></li>
+                    <li class="mr-5"><a href="#"> Contact Us </a></li>
+                </ul>
             </div>
-
+            <a href="{{route('login')}}">
+                <button type="submit" class="inline-flex px-3 py-3 bg-blue-400 rounded-xl hover:bg-blue-500">
+                    <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
+                    <p class="text-white font-bold ml-2">Login</p>
+                </button>
+            </a>
+            <a href="{{route('register')}}">
+                <button type="submit" class="inline-flex px-3 py-3 ml-5 bg-blue-400 rounded-xl hover:bg-blue-500">
+                    <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
+                    <p class="text-white font-bold ml-2">Sign Up</p>
+                </button>
+            </a>
         </section>
 
         <div class="w-full h-[1px] bg-[#c7e7ff]"></div>
