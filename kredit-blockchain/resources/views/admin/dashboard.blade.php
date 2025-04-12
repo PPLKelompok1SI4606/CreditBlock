@@ -218,7 +218,7 @@
             </span>
             <div>
                 <h3 class="text-lg font-semibold text-gray-900 mb-1 tracking-wide">Pengajuan Menunggu</h3>
-                <p class="text-3xl font-bold text-green-600">10</p>
+                <p class="text-3xl font-bold text-green-600">{{ $pendingLoans }}</p>
             </div>
         </div>
     </div>
