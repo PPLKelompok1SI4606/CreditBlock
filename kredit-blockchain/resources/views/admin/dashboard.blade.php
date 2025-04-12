@@ -121,10 +121,14 @@
                 <span class="text-dark-gray font-semibold text-xl tracking-tight">CreditBlock</span>
             </div>
             <div class="flex items-center space-x-6">
-                {{-- <form method="POST" action="{{ route('logout') }}"> --}}
-                <form method="POST" action="">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="navbar-button">Logout</button>
+
+                    <x-auth.responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-auth.responsive-nav-link>
                 </form>
             </div>
         </div>

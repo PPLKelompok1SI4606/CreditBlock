@@ -116,9 +116,15 @@
             <div class="flex items-center space-x-4">
                 <img src="https://via.placeholder.com/150x50?text=Logo" alt="Logo" class="h-10 w-auto transition-transform hover:scale-105">
             </div>
-            <div class="flex items-center space-x-6">
-                <button class="navbar-button">Logout</button>
-            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <x-auth.responsive-nav-link :href="route('logout')"
+                        onclick="event.preventDefault();
+                                    this.closest('form').submit();">
+                    {{ __('Log Out') }}
+                </x-auth.responsive-nav-link>
+            </form>
         </div>
     </header>
 
