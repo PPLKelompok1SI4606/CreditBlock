@@ -8,14 +8,14 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="flex justify-center items-center m-0 p-0 overflow-auto">
+<body class="flex justify-center items-center m-0 p-0">
 
-    <div class="container w-screen h-screen ">
+    <div>
 
         {{-- Navbar --}}
-        <section class="flex justify-between items-center w-full h-[100px] px-[80px]">
-            <img src="{{asset('images/logoCB.png')}}" alt="">
-            <div class="">
+        <section class="flex items-center justify-between w-full h-[100px]">
+            <img src="{{asset('images/logoCB.png')}}" alt="" class="flex justify-start">
+            <div>
                 <ul class="flex text-[#1167B1] font-semibold">
                     <li class="ml-10"><a href="#"> Home </a></li>
                     <li class="ml-5 mr-5"><a href="#"> Compare Lenders </a></li>
@@ -26,13 +26,13 @@
             </div>
             <div class="ml-3">
                 <a href="{{route('login')}}">
-                    <button type="submit" class="inline-flex px-3 py-3 bg-blue-400 rounded-xl hover:bg-blue-500">
+                    <button type="submit" class="inline-flex items-center px-3 py-3 bg-blue-400 rounded-xl hover:bg-blue-500">
                         <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
                         <p class="text-white font-bold ml-2">Login</p>
                     </button>
                 </a>
                 <a href="{{route('register')}}">
-                    <button type="submit" class="inline-flex px-3 py-3 bg-blue-400 rounded-xl hover:bg-blue-500">
+                    <button type="submit" class="inline-flex items-center px-3 py-3 bg-blue-400 rounded-xl hover:bg-blue-500">
                         <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
                         <p class="text-white font-bold ml-2">Sign Up</p>
                     </button>
