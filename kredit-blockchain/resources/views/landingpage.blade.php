@@ -17,13 +17,13 @@
             <x-landingpage.logoNavbar></x-landingpage.logoNavbar>
             <x-landingpage.nav-item></x-landingpage.nav-item>
             <div class="flex gap-x-3">
-                <a href="">
+                <a href="{{route('login')}}">
                     <x-landingpage.auth-button>
                         <img src="{{asset('images/phone.png')}}" alt="">
                         <p class="text-white font-bold ml-2"> Login </p>
                     </x-landingpage.auth-button>
                 </a>
-                <a href="">
+                <a href="{{route('register')}}">
                     <x-landingpage.auth-button>
                         <img src="{{asset('images/phone.png')}}" alt="">
                         <p class="text-white font-bold ml-2">Sign Up </p>
