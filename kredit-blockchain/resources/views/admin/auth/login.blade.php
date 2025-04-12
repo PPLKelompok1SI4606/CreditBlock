@@ -2,16 +2,32 @@
     <!-- Session Status -->
     <x-auth.auth-session-status class="mb-4" :status="session('status')" />
 
-    <h4> Admin Login Page </h4>
+    <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back Admin to the CreditBlock Application</h1>
+
+    <div class="flex mt-8 gap-x-5">
+        <a href="{{route('login')}}">
+            <x-auth.login-option>
+                <img src="{{asset('images/Ileader.png')}}" alt="">
+                <h1 class="text-gray-600 ml-2">Login as User</h1>
+            </x-auth.login-option>
+        </a>
+        <a href="{{route('admin.login')}}">
+            <x-auth.login-option>
+                <img src="{{asset('images/Ileader.png')}}" alt="">
+                <h1 class="text-gray-600 ml-2">Login as Leader</h1>
+            </x-auth.login-option>
+        </a>
+    </div>
+
     <form method="POST" action="{{ route('admin.login') }}">
         @csrf
 
         <!-- Email Address -->
-        <div>
+        <div class="mt-[50px]">
             <x-auth.input-label for="email" :value="__('Email')" />
             <x-auth.text-input
                 id="email"
-                class="block mt-1 w-[450px]"
+                class="block mt-1 w-[400px]"
                 type="email"
                 name="email"
                 :value="old('email')"
@@ -23,7 +39,7 @@
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
+        <div class="mt-10">
             <x-auth.input-label for="password" :value="__('Password')" />
             <x-auth.text-input
                 id="password"
@@ -37,22 +53,23 @@
         </div>
 
         <!-- Remember Me and Button Login -->
-        <div class="flex mt-4 relative">
-            <label for="remember_me" class="inline-flex items-center mt-2">
+        <div class="flex mt-10 relative w-full mb-[80px]">
+            <label for="remember_me" class="inline-flex items-center">
                 <input
                     id="remember_me"
                     type="checkbox"
-                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500"
+                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
                     name="remember"
                 >
-                <span class="ms-2 text-sm text-gray-400">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
             </label>
 
-            <div class="absolute right-0">
+            <div class="ml-auto">
                 <x-auth.primary-button>
                     {{ __('Log in') }}
                 </x-auth.primary-button>
             </div>
+
         </div>
     </form>
 </x-guest-layout>

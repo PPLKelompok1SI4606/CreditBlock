@@ -16,7 +16,20 @@
         <section class="flex justify-between items-center w-full h-[100px] px-[100px]">
             <x-landingpage.logoNavbar></x-landingpage.logoNavbar>
             <x-landingpage.nav-item></x-landingpage.nav-item>
-            <x-landingpage.buttonNomor></x-landingpage.buttonNomor>
+            <div class="flex gap-x-3">
+                <a href="">
+                    <x-landingpage.auth-button>
+                        <img src="{{asset('images/phone.png')}}" alt="">
+                        <p class="text-white font-bold ml-2"> Login </p>
+                    </x-landingpage.auth-button>
+                </a>
+                <a href="">
+                    <x-landingpage.auth-button>
+                        <img src="{{asset('images/phone.png')}}" alt="">
+                        <p class="text-white font-bold ml-2">Sign Up </p>
+                    </x-landingpage.auth-button>
+                </a>
+            </div>
 
         </section>
 

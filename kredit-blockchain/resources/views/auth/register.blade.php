@@ -83,8 +83,12 @@
 
         </div>
 
-        <div class="w-full flex justify-center mt-[50px]">
-            <h1>Own an Account? <a href={{ route('login') }} class="text-blue-400">Jump Right In</a></h1>
+        <div class="w-full flex justify-center mt-[70px]">
+            <h1>Own an Account?
+                <button class="transition duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-1 hover:text-[#0090FE] hover:scale-110">
+                    <a href={{ route('login') }} class="text-blue-400">Jump Right In</a>
+                </button>
+            </h1>
         </div>
     </form>
 </x-guest-layout>
