@@ -12,18 +12,23 @@ class AdminController extends Controller
     //     $this->middleware(['auth', 'is_admin']);
     // }
 
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+        $applications = LoanApplication::with('user')
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })->orWhere('id', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->get();
+
         $totalUsers = \App\Models\User::count();
         $activeLoans = LoanApplication::where('status', 'APPROVED')->count();
         $pendingLoans = LoanApplication::where('status', 'PENDING')->count();
-        return view('admin.dashboard', compact('totalUsers', 'activeLoans', 'pendingLoans'));
-    }
 
-    public function loanApplications()
-    {
-        $applications = LoanApplication::with('user')->latest()->get();
-        return view('admin.loan-applications.index', compact('applications'));
+        return view('admin.dashboard', compact('applications', 'search', 'totalUsers', 'activeLoans', 'pendingLoans'));
     }
 
     public function updateStatus(Request $request, LoanApplication $loanApplication)
@@ -36,7 +41,7 @@ class AdminController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.loan-applications')
+        return redirect()->route('admin.dashboard')
             ->with('success', 'Status pengajuan berhasil diperbarui.');
     }
 }
