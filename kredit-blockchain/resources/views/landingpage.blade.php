@@ -24,14 +24,18 @@
                     <li class="mr-5"><a href="#"> Contact Us </a></li>
                 </ul>
             </div>
-            <button type="submit" class="inline-flex px-3 py-3 bg-blue-400 rounded-xl hover:bg-blue-500">
-                <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
-                <p class="text-white font-bold ml-2">Login</p>
-            </button>
-            <button type="submit" class="inline-flex px-3 py-3 ml-5 bg-blue-400 rounded-xl hover:bg-blue-500">
-                <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
-                <p class="text-white font-bold ml-2">Sign Up</p>
-            </button>
+            <a href="{{route('login')}}">
+                <button type="submit" class="inline-flex px-3 py-3 bg-blue-400 rounded-xl hover:bg-blue-500">
+                    <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
+                    <p class="text-white font-bold ml-2">Login</p>
+                </button>
+            </a>
+            <a href="{{route('register')}}">
+                <button type="submit" class="inline-flex px-3 py-3 ml-5 bg-blue-400 rounded-xl hover:bg-blue-500">
+                    <img src="{{ asset('images/phone.png') }}" alt="" class="w-4 h-4" />
+                    <p class="text-white font-bold ml-2">Sign Up</p>
+                </button>
+            </a>
         </section>
 
         <div class="w-full h-[1px] bg-[#c7e7ff]"></div>
