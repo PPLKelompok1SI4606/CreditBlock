@@ -69,7 +69,7 @@
             <label for="remember_me" class="inline-flex items-center">
                 <input
                     type="checkbox"
-                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-blue-300"
+                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
                     name="remember"
                 >
                 <span class="ms-2 text-[11px] text-gray-400">{{ __('I accept the terms & Conditions') }}</span>

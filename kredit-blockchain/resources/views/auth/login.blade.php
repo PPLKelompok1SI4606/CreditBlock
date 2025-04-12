@@ -45,7 +45,7 @@
                 <input
                     id="remember_me"
                     type="checkbox"
-                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-blue-300"
+                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
                     name="remember"
                 >
                 <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
@@ -60,7 +60,11 @@
         </div>
 
         <div class="w-full flex justify-center mt-[90px]">
-            <h1>No Account yet? <a href={{ route('register') }} class="text-blue-400">Sign Up</a></h1>
+            <h1>No Account yet?
+                <button class="transition duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-1 hover:text-[#0090FE] hover:scale-110">
+                    <a href={{ route('register') }} class="text-blue-400">Sign Up</a>
+                </button>
+            </h1>
         </div>
     </form>
 </x-guest-layout>
