@@ -25,14 +25,14 @@
             </li>
         </ul>
 
-        <div class="relative inline-flex w-full h-full mt-10">
+        <div class="relative inline-flex w-full h-full mt-10 shadow-lg">
             <input
                 type="text"
                 class="w-full h-[60px] border border-gray-300 rounded-md focus:outline-none focus:ring-2 #c7e7ff focus:ring-blue-500"
                 placeholder="Masukkan teks..."
             />
             <button
-                class="flex items-center px-10 py-2 mt-2 mr-4 absolute right-0 bg-blue-500 text-white rounded-xl border border-blue-500 hover:bg-blue-600">
+                class="flex items-center px-10 py-2 mt-[9px] mr-4 absolute right-0 bg-blue-500 text-white rounded-xl border border-blue-500 hover:bg-blue-600">
                 Submit
             </button>
         </div>
