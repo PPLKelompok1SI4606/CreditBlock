@@ -48,15 +48,6 @@
 
         <!-- Remember Me and Button Login -->
         <div class="flex mt-10 relative w-full mb-[80px]">
-            <label for="remember_me" class="inline-flex items-center">
-                <input
-                    id="remember_me"
-                    type="checkbox"
-                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
-                    name="remember"
-                >
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
 
             <div class="ml-auto">
                 <x-auth.primary-button>
