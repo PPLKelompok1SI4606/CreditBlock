@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
+
 <body class="flex flex-col justify-center items-center m-0 p-0">
 
     <div class="h-[850px]">
@@ -108,9 +110,9 @@
         <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-xl">LANGKAH MUDAH</h1>
         <h1 class="text-[#1167B1] font-bold text-5xl mt-2 tracking-wide">Langkah Mudah Mendapatkan Pinjaman</h1>
 
-        <div class="w-[1100px] px-10 py-10 h-full border border-gray-300 rounded-xl mt-10">
+        <div class="w-[1100px] px-10 py-10 h-full border border-gray-300 rounded-xl mt-10 backdrop-blur-md">
 
-            <x-landingpage.easy-option>
+            <x-landingpage.easy-step>
 
                 <h1 class="font-bold text-lg text-[#2A9DF4]">01.</h1>
                 <div class="flex flex-col w-full h-full ml-10">
@@ -120,11 +122,11 @@
                     </p>
                 </div>
 
-            </x-landingpage.easy-option>
+            </x-landingpage.easy-step>
 
             <div class="w-full border my-10"></div>
 
-            <x-landingpage.easy-option>
+            <x-landingpage.easy-step>
 
                 <h1 class="font-bold text-lg text-[#2A9DF4]">02.</h1>
                 <div class="flex flex-col w-full h-full ml-10">
@@ -134,11 +136,11 @@
                     </p>
                 </div>
 
-            </x-landingpage.easy-option>
+            </x-landingpage.easy-step>
 
             <div class="w-full border my-10"></div>
 
-            <x-landingpage.easy-option>
+            <x-landingpage.easy-step>
 
                 <h1 class="font-bold text-lg text-[#2A9DF4]">03.</h1>
                 <div class="flex flex-col w-full h-full ml-10">
@@ -148,11 +150,11 @@
                     </p>
                 </div>
 
-            </x-landingpage.easy-option>
+            </x-landingpage.easy-step>
 
             <div class="w-full border my-10"></div>
 
-            <x-landingpage.easy-option>
+            <x-landingpage.easy-step>
 
                 <h1 class="font-bold text-lg text-[#2A9DF4]">04.</h1>
                 <div class="flex flex-col w-full h-full ml-10">
@@ -162,11 +164,11 @@
                     </p>
                 </div>
 
-            </x-landingpage.easy-option>
+            </x-landingpage.easy-step>
 
             <div class="w-full border my-10"></div>
 
-            <x-landingpage.easy-option>
+            <x-landingpage.easy-step>
 
                 <h1 class="font-bold text-lg text-[#2A9DF4]">05.</h1>
                 <div class="flex flex-col w-full h-full ml-10">
@@ -176,14 +178,45 @@
                     </p>
                 </div>
 
-            </x-landingpage.easy-option>
+            </x-landingpage.easy-step>
 
         </div>
 
-        <img src="{{asset('images/bgNonBlur.png')}}" alt="" class="absolute right-0 top-60 -z-20">
+        <img src="{{asset('images/bgNonBlur.png')}}" alt="" class="absolute right-0 top-80 -z-20">
+
+        <button class="inline-flex h-full items-center px-[150px] py-4 text-[20px] text-white font-bold shadow-xl rounded-full bg-blue-300 my-[50px]">
+            Pelajari Lebih Lanjut
+            <img src="{{asset('images/arrow.png')}}" alt="" class="w-[15px] h-[15px] ml-3 ">
+        </button>
 
     </section>
 
+    {{-- Loan Calculator --}}
+    <section class="flex flex-col items-center w-full h-[500px] px-[100px] text-center">
+        <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-lg">LOAN CALCULATOR</h1>
+        <h1 class="text-[40px] w-[900px] tracking-widest font-bold text-[#1167B1]">Hitung Cicilanmu Sekarang & Temukan Cara Lebih Ringan untuk Membayar!</h1>
+
+        <div class="px-10 py-7 bg-white my-10 rounded-xl border border-gray-300 shadow-md shadow-blue-300">
+            <div class="flex flex-col items-start">
+                <p class="text-[#1167B1] font-semibold"><span class="mr-3">1.</span> Jumlah Pinjaman yang akan diajukan</p>
+                <p>Maksimal pengajuan pinjaman adalah Rp100.000.000</p>
+                <div class="my-5">
+                    <input type="text" class="rounded-lg w-[500px] h-[50px] border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan jumlah pinjaman">
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+    </section>
 
 
 </body>

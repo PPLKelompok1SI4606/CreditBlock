@@ -50,10 +50,12 @@
 
     </div>
     <div class="flex flex-col w-full h-full items-end py-9">
-        <div class="inline-flex text-2xl justify-end items-center px-10 py-4 text-white rounded-full bg-[#2A9DF4]">
+        <div class="inline-flex text-2xl justify-end items-center px-10 py-4 text-white rounded-full bg-blue-400">
             Mulai ajukan !
             <img src="{{asset('images/arrow.png')}}" alt="" class="w-[15px] h-[15px] ml-3">
         </div>
         <img src="{{asset('images/logoCard.png')}}" alt="" class="mt-10 w-[500px] absolute">
     </div>
 </div>
+
+<script ></script>
