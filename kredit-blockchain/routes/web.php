@@ -2,13 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-<<<<<<< Updated upstream
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoanApplicationController;
-=======
 use App\Http\Controllers\PaymentController;
->>>>>>> Stashed changes
 
 Route::get('/', function () {
     return view('landingpage');
