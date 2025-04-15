@@ -20,7 +20,6 @@ class LoanApplicationController extends Controller
             'amount' => 'required|numeric|min:1000000',
             'duration' => 'required|integer|min:1|max:60',
             'document' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'blockchain_loan_id' => 'nullable|integer',
         ]);
 
         try {
@@ -32,7 +31,6 @@ class LoanApplicationController extends Controller
                 'duration' => $request->duration,
                 'document_path' => $documentPath,
                 'status' => 'PENDING',
-                'blockchain_loan_id' => $request->blockchain_loan_id,
             ]);
 
             return redirect()->route('dashboard')

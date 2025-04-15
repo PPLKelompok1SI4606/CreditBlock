@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoanApplicationController;
+use App\Http\Controllers\SupportMessageController;
 
 // Login As User Tidak Perlu Login
 Route::middleware('guest')->group(function () {
@@ -32,4 +33,11 @@ Route::middleware('auth')->group(function () {
 
     // LogOut
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    
+    //routes kontak dukungan (user)
+    Route::get('/support', [SupportMessageController::class, 'index'])->name('support.index');
+    Route::get('/support/create', [SupportMessageController::class, 'create'])->name('support.create');
+    Route::post('/support', [SupportMessageController::class, 'store'])->name('support.store');
+    Route::get('/support/{supportMessage}', [SupportMessageController::class, 'show'])->name('support.show');
 });
+

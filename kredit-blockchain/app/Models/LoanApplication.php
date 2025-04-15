@@ -15,9 +15,11 @@ class LoanApplication extends Model
         'duration',
         'document_path',
         'status',
-        'blockchain_loan_id',
     ];
 
+    /**
+     * Define the relationship with the User model.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
