@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\SupportMessageController;
 
 // Login As Admin Tidak Perlu Login
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
@@ -26,4 +27,9 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/loan-applications', [AdminController::class, 'loanApplications'])->name('admin.loan-applications');
     Route::put('/loan-applications/{loanApplication}/status', [AdminController::class, 'updateStatus'])
         ->name('admin.loan-applications.update-status');
+
+    //routes kontak dukungan (admin)
+    Route::get('/support', [SupportMessageController::class, 'index'])->name('admin.support.index');
+    Route::get('/support/{supportMessage}', [SupportMessageController::class, 'show'])->name('admin.support.show');
+    Route::post('/support/{supportMessage}/respond', [SupportMessageController::class, 'respond'])->name('admin.support.respond');
 });

@@ -158,7 +158,7 @@
                             'Ajukan Pinjaman' => 'loan-applications.create',
                             'Profil' => null,
                             'Riwayat Pembayaran' => null,
-                            'Kontak Dukungan' => null
+                            'Kontak Dukungan' => 'support.index'
                         ];
                     @endphp
                     @foreach ($menuRoutes as $menu => $route)
