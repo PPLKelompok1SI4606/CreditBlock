@@ -51,7 +51,7 @@
     </div>
     <div class="flex flex-col w-full h-full items-end py-9">
         <a href="{{route('dashboard')}}">
-            <button class="inline-flex text-2xl justify-end items-center px-10 py-4 text-white rounded-full bg-blue-400 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
+            <button class="inline-flex text-2xl justify-end items-center px-10 py-4 text-white rounded-full bg-blue-400 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-xl">
                 Mulai ajukan !
                 <img src="{{asset('images/arrow.png')}}" alt="" class="w-[15px] h-[15px] ml-3">
             </button>

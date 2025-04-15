@@ -18,3 +18,16 @@
 .marquee:hover {
     animation-play-state: paused;
 }
+
+.hidden-animated {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(-100px);
+    transition: all 1.5s;
+}
+
+.show-animated {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
