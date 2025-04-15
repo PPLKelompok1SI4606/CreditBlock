@@ -1,4 +1,4 @@
-<div class="flex text-[#1167B1]">
+<div {{$attributes->merge(['class' => 'flex text-[#1167B1]'])}}>
     {{$slot}}
 
     <div class="h-[100px] flex items-center ">

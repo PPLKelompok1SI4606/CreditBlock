@@ -1,3 +1,8 @@
+html {
+    scroll-behavior: smooth;
+}
+
+
 /* Animasi untuk swipe otomatis */
 @keyframes marquee {
     0% {
@@ -23,11 +28,30 @@
     opacity: 0;
     filter: blur(5px);
     transform: translateY(-100px);
-    transition: all 1.5s;
+    transition: opacity 1.5s ease, filter 1.5s ease-in-out, transform 1.5s ease;
 }
 
 .show-animated {
     opacity: 1;
     filter: blur(0);
     transform: translateY(0);
+}
+
+.explanation {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.explanation.active {
+    max-height: 200px; /* Adjust based on content height */
+    opacity: 1;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
