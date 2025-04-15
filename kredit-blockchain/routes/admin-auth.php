@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\LoanApplicationController;
 
 // Login As Admin Tidak Perlu Login
 Route::prefix('admin')->middleware('guest:admin')->group(function () {

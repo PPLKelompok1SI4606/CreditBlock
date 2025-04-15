@@ -131,7 +131,7 @@
     <script>
         document.getElementById('connectMetaMask').addEventListener('click', async () => {
             try {
-                await connectMetaMask();
+                await window.connectMetaMask();
                 document.getElementById('connectMetaMask').classList.add('hidden');
                 document.getElementById('submitLoan').disabled = false;
                 alert('MetaMask terhubung!');
@@ -150,7 +150,7 @@
             }
 
             try {
-                const loanId = await requestCredit(amount, duration);
+                const loanId = await window.requestCredit(amount, duration);
                 document.getElementById('blockchain_loan_id').value = loanId;
                 document.getElementById('loanForm').submit();
             } catch (error) {

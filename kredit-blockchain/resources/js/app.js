@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
-const rupiahTokenAddress = "0xa7298AbA0e1C1160B8475Aa9876846debdb37441";
-const creditSystemAddress = "0x5DDfDAB290906e26b3353C5c7b3F7480c0835aBF";
+const rupiahTokenAddress = "0xa7298AbA0e1C1160B8475Aa9876846debdb37441"; // Ganti dengan alamat dari deploy
+const creditSystemAddress = "0x5DDfDAB290906e26b3353C5c7b3F7480c0835aBF"; // Ganti dengan alamat dari deploy
 const tokenAbi = require('../../blockchain/artifacts/contracts/RupiahToken.sol/RupiahToken.json').abi;
 const creditAbi = require('../../blockchain/artifacts/contracts/CreditSystem.sol/CreditSystem.json').abi;
 
@@ -53,7 +53,9 @@ async function payCredit(loanId, amount) {
     console.log("Pinjaman dibayar!");
 }
 
-// Ekspor fungsi untuk digunakan di inline script
+// Ekspor ke global scope untuk inline script
 window.connectMetaMask = connectMetaMask;
 window.requestCredit = requestCredit;
 window.payCredit = payCredit;
+
+console.log('connectMetaMask defined:', typeof window.connectMetaMask);
