@@ -16,6 +16,7 @@
         "laravel-vite-plugin": "^1.2.0",
         "postcss": "^8.4.31",
         "tailwindcss": "^3.1.0",
+<<<<<<< Updated upstream
         "vite": "^6.2.4"
     },
     "name": "kredit-blockchain",
@@ -28,4 +29,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC"
+=======
+        "vite": "^6.2.4",
+        "vite-plugin-node-polyfills": "^0.23.0"
+    }
+>>>>>>> Stashed changes
 }
