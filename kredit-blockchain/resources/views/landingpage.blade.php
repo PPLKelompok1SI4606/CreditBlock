@@ -8,6 +8,28 @@
     <title>Landing Page</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Animasi untuk swipe otomatis */
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .marquee {
+            display: flex;
+            animation: marquee 20s linear infinite;
+            width: fit-content;
+        }
+
+        /* Pause animasi saat hover */
+        .marquee:hover {
+            animation-play-state: paused;
+        }
+    </style>
 </head>
 
 <body class="flex flex-col justify-center items-center m-0 p-0">
@@ -41,13 +63,20 @@
 
     {{-- Collaborated --}}
     <section class="flex flex-col items-center justify-center w-full h-[300px] px-[100px] bg-[#D0EFFF]">
-
         <h1 class="text-[#2A9DF4] font-bold text-lg tracking-widest">COLLABORATED WITH</h1>
-        <div class="inline-flex items-center justify-center mt-10 gap-x-[130px]">
-            <x-landingpage.bank-logo></x-landingpage.bank-logo>
+        <div class="overflow-hidden mt-10">
+            <div class="marquee ">
+                <!-- Konten asli -->
+                <div class="inline-flex items-center justify-center gap-x-[130px]">
+                    <img src="images/bi_logo.png" alt="BI Logo" class="h-12">
+                    <img src="images/bri_logo.png" alt="BRI Logo" class="h-12">
+                    <img src="images/logo_BCA_Biru.png" alt="BCA Logo" class="h-12">
+                    <img src="images/mandiri_logo.png" alt="Mandiri Logo" class="h-12">
+                    <img src="images/ojk_logo.png" alt="OJK Logo" class="h-12">
+                </div>
 
+            </div>
         </div>
-
     </section>
 
     {{-- Kenapa Memilih Kami --}}
@@ -192,27 +221,78 @@
     </section>
 
     {{-- Loan Calculator --}}
-    <section class="flex flex-col items-center w-full h-[500px] px-[100px] text-center">
+    <section class="flex flex-col items-center w-full h-full px-[100px] py-10 text-center">
         <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-lg">LOAN CALCULATOR</h1>
         <h1 class="text-[40px] w-[900px] tracking-widest font-bold text-[#1167B1]">Hitung Cicilanmu Sekarang & Temukan Cara Lebih Ringan untuk Membayar!</h1>
 
-        <div class="px-10 py-7 bg-white my-10 rounded-xl border border-gray-300 shadow-md shadow-blue-300">
+        <div class="flex flex-col items-center px-10 py-10 bg-white mt-10 rounded-xl border h-full border-gray-300 shadow-md shadow-blue-300">
             <div class="flex flex-col items-start">
-                <p class="text-[#1167B1] font-semibold"><span class="mr-3">1.</span> Jumlah Pinjaman yang akan diajukan</p>
+                <p class="text-[#1167B1] font-semibold "><span class="mr-3">1.</span> Jumlah Pinjaman yang akan diajukan</p>
                 <p>Maksimal pengajuan pinjaman adalah Rp100.000.000</p>
-                <div class="my-5">
-                    <input type="text" class="rounded-lg w-[500px] h-[50px] border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan jumlah pinjaman">
+                <div class="my-5 inline-flex w-[650px] h-[50px]">
+                    <p class="flex items-center border border-r-0 border-gray-300 rounded-l-lg w-[400px] h-full pl-5">Jumlah Pinjaman</p>
+                    <input type="text" class="flex border-l-0 rounded-r-lg w-[250px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan jumlah pinjaman">
                 </div>
             </div>
+
+            <div class="flex flex-col items-start">
+                <p class="text-[#1167B1] font-semibold"><span class="mr-3">2.</span> Lama Pinjaman yang Akan Diajukan</p>
+                <p>Masukkan pinjaman dalam jangka waktu bulan.</p>
+                <div class="my-5 inline-flex w-[650px] h-[50px]">
+                    <p class="flex items-center border border-r-0 border-gray-300 rounded-l-lg w-[250px] h-full pl-5">Jumlah Pinjaman</p>
+                    <input type="text" class="flex border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan jumlah pinjaman">
+                    <p class="flex items-center justify-end border border-l-0 border-gray-300 rounded-r-lg w-[250px] h-full pr-5">Bulan</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-start">
+                <p class="text-[#1167B1] font-semibold"><span class="mr-3">2.</span> Lama Pinjaman yang Akan Diajukan</p>
+                <p>Masukkan pinjaman dalam jangka waktu bulan.</p>
+                <div class="my-5 inline-flex w-[650px] h-[50px]">
+                    <p class="flex items-center border border-r-0 border-gray-300 rounded-l-lg w-[250px] h-full pl-5">Bunga Pinjaman</p>
+                    <input type="text" class="flex border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan jumlah pinjaman">
+                    <p class="flex items-center justify-end border border-l-0 border-gray-300 rounded-r-lg w-[250px] h-full pr-5">%</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-start">
+                <p class="text-[#1167B1] font-semibold"><span class="mr-3">2.</span> Lama Pinjaman yang Akan Diajukan</p>
+                <p>Masukkan pinjaman dalam jangka waktu bulan.</p>
+                <div class="flex justify-between w-[650px] h-[50px]">
+                    <div class="my-5 inline-flex justify-between px-4 items-center w-[310px] h-full border rounded-lg border-blue-800">
+                        <p class="text-[#2A9DF4]">Bulan</p>
+                        <select name="bulan" id="" class="ring-0 outline-0 border-0 focus:ring-0 text-blue-700 font-bold">
+                            <option value="Januari">Januari</option>
+                            <option value="Februari">Februari</option>
+                            <option value="Maret">Maret</option>
+                            <option value="April">April</option>
+                            <option value="Mei">Mei</option>
+                            <option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Agustus">Agustus</option>
+                            <option value="September">September</option>
+                            <option value="Oktober">Oktober</option>
+                            <option value="November">November</option>
+                            <option value="Desember">Desember</option>
+                        </select>
+                    </div>
+                </div>
+
+                <p class="mt-10">Sampai Dengan</p>
+
+
+
+            </div>
+
+            <button
+                type="submit"
+                class="px-[200px] py-4 bg-[#1167B1] text-white rounded-lg border mt-[80px] mb-4">
+                Hitung
+            </button>
+
+            <p class="text-center tracking-wider w-[500px]">Anda dapat mesimulasikan cicilan yang akan dipinjam dengan tepat!</p>
+
         </div>
-
-
-
-
-
-
-
-
 
 
 
