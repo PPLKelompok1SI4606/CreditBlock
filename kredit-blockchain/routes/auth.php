@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoanApplicationController;
 
 // Login As User Tidak Perlu Login
 Route::middleware('guest')->group(function () {
@@ -23,14 +24,11 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
-    Route::get('/loan-applications/create', function () {
-        return view('loan-applications.create');
-    })->name('loan-applications.create');
+    Route::get('/loan-applications/create', [LoanApplicationController::class, 'create'])
+        ->name('loan-applications.create');
 
-    Route::post('/loan-applications', function () {
-        // Temporary handler for form submission
-        return redirect()->route('dashboard')->with('success', 'Loan application submitted!');
-    })->name('loan-applications.store');
+    Route::post('/loan-applications', [LoanApplicationController::class, 'store'])
+        ->name('loan-applications.store');
 
     // LogOut
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

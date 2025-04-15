@@ -17,6 +17,9 @@ class LoanApplication extends Model
         'status',
     ];
 
+    /**
+     * Define the relationship with the User model.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
