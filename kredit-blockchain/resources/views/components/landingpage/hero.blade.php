@@ -38,7 +38,7 @@
         </div>
 
         <button
-            class="inline-flex text-white w-full items-center justify-center mt-5 h-[50px] border border-gray-300 rounded-md bg-[#2A9DF4] focus:outline-none focus:ring-2 #c7e7ff focus:ring-blue-500">
+            class="inline-flex text-white w-full items-center justify-center mt-5 h-[50px] border border-gray-300 rounded-md bg-[#2A9DF4] focus:outline-none focus:ring-2 #c7e7ff focus:ring-blue-500 transition duration-300 ease-in-out hover:-translate-y-1">
             <img src="{{asset('images/mail.png')}}" alt="" class="w-[25px] h-[25px] mr-4">
             Respond to Mail Offer
         </button>
@@ -50,10 +50,12 @@
 
     </div>
     <div class="flex flex-col w-full h-full items-end py-9">
-        <div class="inline-flex text-2xl justify-end items-center px-10 py-4 text-white rounded-full bg-blue-400">
-            Mulai ajukan !
-            <img src="{{asset('images/arrow.png')}}" alt="" class="w-[15px] h-[15px] ml-3">
-        </div>
+        <a href="{{route('dashboard')}}">
+            <button class="inline-flex text-2xl justify-end items-center px-10 py-4 text-white rounded-full bg-blue-400 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
+                Mulai ajukan !
+                <img src="{{asset('images/arrow.png')}}" alt="" class="w-[15px] h-[15px] ml-3">
+            </button>
+        </a>
         <img src="{{asset('images/logoCard.png')}}" alt="" class="mt-10 w-[500px] absolute">
     </div>
 </div>

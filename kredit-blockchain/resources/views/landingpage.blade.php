@@ -8,28 +8,7 @@
     <title>Landing Page</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        /* Animasi untuk swipe otomatis */
-        @keyframes marquee {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        .marquee {
-            display: flex;
-            animation: marquee 20s linear infinite;
-            width: fit-content;
-        }
-
-        /* Pause animasi saat hover */
-        .marquee:hover {
-            animation-play-state: paused;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('css/landingpage.css')}}">
 </head>
 
 <body class="flex flex-col justify-center items-center m-0 p-0">
@@ -120,7 +99,7 @@
 
 
         </div>
-        <div class="flex mt-[25px] flex-col w-[600px] px-8 py-5 h-[300px] rounded-4xl border-2 border-gray-300 bg-[#c7e7ff]">
+        <div class="flex mt-[25px] flex-col w-[600px] px-8 py-5 h-[300px] rounded-4xl border-2 border-gray-300 bg-[#c7e7ff] transition duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl">
             <h1 class="font-bold text-2xl">KALKULATOR CICILAN</h1>
             <div class="inline-flex mt-3 gap-x-[50px]">
                 <img src="{{asset('images/05.png')}}" alt="" class="mt-[108px]">
@@ -213,11 +192,14 @@
 
         <img src="{{asset('images/bgNonBlur.png')}}" alt="" class="absolute right-0 top-80 -z-20">
 
-        <button class="inline-flex h-full items-center px-[150px] py-4 text-[20px] text-white font-bold shadow-xl rounded-full bg-blue-300 my-[50px]">
-            Pelajari Lebih Lanjut
-            <img src="{{asset('images/arrow.png')}}" alt="" class="w-[15px] h-[15px] ml-3 ">
-        </button>
+        <a href="{{route('dashboard')}}" class="my-[50px]">
+            <button class="inline-flex h-full items-center px-[150px] py-4 text-[20px] text-white font-bold shadow-xl rounded-full bg-blue-300 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
+                Pelajari Lebih Lanjut
+                <img src="{{asset('images/arrow.png')}}" alt="" class="w-[15px] h-[15px] ml-3 ">
+            </button>
+        </a>
 
+        <img src="{{asset('images/cirlcebg.png')}}" class="absolute left-0 top-200 -z-20" alt="">
     </section>
 
     {{-- Loan Calculator --}}
@@ -225,77 +207,114 @@
         <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-lg">LOAN CALCULATOR</h1>
         <h1 class="text-[40px] w-[900px] tracking-widest font-bold text-[#1167B1]">Hitung Cicilanmu Sekarang & Temukan Cara Lebih Ringan untuk Membayar!</h1>
 
-        <div class="flex flex-col items-center px-10 py-10 bg-white mt-10 rounded-xl border h-full border-gray-300 shadow-md shadow-blue-300">
+        <div class="flex flex-col items-center px-10 py-10 bg-white mt-10 rounded-xl border h-full border-gray-300 shadow-blue-300 shadow-xl ">
+
             <div class="flex flex-col items-start">
                 <p class="text-[#1167B1] font-semibold "><span class="mr-3">1.</span> Jumlah Pinjaman yang akan diajukan</p>
-                <p>Maksimal pengajuan pinjaman adalah Rp100.000.000</p>
+                <p class="text-gray-500">Maksimal pengajuan pinjaman adalah <span><span class="text-red-500">Rp100.000.000</span></span></p>
                 <div class="my-5 inline-flex w-[650px] h-[50px]">
                     <p class="flex items-center border border-r-0 border-gray-300 rounded-l-lg w-[400px] h-full pl-5">Jumlah Pinjaman</p>
+                    <p class="flex items-center border border-r-0 border-l-0 border-gray-300 w-[45px] h-full pl-5">Rp.</p>
                     <input type="text" class="flex border-l-0 rounded-r-lg w-[250px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan jumlah pinjaman">
                 </div>
             </div>
 
             <div class="flex flex-col items-start">
                 <p class="text-[#1167B1] font-semibold"><span class="mr-3">2.</span> Lama Pinjaman yang Akan Diajukan</p>
-                <p>Masukkan pinjaman dalam jangka waktu bulan.</p>
+                <p class="text-gray-500">Masukkan pinjaman dalam jangka waktu bulan.</p>
                 <div class="my-5 inline-flex w-[650px] h-[50px]">
                     <p class="flex items-center border border-r-0 border-gray-300 rounded-l-lg w-[250px] h-full pl-5">Jumlah Pinjaman</p>
-                    <input type="text" class="flex border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan jumlah pinjaman">
+                    <input type="text" class="flex text-center border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan Bulan">
                     <p class="flex items-center justify-end border border-l-0 border-gray-300 rounded-r-lg w-[250px] h-full pr-5">Bulan</p>
                 </div>
             </div>
 
             <div class="flex flex-col items-start">
                 <p class="text-[#1167B1] font-semibold"><span class="mr-3">2.</span> Lama Pinjaman yang Akan Diajukan</p>
-                <p>Masukkan pinjaman dalam jangka waktu bulan.</p>
+                <p class="text-gray-500">Masukkan pinjaman dalam jangka waktu bulan.</p>
                 <div class="my-5 inline-flex w-[650px] h-[50px]">
                     <p class="flex items-center border border-r-0 border-gray-300 rounded-l-lg w-[250px] h-full pl-5">Bunga Pinjaman</p>
-                    <input type="text" class="flex border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan jumlah pinjaman">
+                    <input type="text" class="flex text-center border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan Persen">
                     <p class="flex items-center justify-end border border-l-0 border-gray-300 rounded-r-lg w-[250px] h-full pr-5">%</p>
                 </div>
             </div>
 
             <div class="flex flex-col items-start">
                 <p class="text-[#1167B1] font-semibold"><span class="mr-3">2.</span> Lama Pinjaman yang Akan Diajukan</p>
-                <p>Masukkan pinjaman dalam jangka waktu bulan.</p>
+                <p class="text-gray-500">Masukkan pinjaman dalam jangka waktu bulan.</p>
+
                 <div class="flex justify-between w-[650px] h-[50px]">
-                    <div class="my-5 inline-flex justify-between px-4 items-center w-[310px] h-full border rounded-lg border-blue-800">
-                        <p class="text-[#2A9DF4]">Bulan</p>
-                        <select name="bulan" id="" class="ring-0 outline-0 border-0 focus:ring-0 text-blue-700 font-bold">
-                            <option value="Januari">Januari</option>
-                            <option value="Februari">Februari</option>
-                            <option value="Maret">Maret</option>
-                            <option value="April">April</option>
-                            <option value="Mei">Mei</option>
-                            <option value="Juni">Juni</option>
-                            <option value="Juli">Juli</option>
-                            <option value="Agustus">Agustus</option>
-                            <option value="September">September</option>
-                            <option value="Oktober">Oktober</option>
-                            <option value="November">November</option>
-                            <option value="Desember">Desember</option>
-                        </select>
-                    </div>
+
+                    <x-landingpage.option-month></x-landingpage.option-month>
+
+                    <x-landingpage.option-year></x-landingpage.option-year>
+
                 </div>
 
-                <p class="mt-10">Sampai Dengan</p>
+                <p class="mt-10 font-bold">Sampai Dengan :</p>
 
+                <div class="flex justify-between w-[650px] h-[50px]">
+                    <x-landingpage.option-month></x-landingpage.option-month>
 
+                    <x-landingpage.option-year></x-landingpage.option-year>
+                </div>
 
             </div>
 
-            <button
-                type="submit"
-                class="px-[200px] py-4 bg-[#1167B1] text-white rounded-lg border mt-[80px] mb-4">
-                Hitung
-            </button>
+            <a href="{{route('dashboard')}}" class="mt-[80px] mb-4">
+                <button
+                    type="submit"
+                    class="px-[200px] py-4 bg-[#1167B1] text-white rounded-xl border transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
+                    Hitung
+                </button>
+            </a>
 
-            <p class="text-center tracking-wider w-[500px]">Anda dapat mesimulasikan cicilan yang akan dipinjam dengan tepat!</p>
+            <p class="text-center tracking-wider w-[500px] text-gray-500">Anda dapat mesimulasikan cicilan yang akan dipinjam dengan tepat!</p>
 
         </div>
 
+    </section>
 
+    {{-- FAQ --}}
+    <section class="relative flex flex-col items-center my-[100px] justify-center w-full h-full px-[100px]">
 
+        <div
+            class="absolute w-full h-[400px] blur-[90px] bg-blue-100 top-50 -z-20">
+        </div>
+
+        <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-xl">FAQ</h1>
+        <h1 class="text-[#1167B1] font-bold text-5xl mt-2 tracking-wide">Frequently Asked Questions</h1>
+
+        <div class="w-[1000px] h-full py-5 px-7 border-2 bg-white border-gray-400 rounded-xl mt-10">
+            <div class="inline-flex w-full justify-between mb-10">
+                <h1 class=" text-[#1167B1] font-bold text-xl tracking-wide">Apa itu Wallet Blockchain ?</h1>
+                <img src="{{asset('images/-.png')}}" alt="">
+            </div>
+            <p class="text-gray-500">Wallet blockchain adalah dompet digital khusus yang digunakan untuk menyimpan dan mengelola aset kripto. Dalam konteks layanan kami, wallet ini berfungsi sebagai sarana untuk menerima dana pinjaman, melakukan pembayaran cicilan, serta memantau seluruh riwayat transaksi yang tercatat secara permanen di jaringan blockchain. Bagi pengguna baru yang belum familiar, kami menyediakan panduan lengkap mulai dari cara membuat wallet hingga tutorial penggunaannya dengan bahasa yang mudah dipahami.</p>
+        </div>
+
+        <div class="w-[1000px] h-full py-6 px-7 border-2 flex items-center justify-between border-gray-400 rounded-xl mt-5 backdrop-blur-lg">
+            <h1 class=" text-[#1167B1] font-bold text-xl tracking-wide">Bagaimana Cara Bayar Cicilan?</h1>
+            <img src="{{asset('images/plus.png')}}" alt="">
+        </div>
+
+        <div class="w-[1000px] h-full py-6 px-7 border-2 flex items-center justify-between border-gray-400 rounded-xl mt-5 backdrop-blur-lg">
+            <h1 class=" text-[#1167B1] font-bold text-xl tracking-wide">Berapa Lama Proses Pencairan Dana?</h1>
+            <img src="{{asset('images/plus.png')}}" alt="">
+        </div>
+
+        <div class="w-[1000px] h-full py-6 px-7 border-2 flex items-center justify-between border-gray-400 rounded-xl mt-5 backdrop-blur-lg">
+            <h1 class=" text-[#1167B1] font-bold text-xl tracking-wide">Apa Keunggulan Pinjaman Berbasis Blockchain?</h1>
+            <img src="{{asset('images/plus.png')}}" alt="">
+        </div>
+
+        <img src="{{asset('images/cirlcebg.png')}}" class="absolute left-0 top-80 -z-20" alt="">
+
+    </section>
+
+    {{-- Footer --}}
+    <section class="relative flex flex-col mt-8 w-full h-full border rounded-t-[100px] bg-[#1167B1]">
+        <x-landingpage.footer></x-landingpage.footer>
     </section>
 
 
