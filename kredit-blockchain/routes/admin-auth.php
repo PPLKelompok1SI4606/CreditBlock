@@ -2,6 +2,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\LoanApplicationController; // Tambahkan import
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\SupportMessageController;
 
 // Login As Admin Tidak Perlu Login
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
@@ -15,10 +17,19 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     // Dashboard Admin
     Route::get('/dashboard', [LoanApplicationController::class, 'index'])->name('admin.dashboard');
 
-    // Route untuk mengubah status pengajuan pinjaman
-    Route::post('/loan-applications/{id}/approve', [LoanApplicationController::class, 'approveLoan'])->name('admin.loan-applications.approve');
-    Route::post('/loan-applications/{id}/reject', [LoanApplicationController::class, 'rejectLoan'])->name('admin.loan-applications.reject');
+    // Dahsboard Admin
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
     // LogOut
     Route::post('logout', [LoginController::class, 'destroy'])->name('admin.logout');
+
+    //Verifikasi Pengajuan Pinjaman
+    Route::get('/loan-applications', [AdminController::class, 'loanApplications'])->name('admin.loan-applications');
+    Route::put('/loan-applications/{loanApplication}/status', [AdminController::class, 'updateStatus'])
+        ->name('admin.loan-applications.update-status');
+
+    //routes kontak dukungan (admin)
+    Route::get('/support', [SupportMessageController::class, 'index'])->name('admin.support.index');
+    Route::get('/support/{supportMessage}', [SupportMessageController::class, 'show'])->name('admin.support.show');
+    Route::post('/support/{supportMessage}/respond', [SupportMessageController::class, 'respond'])->name('admin.support.respond');
 });

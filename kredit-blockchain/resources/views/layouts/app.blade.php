@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - CreditBlock</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Onest:wght@100..900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -158,7 +158,7 @@
                             'Ajukan Pinjaman' => 'loan-applications.create',
                             'Profil' => null,
                             'Riwayat Pembayaran' => null,
-                            'Kontak Dukungan' => null
+                            'Kontak Dukungan' => 'support.index'
                         ];
                     @endphp
                     @foreach ($menuRoutes as $menu => $route)
