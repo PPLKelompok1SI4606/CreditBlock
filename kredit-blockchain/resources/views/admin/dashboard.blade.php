@@ -275,7 +275,8 @@
                         <tbody>
                             @forelse ($users as $user)
                                 <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
-                                    <td class="px-6 py-4 w-16">{{ $user->id }}</td>
+                                    {{-- <td class="px-6 py-4 w-16">{{ $user->id }}</td> --}}
+                                    <td class="px-6 py-4 w-16"></td>
                                     <td class="px-6 py-4 w-56">
                                         <div class="flex items-center space-x-2">
                                             <span class="text-blue-500">
@@ -283,7 +284,8 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                                 </svg>
                                             </span>
-                                            <span>{{ $user->name }}</span>
+                                            {{-- <span>{{ $user->name }}</span> --}}
+                                            <span></span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 w-72">
@@ -465,7 +467,7 @@
         </main>
     </div>
 </body>
-</html>  
+</html>
 
 <!-- Modal untuk Setiap Pengajuan -->
 @foreach ($loanApplications as $application)
