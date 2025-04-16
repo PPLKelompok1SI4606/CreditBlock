@@ -17,7 +17,7 @@ require __DIR__.'/auth.php';
 require __DIR__.'/admin-auth.php';
 
 Route::middleware('auth')->group(function () {
-    Route::get('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
-    Route::post('/payment', [PaymentController::class, 'store'])->name('payment.store');
-    Route::get('/payment/history', [PaymentController::class, 'history'])->name('payment.history');
+    Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store'); 
+    Route::get('/payments/history', [PaymentController::class, 'history'])->name('payments.history');
 });

@@ -15,6 +15,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <div class="mb-4">
+                        <form method="GET" action="{{ route('payments.history') }}">
+                            <select name="sort" id="sort" onchange="this.form.submit()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Tanggal Terbaru</option>
+                                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Tanggal Terlama</option>
+                            </select>
+                        </form>
+                    </div>
                         @foreach ($payments as $payment)
                             <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
                                 <td class="px-6 py-4 flex items-center">
@@ -32,14 +40,6 @@
                                     </span>
                                 </td>
                             </tr>
-                        <div class="mb-4">
-                            <form method="GET" action="{{ route('payment.history') }}">
-                                <select name="sort" id="sort" onchange="this.form.submit()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Tanggal Terbaru</option>
-                                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Tanggal Terlama</option>
-                                </select>
-                            </form>
-                        </div>
                         @endforeach
                     </tbody>
                 </table>

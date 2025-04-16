@@ -166,14 +166,14 @@
                             'Profil' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
                             'Riwayat Pembayaran' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
                             'Kontak Dukungan' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
-                            'Membayar Cicilan' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                            'Pembayaran Cicilan' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
                         ];
                         $activeMenu = request()->route()->getName();
                         if ($activeMenu === 'loan-applications.create') {
                             $activeMenu = 'Ajukan Pinjaman';
-                        } elseif ($activeMenu === 'payment.create') {
-                            $activeMenu = 'Membayar Cicilan';
-                        } elseif ($activeMenu === 'payment.history') {
+                        } elseif ($activeMenu === 'payments.create') {
+                            $activeMenu = 'Pembayaran Cicilan';
+                        } elseif ($activeMenu === 'payments.history') {
                             $activeMenu = 'Riwayat Pembayaran';
                         } else {
                             $activeMenu = 'Dashboard';
@@ -182,7 +182,8 @@
                             'Dashboard' => 'dashboard',
                             'Ajukan Pinjaman' => 'loan-applications.create',
                             'Profil' => null,
-                            'Riwayat Pembayaran' => null,
+                            'Pembayaran Cicilan' => 'payments.create',
+                            'Riwayat Pembayaran' => 'payments.history',
                             'Kontak Dukungan' => 'support.index'
                         ];
                     @endphp

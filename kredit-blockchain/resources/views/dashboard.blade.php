@@ -95,6 +95,10 @@
             <div class="mt-2 space-y-3">
                 <p class="text-gray-600 text-sm flex items-center">
                     <span class="mr-2 text-blue-500">
+                    @php
+                        $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
+                        $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
+                    @endphp
                         <!-- Ikon Credit Card dari Heroicons -->
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
@@ -144,12 +148,26 @@
                 </span>
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pengajuan Pinjaman</h3>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format(10000000, 0, ',', '.') }}</p>
-                </div>
+                        @php
+                            $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
+                            $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
+                        @endphp
+                        <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($loan ? $loan->amount : 0, 0, ',', '.') }}</p>
+                    </div>
             </div>
 
             <!-- Detail -->
             <div class="mt-2 space-y-3">
+                <p class="text-gray-600 text-sm flex items-center">
+                    <span class="mr-2 text-blue-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        </svg>
+                    </span>
+                    Cicilan Berikutnya:
+                    <span class="text-blue-500 font-medium ml-1">Rp {{ number_format($loan ? $loan->amount / $loan->duration : 0, 0, ',', '.') }}</span>
+                    <span class="text-gray-500 ml-1">- {{ now()->addMonth()->format('d M Y') }}</span>
+                </p>
                 <p class="text-gray-600 text-sm flex items-center">
                     <span class="mr-2 text-blue-500">
                         <!-- Ikon Clock dari Heroicons -->
@@ -159,7 +177,7 @@
                     </span>
                     Status:
                     <span class="inline-block bg-yellow-100 text-yellow-700 text-xs font-medium px-2.5 py-1 rounded-full ml-2">
-                        Menunggu
+                        {{ $loan ? $loan->status : 'Menunggu' }}
                     </span>
                 </p>
                 <p class="text-gray-600 text-sm flex items-center">
