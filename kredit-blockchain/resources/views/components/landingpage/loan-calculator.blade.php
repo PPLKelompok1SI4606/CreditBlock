@@ -4,7 +4,7 @@
     <div class="my-5 inline-flex w-[650px] h-[50px]">
         <p class="flex items-center text-[#2A9DF4] font-semibold border border-r-0 border-gray-300 rounded-l-lg w-[400px] h-full pl-5">Jumlah Pinjaman</p>
         <p class="flex items-center border border-r-0 border-l-0 border-gray-300 w-[45px] h-full pl-5 text-[#1167B1] font-semibold">Rp.</p>
-        <input type="text" class="flex border-l-0 rounded-r-lg w-[250px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan jumlah pinjaman">
+        <input type="text" class="flex border-l-0 rounded-r-lg w-[250px] h-full border border-gray-300 ring-0 focus:ring-0 text-[#1167B1] font-semibold" placeholder="Masukkan jumlah pinjaman">
     </div>
 </div>
 
@@ -13,7 +13,7 @@
     <p class="text-gray-500">Masukkan pinjaman dalam jangka waktu bulan.</p>
     <div class="my-5 inline-flex w-[650px] h-[50px]">
         <p class="flex items-center text-[#2A9DF4] font-semibold border border-r-0 border-gray-300 rounded-l-lg w-[250px] h-full pl-5">Lama Pinjaman</p>
-        <input type="text" class="flex text-center border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan Bulan">
+        <input type="text" class="flex text-center border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0 text-[#1167B1] font-semibold" placeholder="Masukkan Bulan">
         <p class="flex items-center justify-end border border-l-0 border-gray-300 rounded-r-lg w-[250px] h-full pr-5 text-[#2A9DF4] font-semibold">Bulan</p>
     </div>
 </div>
@@ -23,7 +23,7 @@
     <p class="text-gray-500">Bunga pinjaman yang dimasukkan dalam kurun waktu per tahun.</p>
     <div class="my-5 inline-flex w-[650px] h-[50px]">
         <p class="flex items-center text-[#2A9DF4] font-semibold border border-r-0 border-gray-300 rounded-l-lg w-[250px] h-full pl-5">Bunga Pinjaman</p>
-        <input type="text" class="flex text-center border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0" placeholder="Masukkan Persen">
+        <input type="text" class="flex text-center border-l-0 border-r-0 w-[150px] h-full border border-gray-300 ring-0 focus:ring-0 text-[#1167B1] font-semibold" placeholder="Masukkan Persen">
         <p class="flex items-center justify-end text-[#2A9DF4] font-semibold border border-l-0 border-gray-300 rounded-r-lg w-[250px] h-full pr-5">%</p>
     </div>
 </div>

@@ -23,13 +23,13 @@
 <!-- Session Status -->
 <x-auth.auth-session-status class="mb-4" :status="session('status')" />
 
-    <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back Admin to the CreditBlock Application</h1>
+    <h1 class="font-bold text-3xl text-center w-[500px]">Selamat Datang Admin di Aplikasi CreditBlock 🗿</h1>
 
     <div class="mt-8">
         <a href="{{route('login')}}">
             <x-auth.login-option>
-                <img src="{{asset('images/Ileader.png')}}" alt="">
-                <h1 class="text-gray-600 ml-2">Login as User</h1>
+                <div class="text-2xl">🧑🏻‍💼</div>
+                <h1 class="text-gray-600 ml-2">Login sebagai Pengguna</h1>
             </x-auth.login-option>
         </a>
     </div>
@@ -72,7 +72,7 @@
 
             <div class="ml-auto">
                 <x-auth.primary-button>
-                    {{ __('Log in') }}
+                    {{ __('Masuk') }}
                 </x-auth.primary-button>
             </div>
 

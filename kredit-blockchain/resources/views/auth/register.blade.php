@@ -1,6 +1,6 @@
 <x-guest-layout>
 
-    <h1 class="font-bold text-3xl text-center w-[400px] mb-10">Join & Connect Secure Wallet for Credit</h1>
+    <h1 class="font-bold text-3xl text-center w-[500px] mb-10">Gabung dan Sambungkan Dompet Kredit bersama Kami 🥰</h1>
 
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -72,21 +72,21 @@
                     class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
                     name="remember"
                 >
-                <span class="ms-2 text-[11px] text-gray-400">{{ __('I accept the terms & Conditions') }}</span>
+                <span class="ms-2 text-[11px] text-gray-400">{{ __('Saya Setuju dengan Aturan Berlaku') }}</span>
             </label>
 
             <div class="ml-auto">
                 <x-auth.primary-button>
-                    {{ __('Sign Up') }}
+                    {{ __('Daftar') }}
                 </x-auth.primary-button>
             </div>
 
         </div>
 
         <div class="w-full flex justify-center mt-[70px]">
-            <h1>Own an Account?
+            <h1>Sudah Punya Akun?
                 <button class="transition duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-1 hover:text-[#0090FE] hover:scale-110">
-                    <a href={{ route('login') }} class="text-blue-400">Jump Right In</a>
+                    <a href={{ route('login') }} class="text-blue-400">Mari Kesini</a>
                 </button>
             </h1>
         </div>

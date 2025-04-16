@@ -2,13 +2,13 @@
     <!-- Session Status -->
     <x-auth.auth-session-status class="mb-4" :status="session('status')" />
 
-    <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back to the CreditBlock Application</h1>
+    <h1 class="font-bold text-3xl text-center w-[400px]">Selamat Datang di Website CreditBlock 😎</h1>
 
     <div class="mt-8">
         <a href="/clear-session">
             <x-auth.login-option>
-                <img src="{{asset('images/IAdmin.png')}}" alt="">
-                <h1 class="text-gray-600 ml-2">Login as Admin</h1>
+                <div class="text-2xl">🧑🏻‍💻</div>
+                <h1 class="text-gray-600 ml-2">Login sebagai Admin</h1>
             </x-auth.login-option>
         </a>
     </div>
@@ -55,21 +55,21 @@
                     class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
                     name="remember"
                 >
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-gray-600">{{ __('Ingat Saya 😋') }}</span>
             </label>
 
             <div class="ml-auto">
                 <x-auth.primary-button>
-                    {{ __('Log in') }}
+                    {{ __('Masuk') }}
                 </x-auth.primary-button>
             </div>
 
         </div>
 
         <div class="w-full flex justify-center mt-[90px]">
-            <h1>No Account yet?
+            <h1>Belum Punya Akun?
                 <button class="transition duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-1 hover:text-[#0090FE] hover:scale-110">
-                    <a href={{ route('register') }} class="text-blue-400">Sign Up</a>
+                    <a href={{ route('register') }} class="text-blue-400">Daftar Disini</a>
                 </button>
             </h1>
         </div>
