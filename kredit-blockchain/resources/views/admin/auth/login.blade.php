@@ -2,6 +2,25 @@
     <!-- Session Status -->
     <x-auth.auth-session-status class="mb-4" :status="session('status')" />
 
+    @if (session('status'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Sukses!',
+                text: '{{ session('status') }}',
+                confirmButtonText: 'OK',
+                timer: 3000,
+                timerProgressBar: true,
+            }).then((result) => {
+                // Redirect ke dashboard setelah alert ditutup
+                window.location.href = '{{ route('admin.dashboard') }}';
+            });
+        });
+    </script>
+@endif
+
+
     <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back Admin to the CreditBlock Application</h1>
 
     <div class="mt-8">
