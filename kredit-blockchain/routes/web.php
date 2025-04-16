@@ -18,6 +18,6 @@ require __DIR__.'/admin-auth.php';
 
 Route::middleware('auth')->group(function () {
     Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
-    Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store'); 
+    Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store');
     Route::get('/payments/history', [PaymentController::class, 'history'])->name('payments.history');
 });
