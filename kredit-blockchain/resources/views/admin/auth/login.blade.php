@@ -1,9 +1,9 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth.auth-session-status class="mb-4" :status="session('status')" />
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if (session('status'))
+    <div>Session Status: {{ session('status') }}</div>
     <script>
+        console.log('Session status: {{ session('status') }}');
         document.addEventListener('DOMContentLoaded', function () {
             Swal.fire({
                 icon: 'success',
@@ -17,9 +17,11 @@
                 window.location.href = '{{ route('admin.dashboard') }}';
             });
         });
-    </script>
-@endif
+        </script>
+    @endif
 
+<!-- Session Status -->
+<x-auth.auth-session-status class="mb-4" :status="session('status')" />
 
     <h1 class="font-bold text-3xl text-center w-[400px]">Welcome back Admin to the CreditBlock Application</h1>
 
