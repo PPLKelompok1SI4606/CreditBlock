@@ -233,7 +233,7 @@
                             'KYC Menunggu' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>',
                             'Kontak Dukungan' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>'
                         ];
-                        $activeMenu = request()->routeIs('admin.dashboard') ? 'Dashboard' : 
+                        $activeMenu = request()->routeIs('admin.dashboard') ? 'Dashboard' :
                                      (request()->routeIs('admin.support.*') ? 'Kontak Dukungan' : '');
                         $menuRoutes = [
                             'Dashboard' => 'admin.dashboard',
@@ -269,7 +269,8 @@
                         </span>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-1 tracking-wide">Pengguna Aktif</h3>
-                            <p class="text-3xl font-bold text-green-600">{{ $totalUsers }}</p>
+                            {{-- <p class="text-3xl font-bold text-green-600">{{ $totalUsers }}</p> --}}
+                            <p class="text-3xl font-bold text-green-600"></p>
                         </div>
                     </div>
                 </div>
@@ -282,7 +283,8 @@
                         </span>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-1 tracking-wide">Pinjaman Aktif</h3>
-                            <p class="text-3xl font-bold text-green-600">{{ $activeLoans }}</p>
+                            {{-- <p class="text-3xl font-bold text-green-600">{{ $activeLoans }}</p> --}}
+                            <p class="text-3xl font-bold text-green-600"></p>
                         </div>
                     </div>
                 </div>
@@ -295,7 +297,8 @@
                         </span>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-1 tracking-wide">Pengajuan Menunggu</h3>
-                            <p class="text-3xl font-bold text-green-600">{{ $pendingLoans }}</p>
+                            {{-- <p class="text-3xl font-bold text-green-600">{{ $pendingLoans }}</p> --}}
+                            <p class="text-3xl font-bold text-green-600"></p>
                         </div>
                     </div>
                 </div>
