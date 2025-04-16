@@ -242,9 +242,9 @@
         <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-xl hidden-animated">DIPERCAYA DAN AMAN</h1>
         <h1 class="text-[#1167B1] font-bold text-5xl mt-2 tracking-wide hidden-animated">Apa Kata Pengguna Kami?</h1>
 
-            <div class="marquee">
+            <div class="marquee-2">
 
-                <div class="marquee-content inline-flex mt-[50px] gap-x-[50px]  mr-[50px]">
+                <div class="marquee-content inline-flex mt-[50px] gap-x-[50px] mr-[50px]">
 
                     <x-landingpage.people></x-landingpage.people>
 

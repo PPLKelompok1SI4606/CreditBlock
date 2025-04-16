@@ -12,9 +12,24 @@ html {
     }
 }
 
+@keyframes marquee-2 {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-30%);
+    }
+}
+
 .marquee {
     display: flex;
-    animation: marquee 20s linear infinite;
+    animation: marquee 15s linear infinite;
+    width: fit-content;
+}
+
+.marquee-2 {
+    display: flex;
+    animation: marquee-2 15s linear infinite;
     width: fit-content;
 }
 
