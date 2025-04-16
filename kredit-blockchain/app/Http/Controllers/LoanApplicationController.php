@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class LoanApplicationController extends Controller
 {
+    public function index()
+{
+
+        $loanApplications = LoanApplication::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('loan-applications.index', compact('loanApplications'));
+}
+
     public function create()
     {
         return view('loan-applications.create');

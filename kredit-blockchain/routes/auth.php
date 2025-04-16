@@ -31,6 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/loan-applications', [LoanApplicationController::class, 'store'])
         ->name('loan-applications.store');
 
+        Route::get('/loan-applications/index', [LoanApplicationController::class, 'index'])
+        ->name('loan-applications.index');
+
     // LogOut
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     
