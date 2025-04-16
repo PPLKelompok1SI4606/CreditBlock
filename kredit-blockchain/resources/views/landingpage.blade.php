@@ -78,7 +78,7 @@
                 <h1 class="font-bold text-2xl">PROSES PENGAJUAN CEPAT</h1>
                 <div class="inline-flex mt-3 gap-x-[50px]">
                     <img src="{{asset('images/01.png')}}" alt="" class="opacity-0 mt-[108px] group-hover:opacity-100 duration-500 transition-opacity">
-                    <p class="mt-10 ">Isi form super singkat, langsung dapat dana! Tidak perlu antri atau ribet dokumen – cair lebih cepat dari kopi pagimu.</p>
+                    <p class="mt-10 text-gray-600 group-hover:text-black">Isi form super singkat, langsung dapat dana! Tidak perlu antri atau ribet dokumen – cair lebih cepat dari kopi pagimu.</p>
                 </div>
             </x-landingpage.grid-column>
 
@@ -86,14 +86,14 @@
                 <h1 class="font-bold text-2xl">TRANSPARANSI BLOCKCHAIN</h1>
                 <div class="inline-flex mt-3 gap-x-[50px]">
                     <img src="{{asset('images/02.png')}}" alt="" class="mt-[108px] opacity-0 group-hover:opacity-100 duration-500 transition-opacity">
-                    <p class="mt-10 text-gray-600">Setiap transaksi tercatat abadi di blockchain – tidak bisa dimanipulasi atau "kecurangan administrasi".</p>
+                    <p class="mt-10 text-gray-600 group-hover:text-black">Setiap transaksi tercatat abadi di blockchain – tidak bisa dimanipulasi atau "kecurangan administrasi".</p>
                 </div>
             </x-landingpage.grid-column>
 
             <x-landingpage.grid-column class="group hidden-animated">
                 <h1 class="font-bold text-2xl flex justify-end">DASHBOARD PRIBADI</h1>
                 <div class="inline-flex mt-3 gap-x-[50px]">
-                    <p class="mt-10 text-gray-600">Pantau pinjaman, cicilan, dan riwayat pembayaran semudah cek media sosial – semua rapi dalam satu layar.</p>
+                    <p class="mt-10 text-gray-600 group-hover:text-black">Pantau pinjaman, cicilan, dan riwayat pembayaran semudah cek media sosial – semua rapi dalam satu layar.</p>
                     <img src="{{asset('images/03.png')}}" alt="" class="mt-[108px] opacity-0 group-hover:opacity-100 duration-500 transition-opacity">
                 </div>
             </x-landingpage.grid-column>
@@ -101,7 +101,7 @@
             <x-landingpage.grid-column class="group hidden-animated">
                 <h1 class="font-bold text-2xl flex justify-end">NOTIFIKASI JATUH TEMPO</h1>
                 <div class="inline-flex mt-3 gap-x-[50px]">
-                    <p class="mt-10 text-gray-600">Sistem kami akan ingatkan Anda sebelum jatuh tempo – seperti asisten pribadi yang selalu on time.</p>
+                    <p class="mt-10 text-gray-600 group-hover:text-black">Sistem kami akan ingatkan Anda sebelum jatuh tempo – seperti asisten pribadi yang selalu on time.</p>
                     <img src="{{asset('images/04.png')}}" alt="" class="mt-[108px] opacity-0 group-hover:opacity-100 duration-500 transition-opacity">
                 </div>
             </x-landingpage.grid-column>
@@ -112,7 +112,7 @@
             <h1 class="font-bold text-2xl">KALKULATOR CICILAN</h1>
             <div class="inline-flex mt-3 gap-x-[50px]">
                 <img src="{{asset('images/05.png')}}" alt="" class="mt-[108px] opacity-0 group-hover:opacity-100 duration-500 transition-opacity ">
-                <p class="mt-10 text-gray-600">Rencanakan pinjaman dengan percaya diri – tahu persis berapa yang harus dibayar sebelum mengajukan!</p>
+                <p class="mt-10 text-gray-600 group-hover:text-black">Rencanakan pinjaman dengan percaya diri – tahu persis berapa yang harus dibayar sebelum mengajukan!</p>
             </div>
         </div>
 

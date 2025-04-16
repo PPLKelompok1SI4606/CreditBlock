@@ -47,6 +47,10 @@ html {
     animation-play-state: paused;
 }
 
+.marquee-2:hover {
+    animation-play-state: paused;
+}
+
 
 /* Animasi Muncul ketika refresh */
 .hidden-animated {
