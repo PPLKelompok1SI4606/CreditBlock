@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LoanApplication;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -13,23 +14,24 @@ class AdminController extends Controller
     // }
 
     public function index(Request $request)
-    {
-        $search = $request->input('search');
-        $applications = LoanApplication::with('user')
-            ->when($search, function ($query, $search) {
-                return $query->whereHas('user', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })->orWhere('id', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->get();
+{
+    $search = $request->input('search');
+    $loanApplications = LoanApplication::with('user')
+        ->when($search, function ($query, $search) {
+            return $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })->orWhere('id', 'like', "%{$search}%");
+        })
+        ->latest()
+        ->get();
 
-        $totalUsers = \App\Models\User::count();
-        $activeLoans = LoanApplication::where('status', 'APPROVED')->count();
-        $pendingLoans = LoanApplication::where('status', 'PENDING')->count();
+    $users = User::all(); // Ambil semua pengguna untuk tabel Daftar Pengguna
+    $totalUsers = User::count();
+    $activeLoans = LoanApplication::where('status', 'APPROVED')->count();
+    $pendingLoans = LoanApplication::where('status', 'PENDING')->count();
 
-        return view('admin.dashboard', compact('applications', 'search', 'totalUsers', 'activeLoans', 'pendingLoans'));
-    }
+    return view('admin.dashboard', compact('loanApplications', 'users', 'search', 'totalUsers', 'activeLoans', 'pendingLoans'));
+}
 
     public function updateStatus(Request $request, LoanApplication $loanApplication)
     {
@@ -44,4 +46,11 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard')
             ->with('success', 'Status pengajuan berhasil diperbarui.');
     }
-}
+
+    // Method ini sepertinya belum diimplementasikan, kita akan tambahkan untuk route admin.loan-applications
+    public function loanApplications()
+    {
+        $loanApplications = LoanApplication::with('user')->latest()->get();
+        return view('admin.loan-applications', compact('loanApplications'));
+    }
+}   
