@@ -45,17 +45,24 @@
     {{-- Collaborated --}}
     <section class="flex flex-col items-center justify-center w-full h-[300px] px-[100px] bg-[#D0EFFF]" id="collaborated">
         <h1 class="text-[#2A9DF4] font-bold text-lg tracking-widest">COLLABORATED WITH</h1>
-        <div class="overflow-hidden mt-10">
-            <div class="marquee ">
+        <div class="overflow-hidden mt-10 w-full">
+            <div class="marquee">
                 <!-- Konten asli -->
-                <div class="inline-flex items-center justify-center gap-x-[130px]">
+                <div class="marquee-content inline-flex items-center justify-center gap-x-[130px] mr-[130px]">
                     <img src="images/bi_logo.png" alt="BI Logo" class="h-12">
                     <img src="images/bri_logo.png" alt="BRI Logo" class="h-12">
                     <img src="images/logo_BCA_Biru.png" alt="BCA Logo" class="h-12">
                     <img src="images/mandiri_logo.png" alt="Mandiri Logo" class="h-12">
                     <img src="images/ojk_logo.png" alt="OJK Logo" class="h-12">
                 </div>
-
+                <!-- Konten duplikat untuk loop mulus -->
+                <div class="marquee-content inline-flex items-center justify-center gap-x-[130px]">
+                    <img src="images/bi_logo.png" alt="BI Logo" class="h-12 mt-5">
+                    <img src="images/bri_logo.png" alt="BRI Logo" class="h-12">
+                    <img src="images/logo_BCA_Biru.png" alt="BCA Logo" class="h-12">
+                    <img src="images/mandiri_logo.png" alt="Mandiri Logo" class="h-12">
+                    <img src="images/ojk_logo.png" alt="OJK Logo" class="h-12">
+                </div>
             </div>
         </div>
     </section>
@@ -228,6 +235,31 @@
         <img src="{{asset('images/blur2.png')}}" alt="" class="absolute right-0 top-200 -z-20">
 
     </section>
+
+    {{-- Apa Kata Pengguna --}}
+    <section class="flex flex-col items-center w-full h-full px-[100px] py-[90px] text-center overflow-hidden relative" id="people">
+
+        <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-xl hidden-animated">DIPERCAYA DAN AMAN</h1>
+        <h1 class="text-[#1167B1] font-bold text-5xl mt-2 tracking-wide hidden-animated">Apa Kata Pengguna Kami?</h1>
+
+            <div class="marquee">
+
+                <div class="marquee-content inline-flex mt-[50px] gap-x-[50px]  mr-[50px]">
+
+                    <x-landingpage.people></x-landingpage.people>
+
+                </div>
+
+                <div class="marquee-content inline-flex mt-[50px] gap-x-[50px]">
+
+                    <x-landingpage.people></x-landingpage.people>
+
+                </div>
+
+            </div>
+
+    </section>
+
 
     {{-- FAQ --}}
     <section class="relative flex flex-col items-center py-[90px] justify-center w-full h-full px-[100px]" id="faq">

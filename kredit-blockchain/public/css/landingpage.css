@@ -2,14 +2,13 @@ html {
     scroll-behavior: smooth;
 }
 
-
-/* Animasi untuk swipe otomatis */
+/* Animasi untuk swipe otomatis dari kanan ke kiri */
 @keyframes marquee {
     0% {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-50%);
+        transform: translateX(-100%);
     }
 }
 
@@ -19,11 +18,22 @@ html {
     width: fit-content;
 }
 
+/* Pastikan konten marquee memiliki lebar yang sesuai */
+.marquee-content {
+    flex-shrink: 0;
+}
+
+.marquee-items {
+    flex-shrink: 0;
+}
+
 /* Pause animasi saat hover */
 .marquee:hover {
     animation-play-state: paused;
 }
 
+
+/* Animasi Muncul ketika refresh */
 .hidden-animated {
     opacity: 0;
     filter: blur(5px);
@@ -45,7 +55,7 @@ html {
 }
 
 .explanation.active {
-    max-height: 200px; /* Adjust based on content height */
+    max-height: 200px;
     opacity: 1;
 }
 
