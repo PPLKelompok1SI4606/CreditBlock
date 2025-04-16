@@ -26,7 +26,9 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        session()->regenerate();
+        session()->flash('status', 'Login berhasil!');
+
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
@@ -38,9 +40,8 @@ class AuthenticatedSessionController extends Controller
     {
         Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
+        session()->invalidate();
+        session()->regenerateToken();
 
         return redirect('/');
     }

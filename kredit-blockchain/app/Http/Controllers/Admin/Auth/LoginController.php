@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 use App\Http\Requests\Auth\AdminLoginRequest;
 
 class LoginController extends Controller
@@ -27,7 +28,8 @@ class LoginController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        session()->regenerate(); // Gunakan helper session()
+        session()->flash('status', 'Login berhasil!');
 
         return redirect()->intended(route('admin.dashboard', absolute: false));
     }
@@ -39,8 +41,8 @@ class LoginController extends Controller
     {
         Auth::guard('admin')->logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        session()->invalidate(); // Gunakan helper session()
+        session()->regenerateToken();
 
         return redirect('/admin/login');
     }

@@ -15,6 +15,9 @@
         <link rel="stylesheet" href="{{asset('css/landingpage.css')}}">
         <script defer src="{{ asset('js/app.js') }}"></script>
 
+        <!-- Tambahkan CDN SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
