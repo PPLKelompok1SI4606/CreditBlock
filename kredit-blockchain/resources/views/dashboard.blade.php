@@ -95,6 +95,10 @@
             <div class="mt-2 space-y-3">
                 <p class="text-gray-600 text-sm flex items-center">
                     <span class="mr-2 text-blue-500">
+                    @php
+                        $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
+                        $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
+                    @endphp
                         <!-- Ikon Credit Card dari Heroicons -->
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
@@ -144,12 +148,26 @@
                 </span>
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pengajuan Pinjaman</h3>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format(10000000, 0, ',', '.') }}</p>
-                </div>
+                        @php
+                            $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
+                            $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
+                        @endphp
+                        <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($loan ? $loan->amount : 0, 0, ',', '.') }}</p>
+                    </div>
             </div>
 
             <!-- Detail -->
             <div class="mt-2 space-y-3">
+                <p class="text-gray-600 text-sm flex items-center">
+                    <span class="mr-2 text-blue-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        </svg>
+                    </span>
+                    Cicilan Berikutnya:
+                    <span class="text-blue-500 font-medium ml-1">Rp {{ number_format($loan ? $loan->amount / $loan->duration : 0, 0, ',', '.') }}</span>
+                    <span class="text-gray-500 ml-1">- {{ now()->addMonth()->format('d M Y') }}</span>
+                </p>
                 <p class="text-gray-600 text-sm flex items-center">
                     <span class="mr-2 text-blue-500">
                         <!-- Ikon Clock dari Heroicons -->
@@ -159,7 +177,7 @@
                     </span>
                     Status:
                     <span class="inline-block bg-yellow-100 text-yellow-700 text-xs font-medium px-2.5 py-1 rounded-full ml-2">
-                        Menunggu
+                        {{ $loan ? $loan->status : 'Menunggu' }}
                     </span>
                 </p>
                 <p class="text-gray-600 text-sm flex items-center">
@@ -201,64 +219,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
-                        <td class="px-6 py-4 flex items-center">
-                            <span class="mr-2 text-blue-500">
-                                <!-- Ikon Calendar dari Heroicons -->
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </span>
-                            1 Mar 2025
-                        </td>
-                        <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format(1000000, 0, ',', '.') }}</td>
-                        <td class="px-6 py-4">
-                            <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
-                                Lunas
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
-                        <td class="px-6 py-4 flex items-center">
-                            <span class="mr-2 text-blue-500">
-                                <!-- Ikon Calendar dari Heroicons -->
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </span>
-                            1 Feb 2025
-                        </td>
-                        <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format(1000000, 0, ',', '.') }}</td>
-                        <td class="px-6 py-4">
-                            <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
-                                Lunas
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition-all duration-200">
-                        <td class="px-6 py-4 flex items-center">
-                            <span class="mr-2 text-blue-500">
-                                <!-- Ikon Calendar dari Heroicons -->
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </span>
-                            1 Jan 2025
-                        </td>
-                        <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format(1000000, 0, ',', '.') }}</td>
-                        <td class="px-6 py-4">
-                            <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
-                                Lunas
-                            </span>
-                        </td>
-                    </tr>
+                    @forelse ($payments as $payment)
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
+                            <td class="px-6 py-4 flex items-center">
+                                <span class="mr-2 text-blue-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </span>
+                                {{ $payment->payment_date->format('d M Y') }}
+                            </td>
+                            <td class="px-6 py-4 font-mono text-gray-800">
+                                Rp {{ number_format($payment->amount, 0, ',', '.') }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
+                                    {{ $payment->status }}
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-4 text-center text-gray-500">Tidak ada riwayat pembayaran.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
         <!-- Action Links -->
         <div class="mt-6 flex items-center space-x-6">
-            <a href="#" class="relative text-blue-500 text-sm font-medium tracking-wide transition-all duration-300 hover:text-blue-600 group">
+            <a href="{{ route('payments.history') }}" class="relative text-blue-500 text-sm font-medium tracking-wide transition-all duration-300 hover:text-blue-600 group">
                 Lihat Semua
                 <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
             </a>
@@ -268,7 +259,6 @@
             </a>
         </div>
     </div>
-</div>
 </div>
 
 <!-- Chart.js CDN dan Script -->

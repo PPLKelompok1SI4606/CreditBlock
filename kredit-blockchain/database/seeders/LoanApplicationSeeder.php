@@ -10,37 +10,20 @@ class LoanApplicationSeeder extends Seeder
 {
     public function run()
     {
-        // Tambahkan user Yohan dan Falah
-        $yohan = User::create([
-            'name' => 'Yohan',
-            'email' => 'yohan@example.com',
-            'password' => bcrypt('password'),
-            'created_at' => now(),
-        ]);
+        // Ambil user pertama
+        $user = User::first();
 
-        $falah = User::create([
-            'name' => 'Falah',
-            'email' => 'falah@example.com',
-            'password' => bcrypt('password'),
-            'created_at' => now(),
-        ]);
+        if (!$user) {
+            $this->command->info('Tidak ada user. Jalankan UserSeeder terlebih dahulu.');
+            return;
+        }
 
-        // Tambahkan pengajuan pinjaman untuk Yohan
+        // Tambahkan loan application dummy
         LoanApplication::create([
-            'user_id' => $yohan->id,
-            'amount' => 8000000,
-            'duration' => 10,
-            'status' => 'menunggu',
-            'created_at' => now(),
-        ]);
-
-        // Tambahkan pengajuan pinjaman untuk Falah
-        LoanApplication::create([
-            'user_id' => $falah->id,
-            'amount' => 12000000,
-            'duration' => 15,
-            'status' => 'menunggu',
-            'created_at' => now(),
+            'user_id' => $user->id,
+            'amount' => 10000000, // Rp 10.000.000
+            'duration' => 12, // 12 bulan
+            'status' => 'APPROVED',
         ]);
     }
 }
