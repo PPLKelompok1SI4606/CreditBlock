@@ -29,7 +29,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $message->user->name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $message->subject }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                 {{ $message->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
                                 {{ $message->status === 'pending' ? 'Menunggu' : 'Dijawab' }}
                             </span>
@@ -38,7 +38,7 @@
                             {{ $message->created_at ? $message->created_at->format('d M Y') : '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">
-                            <a href="{{ route('admin.support.show', $message) }}" 
+                            <a href="{{ route('admin.support.show', $message) }}"
                                class="text-blue-primary hover:text-blue-700">
                                 Lihat
                             </a>

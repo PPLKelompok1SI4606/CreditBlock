@@ -49,7 +49,7 @@
         @endif
 
         <div>
-            <a href="{{ route('admin.support.index') }}" 
+            <a href="{{ route('admin.support.index') }}"
                class="text-blue-primary hover:text-blue-700">
                 Kembali ke Daftar Pesan
             </a>

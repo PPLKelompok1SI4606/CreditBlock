@@ -10,31 +10,28 @@ class SupportMessageController extends Controller
 {
     public function index()
     {
-        $messages = SupportMessage::with('user')
-            ->latest()
-            ->paginate(10);
-        
+        $messages = SupportMessage::with('user')->paginate(10);
         return view('admin.support.index', compact('messages'));
     }
 
     public function show(SupportMessage $supportMessage)
     {
+        $supportMessage->load('user');
         return view('admin.support.show', compact('supportMessage'));
     }
 
     public function respond(Request $request, SupportMessage $supportMessage)
     {
-        $validated = $request->validate([
-            'response' => 'required|string',
+        $request->validate([
+            'response' => 'required|string'
         ]);
 
         $supportMessage->update([
-            'response' => $validated['response'],
+            'response' => $request->response,
             'status' => 'responded',
-            'responded_at' => now(),
+            'responded_at' => now()
         ]);
 
-        return redirect()->route('admin.support.index')
-            ->with('success', 'Respon telah dikirim!');
+        return redirect()->route('admin.support.index')->with('success', 'Respon berhasil dikirim.');
     }
 }
