@@ -13,8 +13,8 @@ class LoanApplication extends Model
         'user_id',
         'amount',
         'duration',
-        'document_path',
         'status',
+        'document_path',
     ];
 
     /**
