@@ -10,10 +10,8 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <link rel="stylesheet" href="{{asset('css/landingpage.css')}}">
-        <script defer src="{{ asset('js/app.js') }}"></script>
+        <script defer src="{{ asset('js/landingpage.js') }}"></script>
 
         <!-- Tambahkan CDN SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

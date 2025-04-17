@@ -7,9 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Landing Page</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="{{asset('css/landingpage.css')}}">
-    <script defer src="{{ asset('js/app.js') }}"></script>
+    <script defer src="{{ asset('js/landingpage.js') }}"></script>
 </head>
 
 <body class="flex flex-col justify-center items-center m-0 p-0">

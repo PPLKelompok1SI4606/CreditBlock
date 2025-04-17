@@ -1,5 +1,5 @@
 {{-- People --}}
-<div class="w-[450px] h-[350px] rounded-4xl bg-[#2A9DF4] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
+<div class="w-[450px] h-[350px] rounded-3xl bg-[#2A9DF4] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
 
     <div class="flex flex-col text-left w-full py-10 px-10 text-white ">
         <h class="font-bold text-2xl w-[300px]">PEMBAYARAN MASA DEPAN</h>
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div class="w-[450px] h-[350px] rounded-4xl bg-[#1167B1] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
+<div class="w-[450px] h-[350px] rounded-3xl bg-[#1167B1] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
 
     <div class="flex flex-col text-left w-full py-10 px-10 text-white ">
         <h class="font-bold text-2xl w-[300px]">INOVASI NYATA</h>
@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<div class="w-[450px] h-[350px] rounded-4xl bg-[#2A9DF4] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
+<div class="w-[450px] h-[350px] rounded-3xl bg-[#2A9DF4] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
 
     <div class="flex flex-col text-left w-full py-10 px-10 text-white ">
         <h class="font-bold text-2xl w-[200px]">BUNGA TERJANGKAU</h>
@@ -53,7 +53,7 @@
     </div>
 </div>
 
-<div class="w-[450px] h-[350px] rounded-4xl bg-[#1167B1] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
+<div class="w-[450px] h-[350px] rounded-3xl bg-[#1167B1] shadow-2xl transition ease-in-out hover:-translate-y-1 hover:scale-105">
 
     <div class="flex flex-col text-left w-full py-10 px-10 text-white ">
         <h class="font-bold text-2xl w-[300px]">KEAMANAN KELAS DUNIA</h>

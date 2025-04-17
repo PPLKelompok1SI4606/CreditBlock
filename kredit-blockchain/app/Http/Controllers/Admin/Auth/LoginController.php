@@ -31,7 +31,7 @@ class LoginController extends Controller
         session()->regenerate(); // Gunakan helper session()
         session()->flash('status', 'Login berhasil!');
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        return redirect()->route('admin.dashboard');
     }
 
     /**

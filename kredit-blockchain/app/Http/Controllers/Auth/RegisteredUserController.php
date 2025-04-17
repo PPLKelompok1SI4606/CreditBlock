@@ -33,6 +33,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'check' => ['required', 'accepted'],
         ]);
 
         $user = User::create([
@@ -42,9 +43,8 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
-
         Auth::login($user);
 
-        return redirect(route('login', absolute: false));
+        return redirect()->route('dashboard')->with('status', 'Registration successful!');
     }
 }

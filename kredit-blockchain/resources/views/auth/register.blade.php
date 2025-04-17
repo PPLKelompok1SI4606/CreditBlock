@@ -70,9 +70,12 @@
                 <input
                     type="checkbox"
                     class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
-                    name="remember"
+                    name="check"
                 >
-                <span class="ms-2 text-[11px] text-gray-400">{{ __('Saya Setuju dengan Aturan Berlaku') }}</span>
+                <div class="flex flex-col relative">
+                    <span class="ms-2 text-[11px] text-gray-400">{{ __('Saya Setuju dengan Aturan Berlaku') }}</span>
+                    <x-auth.input-error :messages="$errors->get('check')" class="absolute mt-5 ms-2 " />
+                </div>
             </label>
 
             <div class="ml-auto">

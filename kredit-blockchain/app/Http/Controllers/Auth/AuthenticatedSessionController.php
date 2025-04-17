@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
         session()->flash('status', 'Login berhasil!');
 
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->route('dashboard');
     }
 
     /**
