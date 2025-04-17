@@ -107,7 +107,7 @@
 
 
         </div>
-        <div class="flex mt-[25px] flex-col w-[600px] px-8 py-5 h-[300px] rounded-4xl border-2 border-gray-300 bg-[#c7e7ff] hidden-animated transition ease-in-out hover:-translate-y-1 hover:shadow-xl group">
+        <div class="flex mt-[25px] flex-col w-[600px] px-8 py-5 h-[300px] rounded-3xl border-2 border-gray-300 bg-[#c7e7ff] hidden-animated transition ease-in-out hover:-translate-y-1 hover:shadow-xl group">
             <h1 class="font-bold text-2xl">KALKULATOR CICILAN</h1>
             <div class="inline-flex mt-3 gap-x-[50px]">
                 <img src="{{asset('images/05.png')}}" alt="" class="mt-[108px] opacity-0 group-hover:opacity-100 duration-500 transition-opacity ">
