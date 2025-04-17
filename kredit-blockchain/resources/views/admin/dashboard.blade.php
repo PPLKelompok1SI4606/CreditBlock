@@ -223,21 +223,6 @@
             </nav>
         </aside>
 
-        <!-- Notifikasi -->
-        @if (session('success'))
-            <div class="p-8">
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6">
-                    <p>{{ session('success') }}</p>
-                </div>
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="p-8">
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6">
-                    <p>{{ session('error') }}</p>
-                </div>
-            </div>
-        @endif
 
         <!-- Konten Utama -->
         <main class="flex-1 p-8 bg-light-gray">
@@ -257,6 +242,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Pinjaman Aktif -->
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 card-hover transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
@@ -371,6 +357,22 @@
                     {{ $users->links() }}
                 </div>
             </div>
+
+                <!-- Notifikasi -->
+                @if (session('success'))
+                    <div class="p-8">
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6">
+                            <p>{{ session('success') }}</p>
+                        </div>
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="p-8">
+                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6">
+                            <p>{{ session('error') }}</p>
+                        </div>
+                    </div>
+                @endif
 
             <!-- Tabel Pinjaman Aktif -->
             <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-10 transition-all duration-300 card-hover hover:shadow-lg">
