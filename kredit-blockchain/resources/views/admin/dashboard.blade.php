@@ -93,6 +93,53 @@
         .profile-img:hover {
             transform: scale(1.05);
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+        .modal.show {
+            opacity: 1;
+        }
+        .modal-content {
+            background: #FFFFFF;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 32rem;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-detail {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .modal-document-btn {
+            background: #3182CE;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background 0.3s ease;
+        }
+        .modal-document-btn:hover {
+            background: #2B6CB0;
+        }
     </style>
     <script>
         tailwind.config = {
@@ -164,7 +211,7 @@
                             'Kontak Dukungan' => 'admin.support.index'
                         ];
                     @endphp
-                    @foreach (['Dashboard', 'Pengguna', 'Pinjaman', 'KYC Menunggu'] as $menu)
+                    @foreach (['Dashboard', 'Pengguna', 'Pinjaman', 'KYC Menunggu','Kontak Dukungan'] as $menu)
                         <li>
                             <a href="{{ $menu === 'Dashboard' ? route('admin.dashboard') : '#' }}" class="sidebar-menu {{ Route::currentRouteName() === 'admin.dashboard' && $menu === 'Dashboard' ? 'sidebar-menu-active' : '' }}">
                                 <span class="mr-3 w-5 {{ Route::currentRouteName() === 'admin.dashboard' && $menu === 'Dashboard' ? 'text-white' : 'text-blue-primary' }}">{!! $icons[$menu] !!}</span>
@@ -206,8 +253,7 @@
                         </span>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-1 tracking-wide">Pengguna Aktif</h3>
-                            {{-- <p class="text-3xl font-bold text-green-600">{{ $totalUsers }}</p> --}}
-                            <p class="text-3xl font-bold text-green-600"></p>
+                            <p class="text-3xl font-bold text-green-600">{{ $totalUsers }}</p>
                         </div>
                     </div>
                 </div>
@@ -222,8 +268,7 @@
                         </span>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-1 tracking-wide">Pinjaman Aktif</h3>
-                            {{-- <p class="text-3xl font-bold text-green-600">{{ $activeLoans }}</p> --}}
-                            <p class="text-3xl font-bold text-green-600"></p>
+                            <p class="text-3xl font-bold text-green-600">{{ $activeLoans }}</p>
                         </div>
                     </div>
                 </div>
@@ -238,8 +283,7 @@
                         </span>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-1 tracking-wide">Pengajuan Menunggu</h3>
-                            {{-- <p class="text-3xl font-bold text-green-600">{{ $pendingLoans }}</p> --}}
-                            <p class="text-3xl font-bold text-green-600"></p>
+                            <p class="text-3xl font-bold text-green-600">{{ $pendingLoans }}</p>
                         </div>
                     </div>
                 </div>
@@ -275,8 +319,7 @@
                         <tbody>
                             @forelse ($users as $user)
                                 <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
-                                    {{-- <td class="px-6 py-4 w-16">{{ $user->id }}</td> --}}
-                                    <td class="px-6 py-4 w-16"></td>
+                                    <td class="px-6 py-4 w-16">{{ $user->id }}</td>
                                     <td class="px-6 py-4 w-56">
                                         <div class="flex items-center space-x-2">
                                             <span class="text-blue-500">
@@ -284,8 +327,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                                 </svg>
                                             </span>
-                                            {{-- <span>{{ $user->name }}</span> --}}
-                                            <span></span>
+                                            <span>{{ $user->name }}</span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 w-72">
@@ -312,7 +354,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 w-32">
-                                        <button class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
+                                        <button onclick="openModal('user-modal-{{ $user->id }}')" class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
                                             Lihat Detail
                                         </button>
                                     </td>
@@ -324,6 +366,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                <div class="mt-4">
+                    {{ $users->links() }}
                 </div>
             </div>
 

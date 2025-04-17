@@ -22,6 +22,11 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    // Relationship with LoanApplication
+    public function loanApplications()
+    {
+        return $this->hasMany(LoanApplication::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -2,55 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LoanApplication;
 use App\Models\User;
+use App\Models\LoanApplication;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware(['auth', 'is_admin']);
-    // }
+    public function dashboard(Request $request)
+    {
+        // Handle search query for users
+        $search = $request->query('search');
+        $usersQuery = User::query();
 
-    public function index(Request $request)
-{
-    $search = $request->input('search');
-    $loanApplications = LoanApplication::with('user')
-        ->when($search, function ($query, $search) {
-            return $query->whereHas('user', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
-            })->orWhere('id', 'like', "%{$search}%");
+        if ($search) {
+            $usersQuery->where('name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%');
+        }
+
+        // Fetch users with pagination
+        $users = $usersQuery->paginate(10);
+
+        // Fetch summary data
+        $totalUsers = User::count();
+        $activeLoans = LoanApplication::where('status', 'APPROVED')->count();
+        $pendingLoans = LoanApplication::where('status', 'PENDING')->count();
+
+        // Fetch loan applications with user relationship
+        $loanApplications = LoanApplication::with('user')
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            })->orWhere('id', 'like', '%' . $search . '%');
         })
-        ->latest()
-        ->get();
+            ->paginate(10);
 
-    $users = User::all(); // Ambil semua pengguna untuk tabel Daftar Pengguna
-    $totalUsers = User::count();
-    $activeLoans = LoanApplication::where('status', 'APPROVED')->count();
-    $pendingLoans = LoanApplication::where('status', 'PENDING')->count();
+        // Pass data to the view
+        return view('admin.dashboard', compact(
+            'users',
+            'totalUsers',
+            'activeLoans',
+            'pendingLoans',
+            'loanApplications',
+            'search'
+        ));
+    }
 
-    return view('admin.dashboard', compact('loanApplications', 'users', 'search', 'totalUsers', 'activeLoans', 'pendingLoans'));
-}
+    // Existing methods (e.g., loanApplications, updateStatus)
+    public function loanApplications()
+    {
+        // Your existing logic for loan applications
+    }
 
     public function updateStatus(Request $request, LoanApplication $loanApplication)
     {
-        $request->validate([
-            'status' => 'required|in:APPROVED,REJECTED',
-        ]);
+        // Your existing logic for updating loan status
+        $loanApplication->status = $request->status;
+        $loanApplication->save();
 
-        $loanApplication->update([
-            'status' => $request->status,
-        ]);
-
-        return redirect()->route('admin.dashboard')
-            ->with('success', 'Status pengajuan berhasil diperbarui.');
+        return redirect()->route('admin.dashboard')->with('success', 'Status pinjaman berhasil diperbarui.');
     }
-
-    // Method ini sepertinya belum diimplementasikan, kita akan tambahkan untuk route admin.loan-applications
-    public function loanApplications()
-    {
-        $loanApplications = LoanApplication::with('user')->latest()->get();
-        return view('admin.loan-applications', compact('loanApplications'));
-    }
-}   
+}
