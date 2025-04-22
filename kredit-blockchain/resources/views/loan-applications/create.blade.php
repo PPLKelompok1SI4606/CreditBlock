@@ -117,7 +117,7 @@
                             <select name="start_month" id="start_month" required
                                     class="py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
                                 @for ($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}">{{ \Carbon\Carbon::create()->month($i)->format('F') }}</option>
+                                    <option value="{{ $i }}">{{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}</option>
                                 @endfor
                             </select>
                             @error('start_month')
@@ -146,10 +146,10 @@
                             <label for="end_month" class="block text-sm font-medium text-gray-700 mb-2">
                                 Selesai Pinjaman (Bulan)
                             </label>
-                            <select name="end_month" id="end_month" required
-                                    class="py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
+                            <select name="end_month" id="end_month" required readonly
+                                    class="py-3 w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
                                 @for ($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}">{{ \Carbon\Carbon::create()->month($i)->format('F') }}</option>
+                                    <option value="{{ $i }}">{{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}</option>
                                 @endfor
                             </select>
                             @error('end_month')
@@ -160,8 +160,8 @@
                             <label for="end_year" class="block text-sm font-medium text-gray-700 mb-2">
                                 Selesai Pinjaman (Tahun)
                             </label>
-                            <select name="end_year" id="end_year" required
-                                    class="py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
+                            <select name="end_year" id="end_year" required readonly
+                                    class="py-3 w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
                                 @for ($i = 2025; $i <= 2030; $i++)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
@@ -204,7 +204,7 @@
     </div>
 
     <script>
-        // Rupiah formatting
+        // Format Rupiah
         const amountDisplay = document.getElementById('amount_display');
         const amountHidden = document.getElementById('amount');
 
@@ -220,12 +220,37 @@
             }
         });
 
-        // Auto-set interest rate based on duration
+        // Otomatis hitung bunga dan tanggal selesai berdasarkan durasi dan tanggal mulai
         const durationInput = document.getElementById('duration');
         const interestRateInput = document.getElementById('interest_rate');
+        const startMonthInput = document.getElementById('start_month');
+        const startYearInput = document.getElementById('start_year');
+        const endMonthInput = document.getElementById('end_month');
+        const endYearInput = document.getElementById('end_year');
 
-        durationInput.addEventListener('input', function(e) {
-            const duration = parseInt(e.target.value);
+        function updateEndDate() {
+            const duration = parseInt(durationInput.value);
+            const startMonth = parseInt(startMonthInput.value);
+            const startYear = parseInt(startYearInput.value);
+
+            if (duration && startMonth && startYear) {
+                // Hitung tanggal selesai
+                let totalBulan = startMonth + duration - 1; // Kurang 1 karena bulan mulai dihitung
+                let endYear = startYear + Math.floor(totalBulan / 12);
+                let endMonth = (totalBulan % 12) || 12; // Kalo sisa 0, jadi 12
+
+                // Update field tanggal selesai
+                endMonthInput.value = endMonth;
+                endYearInput.value = endYear;
+            } else {
+                // Reset kalo input ga lengkap
+                endMonthInput.value = '';
+                endYearInput.value = '';
+            }
+        }
+
+        function updateInterestRate() {
+            const duration = parseInt(durationInput.value);
             if (duration >= 1 && duration <= 6) {
                 interestRateInput.value = 5;
             } else if (duration > 6) {
@@ -233,6 +258,17 @@
             } else {
                 interestRateInput.value = 5;
             }
+        }
+
+        durationInput.addEventListener('input', function(e) {
+            updateInterestRate();
+            updateEndDate();
         });
+
+        startMonthInput.addEventListener('change', updateEndDate);
+        startYearInput.addEventListener('change', updateEndDate);
+
+        // Panggil updateEndDate saat halaman dimuat untuk inisialisasi
+        updateEndDate();
     </script>
 @endsection
