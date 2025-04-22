@@ -13,6 +13,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('amount', 15, 2);
             $table->integer('duration');
+            $table->decimal('interest_rate', 5, 2)->nullable();
+            $table->integer('start_month');
+            $table->integer('start_year');
+            $table->integer('end_month');
+            $table->integer('end_year');
             $table->string('document_path')->nullable();
             $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED'])->default('PENDING');
             $table->timestamps();

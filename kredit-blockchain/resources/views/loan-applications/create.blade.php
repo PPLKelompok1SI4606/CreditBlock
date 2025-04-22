@@ -49,9 +49,10 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </span>
-                            <input type="number" name="amount" id="amount" required
+                            <input type="text" name="amount_display" id="amount_display" required
                                    class="pl-10 pr-12 py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400"
-                                   placeholder="5000000" min="1000000">
+                                   placeholder="Rp5.000.000">
+                            <input type="hidden" name="amount" id="amount">
                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 text-xs font-medium">
                                 IDR
                             </span>
@@ -84,6 +85,93 @@
                         @enderror
                     </div>
 
+                    <!-- Interest Rate -->
+                    <div>
+                        <label for="interest_rate" class="block text-sm font-medium text-gray-700 mb-2">
+                            Suku Bunga (% per tahun)
+                        </label>
+                        <div class="relative group">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-hover:text-blue-600 transition-colors duration-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                </svg>
+                            </span>
+                            <input type="number" name="interest_rate" id="interest_rate" readonly
+                                   class="pl-10 pr-12 py-3 w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-900 placeholder-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400"
+                                   value="5">
+                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 text-xs font-medium">
+                                %
+                            </span>
+                        </div>
+                        @error('interest_rate')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="start_month" class="block text-sm font-medium text-gray-700 mb-2">
+                                Mulai Pinjaman (Bulan)
+                            </label>
+                            <select name="start_month" id="start_month" required
+                                    class="py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}">{{ \Carbon\Carbon::create()->month($i)->format('F') }}</option>
+                                @endfor
+                            </select>
+                            @error('start_month')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="start_year" class="block text-sm font-medium text-gray-700 mb-2">
+                                Mulai Pinjaman (Tahun)
+                            </label>
+                            <select name="start_year" id="start_year" required
+                                    class="py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
+                                @for ($i = 2025; $i <= 2030; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            @error('start_year')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="end_month" class="block text-sm font-medium text-gray-700 mb-2">
+                                Selesai Pinjaman (Bulan)
+                            </label>
+                            <select name="end_month" id="end_month" required
+                                    class="py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}">{{ \Carbon\Carbon::create()->month($i)->format('F') }}</option>
+                                @endfor
+                            </select>
+                            @error('end_month')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="end_year" class="block text-sm font-medium text-gray-700 mb-2">
+                                Selesai Pinjaman (Tahun)
+                            </label>
+                            <select name="end_year" id="end_year" required
+                                    class="py-3 w-full rounded-lg border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-200 hover:border-gray-400">
+                                @for ($i = 2025; $i <= 2030; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            @error('end_year')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
                     <!-- Document -->
                     <div>
                         <label for="document" class="block text-sm font-medium text-gray-700 mb-2">
@@ -114,4 +202,37 @@
             </form>
         </div>
     </div>
+
+    <script>
+        // Rupiah formatting
+        const amountDisplay = document.getElementById('amount_display');
+        const amountHidden = document.getElementById('amount');
+
+        amountDisplay.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value) {
+                value = parseInt(value);
+                amountHidden.value = value;
+                e.target.value = 'Rp' + value.toLocaleString('id-ID');
+            } else {
+                amountHidden.value = '';
+                e.target.value = '';
+            }
+        });
+
+        // Auto-set interest rate based on duration
+        const durationInput = document.getElementById('duration');
+        const interestRateInput = document.getElementById('interest_rate');
+
+        durationInput.addEventListener('input', function(e) {
+            const duration = parseInt(e.target.value);
+            if (duration >= 1 && duration <= 6) {
+                interestRateInput.value = 5;
+            } else if (duration > 6) {
+                interestRateInput.value = 10;
+            } else {
+                interestRateInput.value = 5;
+            }
+        });
+    </script>
 @endsection

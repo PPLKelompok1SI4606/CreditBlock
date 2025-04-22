@@ -13,6 +13,11 @@ class LoanApplication extends Model
         'user_id',
         'amount',
         'duration',
+        'interest_rate',
+        'start_month',
+        'start_year',
+        'end_month',
+        'end_year',
         'status',
         'document_path',
     ];
