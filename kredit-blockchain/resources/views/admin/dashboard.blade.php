@@ -50,89 +50,142 @@
     </div>
 
     <!-- Tabel Daftar Pengguna -->
-    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-10 transition-all duration-300 card-hover hover:shadow-lg">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-semibold text-gray-900 tracking-wide leading-relaxed">Daftar Pengguna</h2>
-            <div class="relative w-64">
-                <form method="GET" action="{{ route('admin.dashboard') }}">
-                    <input type="text" name="search" placeholder="Cari nama atau email..." value="{{ $search ?? '' }}"
-                           class="w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
-                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </span>
-                </form>
-            </div>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-gray-700 text-sm">
-                <thead>
-                    <tr class="bg-gray-50 text-gray-900">
-                        <th class="px-6 py-4 text-left rounded-tl-lg font-medium tracking-wide w-16">ID</th>
-                        <th class="px-6 py-4 text-left font-medium tracking-wide w-56">Nama</th>
-                        <th class="px-6 py-4 text-left font-medium tracking-wide w-72">Email</th>
-                        <th class="px-6 py-4 text-left font-medium tracking-wide w-32">Status KYC</th>
-                        <th class="px-6 py-4 text-left font-medium tracking-wide w-48">Tanggal Daftar</th>
-                        <th class="px-6 py-4 text-left rounded-tr-lg font-medium tracking-wide w-32">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($users as $user)
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
-                            <td class="px-6 py-4 w-16">{{ $user->id }}</td>
-                            <td class="px-6 py-4 w-56">
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-blue-500">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ $user->name }}</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 w-72">
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-blue-500">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ $user->email }}</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 w-32">
-                                <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">Terverifikasi</span>
-                            </td>
-                            <td class="px-6 py-4 w-48">
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-blue-500">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ $user->created_at->format('d M Y') }}</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 w-32">
-                                <button onclick="openModal('user-modal-{{ $user->id }}')"
-                                        class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
-                                    Lihat Detail
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">Tidak ada pengguna.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-4">
-            {{ $users->links() }}
+<div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-10 transition-all duration-300 card-hover hover:shadow-lg">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 tracking-wide leading-relaxed">Daftar Pengguna</h2>
+        <div class="relative w-64">
+            <form method="GET" action="{{ route('admin.dashboard') }}">
+                <input type="text" name="search" placeholder="Cari nama atau email..." value="{{ $search ?? '' }}"
+                       class="w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
+                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </span>
+            </form>
         </div>
     </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-gray-700 text-sm">
+            <thead>
+                <tr class="bg-gray-50 text-gray-900">
+                    <th class="px-6 py-4 text-left rounded-tl-lg font-medium tracking-wide w-16">ID</th>
+                    <th class="px-6 py-4 text-left font-medium tracking-wide w-56">Nama</th>
+                    <th class="px-6 py-4 text-left font-medium tracking-wide w-72">Email</th>
+                    <th class="px-6 py-4 text-left font-medium tracking-wide w-32">Status KYC</th>
+                    <th class="px-6 py-4 text-left font-medium tracking-wide w-48">Tanggal Daftar</th>
+                    <th class="px-6 py-4 text-left rounded-tr-lg font-medium tracking-wide w-32">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($users as $user)
+                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
+                        <td class="px-6 py-4 w-16">{{ $user->id }}</td>
+                        <td class="px-6 py-4 w-56">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-blue-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </span>
+                                <span>{{ $user->name }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 w-72">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-blue-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </span>
+                                <span>{{ $user->email }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 w-32">
+                            <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">Terverifikasi</span>
+                        </td>
+                        <td class="px-6 py-4 w-48">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-blue-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </span>
+                                <span>{{ $user->created_at->format('d M Y') }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 w-32">
+                            <button onclick="openModal('user-modal-{{ $user->id }}')"
+                                    class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
+                                Lihat Detail
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Modal untuk Detail Pengguna -->
+                    <div id="user-modal-{{ $user->id }}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                        <div class="bg-white rounded-2xl p-8 max-w-lg w-full">
+                            <h3 class="text-2xl font-semibold text-gray-900 mb-6">Detail Pengguna</h3>
+                            <div class="space-y-4">
+                                <p><strong>ID:</strong> {{ $user->id }}</p>
+                                <p><strong>Nama:</strong> {{ $user->name }}</p>
+                                <p><strong>Email:</strong> {{ $user->email }}</p>
+                                <p><strong>Status KYC:</strong> Terverifikasi</p>
+                                <p><strong>Tanggal Daftar:</strong> {{ $user->created_at->format('d M Y') }}</p>
+                            </div>
+                            <div class="mt-6">
+                                <!-- Form untuk Ganti Password -->
+                                <form action="{{ route('admin.change-password', $user->id) }}" method="POST" class="mb-4">
+                                    @csrf
+                                    @method('PATCH')
+                                    <label for="new_password" class="block text-sm font-medium text-gray-700">Password Baru</label>
+                                    <input type="password" name="new_password" id="new_password" required
+                                           class="mt-1 w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <button type="submit"
+                                            class="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-all duration-300">
+                                        Ganti Password
+                                    </button>
+                                </form>
+                                <!-- Form untuk Hapus Pengguna -->
+                                <form action="{{ route('admin.delete-user', $user->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
+                                        Hapus Pengguna
+                                    </button>
+                                </form>
+                            </div>
+                            <button onclick="closeModal('user-modal-{{ $user->id }}')"
+                                    class="mt-4 text-gray-500 hover:text-gray-700 font-medium">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">Tidak ada pengguna.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        {{ $users->links() }}
+    </div>
+</div>
+
+<!-- JavaScript untuk Mengontrol Modal -->
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+</script>
 
     <!-- Tabel Pinjaman Aktif -->
     <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-10 transition-all duration-300 card-hover hover:shadow-lg">
