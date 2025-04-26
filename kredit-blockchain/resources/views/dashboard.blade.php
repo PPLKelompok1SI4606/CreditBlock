@@ -3,6 +3,15 @@
 @section('title', 'Dashboard')
 
 @section('content')
+<script>
+    window.Laravel = {
+        csrfToken: '{{ csrf_token() }}',
+        routes: {
+            walletStore: '{{ route('wallet.store') }}'
+        }
+    };
+</script>
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Notifikasi -->
     @if (session('notification'))
@@ -22,12 +31,11 @@
                 <h3 class="text-xl font-semibold text-gray-900 tracking-wide leading-relaxed">MetaMask Wallet</h3>
                 <p class="text-sm text-gray-500 mt-2 flex items-center leading-loose">
                     <span class="mr-3 text-blue-500">
-                        <!-- Ikon Wallet dari Heroicons -->
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                         </svg>
                     </span>
-                    Saldo: <span class="font-medium text-blue-500 ml-1">0.025 ETH</span>
+                    Saldo: <span id="wallet-balance" class="font-medium text-blue-500 ml-1">Rp 0</span>
                 </p>
             </div>
             <img src="images/MetaMask-logo.png" alt="MetaMask Logo" class="h-9 w-auto transition-transform hover:scale-105">
@@ -37,12 +45,11 @@
         <div class="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
             <p class="text-sm text-gray-600 flex items-center leading-loose">
                 <span class="mr-3 text-blue-500">
-                    <!-- Ikon Address dari Heroicons -->
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"></path>
                     </svg>
                 </span>
-                Alamat: <span class="font-mono text-blue-500 ml-1 tracking-wide truncate">0x123...abc</span>
+                Alamat: <span id="wallet-address" class="font-mono text-blue-500 ml-1 tracking-wide truncate">Belum terkoneksi</span>
             </p>
         </div>
 
@@ -73,7 +80,7 @@
 </div>
 
 <!-- Card Horizontal -->
-<div class="grid grid-cols-2 gap-6 mb-10">
+<div class="grid grid-cols-2 gap-6 mb-2">
     <!-- Card Status Pinjaman -->
     <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 card-hover transition-all duration-300 hover:shadow-md">
         <div class="relative bg-white rounded-lg p-6 overflow-hidden">
@@ -148,12 +155,12 @@
                 </span>
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pengajuan Pinjaman</h3>
-                        @php
-                            $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
-                            $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
-                        @endphp
-                        <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($loan ? $loan->amount : 0, 0, ',', '.') }}</p>
-                    </div>
+                    @php
+                        $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
+                        $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
+                    @endphp
+                    <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($loan ? $loan->amount : 0, 0, ',', '.') }}</p>
+                </div>
             </div>
 
             <!-- Detail -->
