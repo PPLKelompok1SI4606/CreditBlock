@@ -84,3 +84,32 @@ html {
     align-items: center;
     width: 100%;
 }
+
+/* Table styles for amortization schedule */
+#calculation-results table td {
+    text-align: left;
+    font-size: 0.875rem;
+    color: #1A202C;
+}
+
+/* Ensure select elements match input styling */
+select {
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(17, 103, 177, 0.2);
+}
+
+/* Results section animation */
+#calculation-results.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+#calculation-results.show-animated {
+    opacity: 1;
+    transform: translateY(0);
+}
