@@ -26,7 +26,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                         </svg>
                     </span>
-                    Saldo: <span id="wallet-balance" class="font-medium text-blue-500 ml-1">0.025 ETH</span>
+                    Saldo: <span id="wallet-balance" class="font-medium text-blue-500 ml-1">Rp 0</span>
                 </p>
             </div>
             <img src="images/MetaMask-logo.png" alt="MetaMask Logo" class="h-9 w-auto transition-transform hover:scale-105">
@@ -71,7 +71,7 @@
 </div>
 
 <!-- Card Horizontal -->
-<div class="grid grid-cols-2 gap-6 mb-10">
+<div class="grid grid-cols-2 gap-6 mb-2">
     <!-- Card Status Pinjaman -->
     <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 card-hover transition-all duration-300 hover:shadow-md">
         <div class="relative bg-white rounded-lg p-6 overflow-hidden">
@@ -146,12 +146,12 @@
                 </span>
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pengajuan Pinjaman</h3>
-                        @php
-                            $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
-                            $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
-                        @endphp
-                        <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($loan ? $loan->amount : 0, 0, ',', '.') }}</p>
-                    </div>
+                    @php
+                        $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
+                        $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
+                    @endphp
+                    <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($loan ? $loan->amount : 0, 0, ',', '.') }}</p>
+                </div>
             </div>
 
             <!-- Detail -->
@@ -323,83 +323,4 @@
         box-shadow: 0 10px 20px rgba(42, 157, 244, 0.2);
     }
 </style>
-<script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="text/javascript"></script>
-<script>
-    const connectButton = document.getElementById('connect-metamask');
-    const walletIndicator = document.getElementById('wallet-indicator');
-    const walletAddressElement = document.getElementById('wallet-address');
-    const walletBalanceElement = document.getElementById('wallet-balance');
-
-    async function connectMetaMask() {
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                // Request access to MetaMask accounts
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const address = accounts[0];
-
-                // Initialize Ethers.js provider
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const balance = await provider.getBalance(address);
-                const balanceEth = ethers.utils.formatEther(balance);
-
-                // Update UI
-                walletAddressElement.textContent = address.substring(0, 6) + '...' + address.substring(address.length - 4);
-                walletBalanceElement.textContent = parseFloat(balanceEth).toFixed(3) + ' ETH';
-                walletIndicator.classList.remove('bg-red-400', 'ring-red-200');
-                walletIndicator.classList.add('bg-green-400', 'ring-green-200');
-                walletIndicator.title = 'Wallet terkoneksi';
-
-                // Kirim alamat wallet ke backend
-                await fetch('{{ route('wallet.store') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ wallet_address: address })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log('Wallet address saved:', address);
-                    } else {
-                        alert('Gagal menyimpan alamat wallet: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menyimpan alamat wallet');
-                });
-
-            } catch (error) {
-                console.error('MetaMask connection error:', error);
-                alert('Gagal menghubungkan MetaMask: ' + error.message);
-            }
-        } else {
-            alert('MetaMask tidak terdeteksi. Silakan install MetaMask di browser Anda.');
-        }
-    }
-
-    connectButton.addEventListener('click', connectMetaMask);
-
-    // Cek koneksi saat halaman dimuat
-    window.ethereum?.on('accountsChanged', async (accounts) => {
-        if (accounts.length > 0) {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const balance = await provider.getBalance(accounts[0]);
-            const balanceEth = ethers.utils.formatEther(balance);
-            walletAddressElement.textContent = accounts[0].substring(0, 6) + '...' + accounts[0].substring(accounts[0].length - 4);
-            walletBalanceElement.textContent = parseFloat(balanceEth).toFixed(3) + ' ETH';
-            walletIndicator.classList.remove('bg-red-400', 'ring-red-200');
-            walletIndicator.classList.add('bg-green-400', 'ring-green-200');
-            walletIndicator.title = 'Wallet terkoneksi';
-        } else {
-            walletAddressElement.textContent = 'Belum terkoneksi';
-            walletBalanceElement.textContent = '0.000 ETH';
-            walletIndicator.classList.remove('bg-green-400', 'ring-green-200');
-            walletIndicator.classList.add('bg-red-400', 'ring-red-200');
-            walletIndicator.title = 'Wallet belum terkoneksi';
-        }
-    });
-</script>
 @endsection
