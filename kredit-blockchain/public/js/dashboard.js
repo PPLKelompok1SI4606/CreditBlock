@@ -32,6 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // Cek apakah route wallet.store tersedia
+    if (!window.Laravel || !window.Laravel.routes || !window.Laravel.routes.walletStore) {
+        console.error("Route wallet.store tidak didefinisikan di window.Laravel.routes");
+        alert("Konfigurasi aplikasi salah: Route wallet.store tidak ditemukan");
+        return;
+    }
+
     // Koneksi ke MetaMask
     connectButton.addEventListener("click", async () => {
         try {
@@ -59,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                    "X-CSRF-TOKEN": window.Laravel.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
                 },
                 body: JSON.stringify({ address }),
             });
@@ -79,12 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Saldo ditampilkan: Rp", verifyResult.balance_idr || 0);
 
             // Simpan alamat wallet ke backend
-            const storeResponse = await fetch("{{ route('wallet.store') }}", {
+            const storeResponse = await fetch(window.Laravel.routes.walletStore, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                    "X-CSRF-TOKEN": window.Laravel.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
                 },
                 body: JSON.stringify({ wallet_address: address }),
             });
@@ -105,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Gagal menyimpan alamat wallet: " + (storeResult.message || "Kesalahan tidak diketahui"));
             } else {
                 console.log("Wallet address saved:", address);
+                alert("Alamat wallet berhasil disimpan!");
             }
         } catch (error) {
             console.error("Gagal koneksi ke MetaMask:", error.message, error);
@@ -138,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        "X-CSRF-TOKEN": window.Laravel.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
                     },
                     body: JSON.stringify({ address }),
                 });

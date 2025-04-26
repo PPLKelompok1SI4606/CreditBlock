@@ -8,6 +8,9 @@ use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\HttpRequestManager;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 
 class WalletController extends Controller
 {
@@ -31,14 +34,45 @@ class WalletController extends Controller
             ]);
 
             $walletAddress = $request->input('wallet_address');
-            Log::info('Menyimpan alamat wallet: ' . $walletAddress);
+            Log::info('Menyimpan alamat wallet: ' . $walletAddress . ' untuk pengguna ID: ' . Auth::id());
 
-            // Simpan alamat wallet ke database (sesuaikan dengan modelmu)
-            // Contoh: Auth::user()->update(['wallet_address' => $walletAddress]);
-            // Untuk contoh, kita asumsikan penyimpanan berhasil
-            // Ganti dengan logika penyimpanan ke database sesuai kebutuhan
-            // Misalnya:
-            // \App\Models\User::where('id', auth()->id())->update(['wallet_address' => $walletAddress]);
+            // Simpan alamat wallet ke database
+            $user = Auth::user();
+            if (!$user) {
+                Log::error('Pengguna tidak terautentikasi saat menyimpan wallet');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengguna tidak terautentikasi'
+                ], 401);
+            }
+
+            // Verifikasi bahwa $user adalah instance Eloquent Model
+            if (!$user instanceof Model) {
+                Log::error('Objek pengguna bukan instance Eloquent Model', [
+                    'user_class' => get_class($user)
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kesalahan server: Objek pengguna tidak valid'
+                ], 500);
+            }
+
+            // Log tipe user untuk debugging
+            Log::info('Tipe objek pengguna: ' . get_class($user));
+
+            // Cek apakah wallet_address sudah ada di database
+            $existingUser = User::where('wallet_address', $walletAddress)->first();
+            if ($existingUser && $existingUser->id !== $user->id) {
+                Log::warning('Alamat wallet sudah digunakan oleh pengguna lain: ' . $walletAddress);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Alamat wallet sudah terkait dengan akun lain'
+                ], 422);
+            }
+
+            // Update wallet_address menggunakan fill dan save
+            $user->fill(['wallet_address' => $walletAddress])->save();
+            Log::info('Alamat wallet berhasil disimpan untuk pengguna ID: ' . $user->id);
 
             return response()->json([
                 'success' => true,

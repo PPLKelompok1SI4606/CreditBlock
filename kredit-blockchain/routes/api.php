@@ -10,6 +10,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
+Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
 Route::post('/wallet/verify', [WalletController::class, 'verifyWallet']);
 
 Route::post('/credit/request', [CreditController::class, 'requestCredit']);
