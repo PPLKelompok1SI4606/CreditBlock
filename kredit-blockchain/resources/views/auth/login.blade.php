@@ -69,7 +69,7 @@
         <div class="w-full flex justify-center mt-[90px]">
             <h1>Belum Punya Akun?
                 <button class="transition duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-1 hover:text-[#0090FE] hover:scale-110">
-                    <a href={{ route('register') }} class="text-blue-400">Daftar Disini</a>
+                    <a href={{ route('welcome') }} class="text-blue-400">Daftar Disini</a>
                 </button>
             </h1>
         </div>

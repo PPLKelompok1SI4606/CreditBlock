@@ -9,6 +9,16 @@ use App\Http\Controllers\SupportMessageController;
 // Login As User Tidak Perlu Login
 Route::middleware('guest')->group(function () {
 
+    // Welcome
+    Route::get('/welcome', function () {
+        return view('auth.welcome');
+    })->name('welcome');
+
+    // KYC
+    Route::get('/kyc', function () {
+        return view('auth.kyc');
+    })->name('kyc');
+
     // Register
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('register', [RegisteredUserController::class, 'store']);
@@ -36,7 +46,7 @@ Route::middleware('auth')->group(function () {
 
     // LogOut
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-    
+
     //routes kontak dukungan (user)
     Route::get('/support', [SupportMessageController::class, 'index'])->name('support.index');
     Route::get('/support/create', [SupportMessageController::class, 'create'])->name('support.create');

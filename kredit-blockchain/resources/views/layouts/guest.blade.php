@@ -23,12 +23,12 @@
         <div class="flex min-h-screen">
             <div class="relative flex w-1/2 flex-col items-center justify-center">
                 <x-background class="absolute bg-cover bg-center h-full w-full text-gray-500" />
-                <x-application-logo class="z-10 hidden-animated"></x-application-logo>
-                <a href="{{route('landingpage')}}">
-                    <x-icon class="z-10 h-[380px] mt-10 hidden-animated transition duration-300 ease-in-out hover:-translate-y-1"></x-icon>
+                <x-application-logo class="z-10"></x-application-logo>
+                <a href="{{route('landingpage')}}" class="z-50">
+                    <x-icon class="z-10 h-[380px] mt-10 transition duration-300 ease-in-out hover:-translate-y-1"></x-icon>
                 </a>
-                <h1 class="z-10 mt-10 font-bold text-center text-2xl text-[#1167B1] w-[500px] hidden-animated">Credit Dompet Aman dengan Blockchain untuk Semuanya</h1>
-                <p class="z-10 text-center mt-5 text-[#1167B1] w-[500px] hidden-animated">CreditBlock adalah sebuah aplikasi berbasis website yang bisa mengamankan dompet digital Anda dengan menggunakan teknologi blockchain.</p>
+                <h1 class="z-10 mt-10 font-bold text-center text-2xl text-[#1167B1] w-[500px] ">Credit Dompet Aman dengan Blockchain untuk Semuanya</h1>
+                <p class="z-10 text-center mt-5 text-[#1167B1] w-[500px] ">CreditBlock adalah sebuah aplikasi berbasis website yang bisa mengamankan dompet digital Anda dengan menggunakan teknologi blockchain.</p>
             </div>
 
             <div class="flex-1 h-screen flex flex-col items-center justify-center hidden-animated">

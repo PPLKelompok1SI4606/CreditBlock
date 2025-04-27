@@ -2,7 +2,7 @@
 
     <h1 class="font-bold text-3xl text-center w-[500px] mb-10">Gabung dan Sambungkan Dompet Kredit bersama Kami 🥰</h1>
 
-    <form method="POST" action="{{ route('register') }}">
+    <form id="registerForm" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
 
         <!-- Name -->
@@ -65,33 +65,44 @@
         </div>
 
         <!-- Remember Me and Button Login -->
-        <div class="flex mt-7 relative w-full">
-            <label for="remember_me" class="inline-flex items-center">
-                <input
-                    type="checkbox"
-                    class="rounded p-[10px] border-gray-300 text-blue-400 shadow-sm focus:ring-0 focus:ring-offset-0"
-                    name="check"
-                >
-                <div class="flex flex-col relative">
-                    <span class="ms-2 text-[11px] text-gray-400">{{ __('Saya Setuju dengan Aturan Berlaku') }}</span>
-                    <x-auth.input-error :messages="$errors->get('check')" class="absolute mt-5 ms-2 " />
-                </div>
-            </label>
+        <div class="flex mt-5 relative w-full">
 
             <div class="ml-auto">
-                <x-auth.primary-button>
-                    {{ __('Daftar') }}
-                </x-auth.primary-button>
+                <a href="{{route('kyc')}}">
+                    <div class="inline-flex items-center px-[50px] py-4 bg-[#2A9DF4] border-transparent shadow-xl shadow-blue-200 rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#0090FE] focus:bg-[#0090FE] active:bg-[#0090FE] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
+                        Next
+                    </div>
+                </a>
+                {{-- <x-auth.primary-button>
+                    {{ __('Next') }}
+                </x-auth.primary-button> --}}
             </div>
 
         </div>
 
-        <div class="w-full flex justify-center mt-[70px]">
+        <div class="w-full flex justify-center mt-[50px]">
             <h1>Sudah Punya Akun?
                 <button class="transition duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-1 hover:text-[#0090FE] hover:scale-110">
                     <a href={{ route('login') }} class="text-blue-400">Mari Kesini</a>
                 </button>
             </h1>
+        </div>
+        <div class="inline-flex gap-x-4 justify-center w-full mt-[20px] items-center">
+            <a href="{{ route('welcome') }}">
+                <div class="py-2 px-4 border rounded-full {{ request()->routeIs('welcome') ? 'bg-blue-500 text-white' : 'hover:bg-blue-500 hover:text-white' }}">
+                    1
+                </div>
+            </a>
+            <a href="{{ route('register') }}">
+                <div class="py-2 px-4 border rounded-full {{ request()->routeIs('register') ? 'bg-blue-500 text-white' : 'hover:bg-blue-500 hover:text-white' }}">
+                    2
+                </div>
+            </a>
+            <a href="{{ route('kyc') }}">
+                <div class="py-2 px-4 border rounded-full {{ request()->routeIs('kyc') ? 'bg-blue-500 text-white' : 'hover:bg-blue-500 hover:text-white' }}">
+                    3
+                </div>
+            </a>
         </div>
     </form>
 </x-guest-layout>
