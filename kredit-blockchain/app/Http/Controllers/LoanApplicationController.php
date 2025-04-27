@@ -58,11 +58,16 @@ class LoanApplicationController extends Controller
         try {
             $documentPath = $request->file('document')->store('documents', 'public');
 
+                // Hitung total pembayaran (pokok + bunga)
+            $interestAmount = ($request->amount * $request->interest_rate) / 100; // Bunga
+            $totalPayment = $request->amount + $interestAmount; // Total pembayaran
+
             LoanApplication::create([
                 'user_id' => Auth::id(),
                 'amount' => $request->amount,
                 'duration' => $request->duration,
                 'interest_rate' => $request->interest_rate,
+                'total_payment' => $totalPayment,
                 'start_month' => $request->start_month,
                 'start_year' => $request->start_year,
                 'end_month' => $request->end_month,
@@ -77,5 +82,18 @@ class LoanApplicationController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal menyimpan pengajuan: ' . $e->getMessage());
         }
+    }
+
+    public function checkLoanStatus()
+    {
+        $loanApplication = LoanApplication::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $remainingAmount = $loanApplication && $loanApplication->status === 'APPROVED'
+            ? $loanApplication->amount // Hitung sisa pembayaran jika ada logika tambahan
+            : 0;
+
+        return view('payments.create', compact('loanApplication', 'remainingAmount'));
     }
 }

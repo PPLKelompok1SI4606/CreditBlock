@@ -20,6 +20,7 @@ class LoanApplication extends Model
         'end_year',
         'status',
         'document_path',
+        'total_payment',
     ];
 
     /**

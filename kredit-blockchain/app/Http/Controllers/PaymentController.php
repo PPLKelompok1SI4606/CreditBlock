@@ -13,25 +13,39 @@ class PaymentController extends Controller
         // Cari pinjaman aktif untuk user saat ini
         $loan = LoanApplication::where('user_id', Auth::id())
             ->whereIn('status', ['APPROVED', 'PENDING']) // Periksa status pinjaman
+            ->orderBy('created_at', 'DESC')
             ->first();
     
+        
+        \Log::info('Loan Query Result:', ['loan' => $loan]);
+        
         // Jika tidak ada pinjaman aktif
         if (!$loan) {
-            return redirect()->route('dashboard')->with('error', 'Tidak ada pinjaman aktif.');
+            \Log::info('Tidak ada pinjaman aktif untuk user:', ['user_id' => Auth::id()]);
+            return view('payments.create', ['loanApplication' => null]);
         }
     
+        \Log::info('Status Pinjaman:', ['status' => $loan->status]);
+
         // Jika status pinjaman adalah PENDING
         if ($loan->status === 'PENDING') {
-            return redirect()->route('dashboard')->with('error', 'Tidak ada peminjaman yang aktif dan disetujui.');
+            \Log::info('Pinjaman dengan status PENDING ditemukan:', ['loan' => $loan]);
+            return view('payments.create', ['loanApplication' => $loan]);
         }
     
         // Jika status pinjaman adalah APPROVED
-        // Hitung sisa pembayaran
         $paidAmount = $loan->payments()->sum('amount'); // Total pembayaran yang sudah dilakukan
         $remainingAmount = $loan->amount - $paidAmount; // Sisa pembayaran
+
+        // Jika sisa pembayaran adalah 0, perlakukan seolah-olah tidak ada pinjaman aktif
+        if ($remainingAmount <= 0) {
+            return view('payments.create', ['loanApplication' => null]);
+        }
     
-        // Kirim data ke view
-        return view('payments.create', compact('loan', 'remainingAmount'));
+        return view('payments.create', [
+            'loanApplication' => $loan,
+            'remainingAmount' => $remainingAmount,
+        ]);
     }
 
     public function store(Request $request)

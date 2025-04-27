@@ -2,6 +2,10 @@
 
 @section('title', 'Pembayaran Cicilan')
 
+@php
+    \Log::info('Loan Application di View:', ['loanApplication' => $loanApplication]);
+@endphp
+
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-4xl font-bold text-sky-blue mb-10 drop-shadow-lg tracking-wide animate-fade-in">
@@ -9,18 +13,24 @@
     </h1>
     <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-10 card-hover transition-all duration-300 hover:shadow-md">
         <div class="relative bg-white rounded-lg p-6 overflow-hidden">
-            @if (session('error'))
-                <div class="bg-red-100 text-red-700 px-4 py-3 rounded mb-6">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if ($remainingAmount > 0)
-                <h2 class="text-2xl font-semibold text-gray-900 mb-6 tracking-wide leading-relaxed">
-                    Informasi Pembayaran
-                </h2>
+            @if (!$loanApplication)
+                <p class="text-gray-600 text-lg">
+                    Anda belum memiliki ajuan pinjaman. Silakan ke menu 
+                    <a href="{{ route('loan-applications.create') }}" class="text-blue-500 underline">Ajuan Pinjaman</a> terlebih dahulu.
+                </p>
+            @elseif ($loanApplication->status === 'PENDING')
+                <p class="text-gray-600 text-lg">
+                    Ajuan pinjaman Anda sedang diproses. Silakan tunggu hingga ajuan Anda disetujui.
+                </p>
+            @elseif ($loanApplication->status === 'APPROVED')
                 <p class="text-gray-600 text-lg mb-4">
-                    Sisa Pembayaran Cicilan: 
+                    Total Pembayaran (Pokok + Bunga): 
+                    <span class="font-bold text-blue-500">
+                        Rp {{ number_format($loanApplication->total_payment, 0, ',', '.') }}
+                    </span>
+                </p>
+                <p class="text-gray-600 text-lg mb-4">
+                    Sisa Pembayaran: 
                     <span class="font-bold text-blue-500">
                         Rp {{ number_format($remainingAmount, 0, ',', '.') }}
                     </span>
@@ -59,9 +69,10 @@
                         Bayar Cicilan Sekarang
                     </button>
                 </form>
-            @else
+                @else
+                <!-- Kondisi: Status Tidak Dikenali -->
                 <p class="text-gray-600 text-lg">
-                    Anda tidak memiliki pinjaman aktif saat ini.
+                    Status pinjaman tidak dikenali. Silakan hubungi administrator.
                 </p>
             @endif
         </div>
