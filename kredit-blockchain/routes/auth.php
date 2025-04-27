@@ -8,6 +8,7 @@ use App\Http\Controllers\SupportMessageController;
 use App\Http\Controllers\LoanApplicationController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\WalletController;
 
 // Login As User Tidak Perlu Login
 Route::middleware('guest')->group(function () {
@@ -59,5 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/support/create', [SupportMessageController::class, 'create'])->name('support.create');
     Route::post('/support', [SupportMessageController::class, 'store'])->name('support.store');
     Route::get('/support/{supportMessage}', [SupportMessageController::class, 'show'])->name('support.show');
+
+    //route Connect Metamask Wallet
+    Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
 });
 

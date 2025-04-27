@@ -1,17 +1,15 @@
-<div class="my-5 inline-flex justify-between px-4 items-center w-[310px] h-full border rounded-lg border-blue-800">
-    <p class="text-[#2A9DF4] font-bold">Bulan</p>
-    <select name="bulan" id="" class="ring-0 outline-0 border-0 focus:ring-0 text-blue-700 font-bold">
-        <option value="Januari">Januari</option>
-        <option value="Februari">Februari</option>
-        <option value="Maret">Maret</option>
-        <option value="April">April</option>
-        <option value="Mei">Mei</option>
-        <option value="Juni">Juni</option>
-        <option value="Juli">Juli</option>
-        <option value="Agustus">Agustus</option>
-        <option value="September">September</option>
-        <option value="Oktober">Oktober</option>
-        <option value="November">November</option>
-        <option value="Desember">Desember</option>
-    </select>
-</div>
+<select name="{{ $name ?? 'month' }}" class="flex w-[310px] h-[50px] border border-gray-300 rounded-lg text-[#1167B1] font-semibold focus:ring-0 focus:border-[#1167B1] text-center" required>
+    <option value="" disabled selected>Pilih Bulan</option>
+    <option value="1">Januari</option>
+    <option value="2">Februari</option>
+    <option value="3">Maret</option>
+    <option value="4">April</option>
+    <option value="5">Mei</option>
+    <option value="6">Juni</option>
+    <option value="7">Juli</option>
+    <option value="8">Agustus</option>
+    <option value="9">September</option>
+    <option value="10">Oktober</option>
+    <option value="11">November</option>
+    <option value="12">Desember</option>
+</select>
