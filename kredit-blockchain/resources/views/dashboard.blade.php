@@ -7,7 +7,8 @@
     window.Laravel = {
         csrfToken: '{{ csrf_token() }}',
         routes: {
-            walletStore: '{{ route('wallet.store') }}'
+            walletStore: '{{ route('wallet.store') }}',
+            walletAddress:'{{route('wallet.address')}}'
         }
     };
 </script>

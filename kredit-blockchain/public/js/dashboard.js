@@ -39,6 +39,86 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // Fungsi untuk memperbarui UI
+    const updateWalletUI = (address, balanceIdr = 0) => {
+        if (address) {
+            walletAddressElement.textContent = address.substring(0, 6) + "..." + address.substring(address.length - 4);
+            walletIndicator.classList.remove("bg-red-400", "ring-red-200");
+            walletIndicator.classList.add("bg-green-400", "ring-green-200");
+            walletIndicator.title = "Dompet terkoneksi";
+            walletBalanceElement.textContent = formatRupiah(balanceIdr);
+        } else {
+            walletAddressElement.textContent = "Belum terkoneksi";
+            walletBalanceElement.textContent = "Rp 0";
+            walletIndicator.classList.remove("bg-green-400", "ring-green-200");
+            walletIndicator.classList.add("bg-red-400", "ring-red-200");
+            walletIndicator.title = "Wallet belum terkoneksi";
+        }
+    };
+
+    // Fungsi untuk memeriksa koneksi MetaMask
+    const checkWalletConnection = async () => {
+        try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const accounts = await provider.listAccounts(); // Cek akun yang sudah terkoneksi
+            let address = accounts.length > 0 ? accounts[0] : null;
+
+            // Jika tidak ada akun, coba ambil dari localStorage
+            if (!address) {
+                address = localStorage.getItem("wallet_address");
+            }
+
+            // Jika masih tidak ada, coba ambil dari server
+            if (!address) {
+                const response = await fetch("/api/wallet/address", {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": window.Laravel.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                });
+                const result = await response.json();
+                if (result.success && result.wallet_address) {
+                    address = result.wallet_address;
+                }
+            }
+
+            if (address) {
+                // Simpan ke localStorage
+                localStorage.setItem("wallet_address", address);
+                console.log("Wallet ditemukan:", address);
+
+                // Verifikasi dan ambil saldo
+                const verifyResponse = await fetch("/api/wallet/verify", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": window.Laravel.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({ address }),
+                });
+                const verifyResult = await verifyResponse.json();
+                console.log("Respons dari /api/wallet/verify:", verifyResult);
+
+                if (verifyResult.success) {
+                    updateWalletUI(address, verifyResult.balance_idr || 0);
+                } else {
+                    updateWalletUI(null);
+                    localStorage.removeItem("wallet_address");
+                }
+            } else {
+                updateWalletUI(null);
+            }
+        } catch (error) {
+            console.error("Gagal memeriksa koneksi wallet:", error.message);
+            updateWalletUI(null);
+        }
+    };
+
+    // Panggil saat halaman dimuat
+    checkWalletConnection();
+
     // Koneksi ke MetaMask
     connectButton.addEventListener("click", async () => {
         try {
@@ -53,11 +133,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const signer = provider.getSigner();
             const address = await signer.getAddress();
 
+            // Simpan ke localStorage
+            localStorage.setItem("wallet_address", address);
+
             // Update UI
-            walletAddressElement.textContent = address.substring(0, 6) + "..." + address.substring(address.length - 4);
-            walletIndicator.classList.remove("bg-red-400", "ring-red-200");
-            walletIndicator.classList.add("bg-green-400", "ring-green-200");
-            walletIndicator.title = "Dompet terkoneksi";
+            updateWalletUI(address);
             console.log("Alamat wallet terkoneksi:", address);
 
             // Panggil backend untuk verifikasi dan ambil saldo dalam IDR
@@ -78,11 +158,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const errorMessage = verifyResult.error || "Kesalahan tidak diketahui dari server";
                 console.error("Verifikasi dompet gagal:", errorMessage);
                 alert("Gagal verifikasi dompet: " + errorMessage);
+                localStorage.removeItem("wallet_address");
+                updateWalletUI(null);
                 return;
             }
 
             // Tampilkan saldo dalam Rupiah, bahkan jika nol
-            walletBalanceElement.textContent = formatRupiah(verifyResult.balance_idr || 0);
+            updateWalletUI(address, verifyResult.balance_idr || 0);
             console.log("Saldo ditampilkan: Rp", verifyResult.balance_idr || 0);
 
             // Simpan alamat wallet ke backend
@@ -116,6 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (error) {
             console.error("Gagal koneksi ke MetaMask:", error.message, error);
+            localStorage.removeItem("wallet_address");
+            updateWalletUI(null);
             if (error.code === 4001) {
                 alert("Koneksi ditolak oleh MetaMask. Silakan izinkan koneksi.");
             } else if (error.code === -32002) {
@@ -130,14 +214,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.ethereum?.on("accountsChanged", async (accounts) => {
         try {
             if (accounts.length > 0) {
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const address = accounts[0];
-
-                // Update UI
-                walletAddressElement.textContent = address.substring(0, 6) + "..." + address.substring(address.length - 4);
-                walletIndicator.classList.remove("bg-red-400", "ring-red-200");
-                walletIndicator.classList.add("bg-green-400", "ring-green-200");
-                walletIndicator.title = "Dompet terkoneksi";
+                localStorage.setItem("wallet_address", address);
                 console.log("Akun MetaMask berubah:", address);
 
                 // Ambil saldo dari backend
@@ -154,23 +232,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 const result = await response.json();
                 console.log("Respons dari /api/wallet/verify (accountsChanged):", result);
                 if (result.success) {
-                    walletBalanceElement.textContent = formatRupiah(result.balance_idr || 0);
-                    console.log("Saldo diperbarui: Rp", result.balance_idr || 0);
+                    updateWalletUI(address, result.balance_idr || 0);
                 } else {
-                    walletBalanceElement.textContent = "Rp 0";
+                    updateWalletUI(null);
+                    localStorage.removeItem("wallet_address");
                     const errorMessage = result.error || "Kesalahan tidak diketahui dari server";
                     console.error("Gagal verifikasi saldo:", errorMessage);
                 }
             } else {
-                walletAddressElement.textContent = "Belum terkoneksi";
-                walletBalanceElement.textContent = "Rp 0";
-                walletIndicator.classList.remove("bg-green-400", "ring-green-200");
-                walletIndicator.classList.add("bg-red-400", "ring-red-200");
-                walletIndicator.title = "Wallet belum terkoneksi";
+                localStorage.removeItem("wallet_address");
+                updateWalletUI(null);
                 console.log("Tidak ada akun MetaMask terhubung");
             }
         } catch (error) {
             console.error("Gagal menangani perubahan akun:", error.message, error);
+            localStorage.removeItem("wallet_address");
+            updateWalletUI(null);
             alert("Gagal menangani perubahan akun MetaMask: " + error.message);
         }
     });

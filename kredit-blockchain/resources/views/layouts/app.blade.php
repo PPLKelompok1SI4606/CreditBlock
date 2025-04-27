@@ -141,10 +141,9 @@
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <x-auth.responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                    this.closest('form').submit();">
+                <button type="submit" class="navbar-button">
                     {{ __('Log Out') }}
-                </x-auth.responsive-nav-link>
+                </button>
             </form>
         </div>
     </header>
@@ -158,8 +157,8 @@
                 <div class="flex items-center space-x-3 mb-8">
                     <img src="https://via.placeholder.com/48" alt="Foto Profil" class="profile-img">
                     <div>
-                        <span class="text-gray-900 font-semibold text-lg tracking-tight">John Doe</span>
-                        <p class="text-gray-500 text-sm">Pengguna</p>
+                        <span class="text-gray-900 font-semibold text-lg tracking-tight">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</span>
+                        <p class="text-gray-500 text-sm">{{ auth()->check() ? 'Pengguna' : 'Tamu' }}</p>
                     </div>
                 </div>
             </div>
@@ -183,7 +182,11 @@
                             $activeMenu = 'Pembayaran Cicilan';
                         } elseif ($activeMenu === 'payments.history') {
                             $activeMenu = 'Riwayat Pembayaran';
-                        } else {
+                        }elseif($activeMenu === 'loan-applications.index'){
+                            $activeMenu = 'Riwayat Peminjaman';
+                        }elseif($activeMenu === 'support.index'){
+                            $activeMenu = 'Kontak Dukungan';
+                        }else {
                             $activeMenu = 'Dashboard';
                         }
                         $menuRoutes = [
