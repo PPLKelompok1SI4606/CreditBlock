@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminKYCController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\SupportMessageController;
 
@@ -30,4 +31,8 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/support', [SupportMessageController::class, 'index'])->name('admin.support.index');
     Route::get('/support/{supportMessage}', [SupportMessageController::class, 'show'])->name('admin.support.show');
     Route::post('/support/{supportMessage}/respond', [SupportMessageController::class, 'respond'])->name('admin.support.respond');
+
+    Route::get('/admin/kyc/{user}/verify', [AdminKYCController::class, 'verify'])->name('admin.kyc.verify');
+    Route::post('/admin/kyc/{user}/approve', [AdminKYCController::class, 'approve'])->name('admin.kyc.approve');
+    Route::post('/admin/kyc/{user}/reject', [AdminKYCController::class, 'reject'])->name('admin.kyc.reject');
 });

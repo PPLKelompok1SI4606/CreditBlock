@@ -1,6 +1,4 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth.auth-session-status class="mb-4" :status="session('status')" />
 
     <h1 class="font-bold text-3xl text-center w-[400px]">Selamat Datang di Website CreditBlock 😎</h1>
 

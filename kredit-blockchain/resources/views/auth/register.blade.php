@@ -1,9 +1,24 @@
 <x-guest-layout>
-
     <h1 class="font-bold text-3xl text-center w-[500px] mb-10">Gabung dan Sambungkan Dompet Kredit bersama Kami 🥰</h1>
 
-    <form id="registerForm" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+    <form id="registerForm" method="POST" action="{{ route('register') }}">
         @csrf
+
+        {{-- @if (session('status'))
+            <div class="text-green-500 text-sm mb-4">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="text-red-500 text-sm mb-4">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif --}}
 
         <!-- Name -->
         <div>
@@ -64,27 +79,18 @@
             <x-auth.input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <!-- Remember Me and Button Login -->
+        <!-- Submit Button -->
         <div class="flex mt-5 relative w-full">
-
             <div class="ml-auto">
-                <a href="{{route('kyc')}}">
-                    <div class="inline-flex items-center px-[50px] py-4 bg-[#2A9DF4] border-transparent shadow-xl shadow-blue-200 rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#0090FE] focus:bg-[#0090FE] active:bg-[#0090FE] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
-                        Next
-                    </div>
-                </a>
-                {{-- <x-auth.primary-button>
+                <button type="submit" class="inline-flex items-center px-[50px] py-4 bg-[#2A9DF4] border-transparent shadow-xl shadow-blue-200 rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#0090FE] focus:bg-[#0090FE] active:bg-[#0090FE] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
                     {{ __('Next') }}
-                </x-auth.primary-button> --}}
+                </button>
             </div>
-
         </div>
 
         <div class="w-full flex justify-center mt-[50px]">
             <h1>Sudah Punya Akun?
-                <button class="transition duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-1 hover:text-[#0090FE] hover:scale-110">
-                    <a href={{ route('login') }} class="text-blue-400">Mari Kesini</a>
-                </button>
+                <a href="{{ route('login') }}" class="text-blue-400">Mari Kesini</a>
             </h1>
         </div>
         <div class="inline-flex gap-x-4 justify-center w-full mt-[20px] items-center">
@@ -98,7 +104,7 @@
                     2
                 </div>
             </a>
-            <a href="{{ route('kyc') }}">
+            <a href="#">
                 <div class="py-2 px-4 border rounded-full {{ request()->routeIs('kyc') ? 'bg-blue-500 text-white' : 'hover:bg-blue-500 hover:text-white' }}">
                     3
                 </div>
