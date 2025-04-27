@@ -82,90 +82,120 @@
 
 <!-- Card Horizontal -->
 <div class="grid grid-cols-2 gap-6 mb-2">
-    <!-- Card Status Pinjaman -->
-    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 card-hover transition-all duration-300 hover:shadow-md">
-        <div class="relative bg-white rounded-lg p-6 overflow-hidden">
-            <!-- Header Card -->
-            <div class="flex items-center space-x-4 mb-4">
-                <span class="text-blue-500">
-                    <!-- Ikon Money dari Heroicons -->
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </span>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pinjaman Saya</h3>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format(5000000, 0, ',', '.') }}</p>
-                </div>
-            </div>
-
-            <!-- Detail -->
-            <div class="mt-2 space-y-3">
-                <p class="text-gray-600 text-sm flex items-center">
-                    <span class="mr-2 text-blue-500">
-                    @php
-                        $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
-                        $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
-                    @endphp
-                        <!-- Ikon Credit Card dari Heroicons -->
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
-                    </span>
-                    Cicilan Berikutnya:
-                    <span class="text-blue-500 font-medium ml-1">Rp {{ number_format(1000000, 0, ',', '.') }}</span>
-                    <span class="text-gray-500 ml-1">- 5 Apr 2025</span>
-                </p>
-                <p class="text-gray-600 text-sm flex items-center">
-                    <span class="mr-2 text-blue-500">
-                        <!-- Ikon Check Circle dari Heroicons -->
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </span>
-                    Status:
-                    <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full ml-2">
-                        Aktif
-                    </span>
-                </p>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="mt-6 flex items-center space-x-4">
-                <button class="bg-blue-500 text-white px-5 py-2 rounded-lg font-medium text-sm tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
-                    Bayar Cicilan
-                </button>
-                <a href="#" class="relative text-blue-500 text-sm font-medium tracking-wide transition-all duration-300 hover:text-blue-600 group">
-                    Lihat Detail
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                </a>
+<!-- Card Status Pinjaman -->
+<div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-10 card-hover transition-all duration-300 hover:shadow-md">
+    <div class="relative bg-white rounded-lg p-6 overflow-hidden">
+        <!-- Header Card -->
+        <div class="flex items-center space-x-4 mb-4">
+            <span class="text-blue-500">
+                <!-- Ikon Money dari Heroicons -->
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </span>
+            <div>
+                <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pinjaman Saya</h3>
+                @php
+                    $loans = \App\Models\LoanApplication::where('user_id', Auth::id())
+                        ->where('status', 'APPROVED')
+                        ->get();
+                    $totalAmount = $loans->sum('amount');
+                    $totalPaid = $loans->sum(function ($loan) {
+                        return $loan->payments()->sum('amount');
+                    });
+                    $remainingAmount = $totalAmount - $totalPaid;
+                    $monthlyInstallment = $loans->sum(function ($loan) {
+                        return $loan->amount / $loan->duration;
+                    });
+                    $nextDueDate = $loans->isNotEmpty() ? now()->addMonth()->format('d M Y') : '-';
+                    $status = $loans->isNotEmpty() ? 'Aktif' : 'Tidak Aktif';
+                    $statusStyle = $loans->isNotEmpty() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
+                @endphp
+                <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($remainingAmount, 0, ',', '.') }}</p>
             </div>
         </div>
-    </div>
 
-    <!-- Card Status Pengajuan -->
-    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 card-hover transition-all duration-300 hover:shadow-md">
-        <div class="relative bg-white rounded-lg p-6 overflow-hidden">
-            <!-- Header Card -->
-            <div class="flex items-center space-x-4 mb-4">
-                <span class="text-blue-500">
-                    <!-- Ikon Document dari Heroicons -->
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        <!-- Detail -->
+        <div class="mt-2 space-y-3">
+            <p class="text-gray-600 text-sm flex items-center">
+                <span class="mr-2 text-blue-500">
+                    <!-- Ikon Credit Card dari Heroicons -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                     </svg>
                 </span>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pengajuan Pinjaman</h3>
-                    @php
-                        $loan = \App\Models\LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
-                        $remainingAmount = $loan ? ($loan->amount - $loan->payments()->sum('amount')) : 0;
-                    @endphp
-                    <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($loan ? $loan->amount : 0, 0, ',', '.') }}</p>
-                </div>
-            </div>
+                Cicilan Berikutnya:
+                <span class="text-blue-500 font-medium ml-1">Rp {{ number_format($monthlyInstallment, 0, ',', '.') }}</span>
+                <span class="text-gray-500 ml-1">- {{ $nextDueDate }}</span>
+            </p>
+            <p class="text-gray-600 text-sm flex items-center">
+                <span class="mr-2 text-blue-500">
+                    <!-- Ikon Check Circle dari Heroicons -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </span>
+                Status:
+                <span class="inline-block {{ $statusStyle }} text-xs font-medium px-2.5 py-1 rounded-full ml-2">
+                    {{ $status }}
+                </span>
+            </p>
+        </div>
 
-            <!-- Detail -->
-            <div class="mt-2 space-y-3">
+        <!-- Action Buttons -->
+        <div class="mt-6 flex items-center space-x-4">
+            <button class="bg-blue-500 text-white px-5 py-2 rounded-lg font-medium text-sm tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
+                Bayar Cicilan
+            </button>
+            <a href="#" class="relative text-blue-500 text-sm font-medium tracking-wide transition-all duration-300 hover:text-blue-600 group">
+                Lihat Detail
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Card Status Pengajuan -->
+<div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-10 card-hover transition-all duration-300 hover:shadow-md">
+    <div class="relative bg-white rounded-lg p-6 overflow-hidden">
+        <!-- Header Card -->
+        <div class="flex items-center space-x-4 mb-4">
+            <span class="text-blue-500">
+                <!-- Ikon Document dari Heroicons -->
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </span>
+            <div>
+                <h3 class="text-sm font-semibold text-gray-900 tracking-wide">Pengajuan Pinjaman</h3>
+                @php
+                    $loan = \App\Models\LoanApplication::where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+                    $remainingAmount = $loan && $loan->status === 'APPROVED' ? ($loan->amount - $loan->payments()->sum('amount')) : ($loan ? $loan->amount : 0);
+                    $monthlyInstallment = $loan && $loan->status === 'APPROVED' ? ($loan->amount / $loan->duration) : 0;
+                    $nextDueDate = $loan && $loan->status === 'APPROVED' ? now()->addMonth()->format('d M Y') : '-';
+                    $durationInMonths = $loan ? $loan->duration : 0;
+                    $statusLabels = [
+                        'PENDING' => 'Menunggu',
+                        'APPROVED' => 'Disetujui',
+                        'REJECTED' => 'Ditolak'
+                    ];
+                    $statusStyles = [
+                        'PENDING' => 'bg-yellow-100 text-yellow-700',
+                        'APPROVED' => 'bg-green-100 text-green-700',
+                        'REJECTED' => 'bg-red-100 text-red-700'
+                    ];
+                @endphp
+                <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($remainingAmount, 0, ',', '.') }}</p>
+            </div>
+        </div>
+
+        <!-- Detail -->
+        <div class="mt-2 space-y-3">
+            @if (!$loan)
+                <p class="text-gray-600 text-sm">Belum ada pengajuan pinjaman.</p>
+            @else
                 <p class="text-gray-600 text-sm flex items-center">
                     <span class="mr-2 text-blue-500">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -173,8 +203,8 @@
                         </svg>
                     </span>
                     Cicilan Berikutnya:
-                    <span class="text-blue-500 font-medium ml-1">Rp {{ number_format($loan ? $loan->amount / $loan->duration : 0, 0, ',', '.') }}</span>
-                    <span class="text-gray-500 ml-1">- {{ now()->addMonth()->format('d M Y') }}</span>
+                    <span class="text-blue-500 font-medium ml-1">Rp {{ number_format($monthlyInstallment, 0, ',', '.') }}</span>
+                    <span class="text-gray-500 ml-1">- {{ $nextDueDate }}</span>
                 </p>
                 <p class="text-gray-600 text-sm flex items-center">
                     <span class="mr-2 text-blue-500">
@@ -184,8 +214,8 @@
                         </svg>
                     </span>
                     Status:
-                    <span class="inline-block bg-yellow-100 text-yellow-700 text-xs font-medium px-2.5 py-1 rounded-full ml-2">
-                        {{ $loan ? $loan->status : 'Menunggu' }}
+                    <span class="inline-block {{ $statusStyles[$loan->status] }} text-xs font-medium px-2.5 py-1 rounded-full ml-2">
+                        {{ $statusLabels[$loan->status] }}
                     </span>
                 </p>
                 <p class="text-gray-600 text-sm flex items-center">
@@ -195,19 +225,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </span>
-                    Jangka Waktu: <span class="text-blue-500 font-medium ml-1">12 Bulan</span>
+                    Jangka Waktu: <span class="text-blue-500 font-medium ml-1">{{ $durationInMonths ? $durationInMonths . ' Bulan' : '-' }}</span>
                 </p>
-            </div>
-
-            <!-- Action Link -->
-            <div class="mt-6">
-                <a href="#" class="relative text-blue-500 text-sm font-medium tracking-wide transition-all duration-300 hover:text-blue-600 group">
-                    Lihat Status
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                </a>
-            </div>
+            @endif
         </div>
     </div>
+</div>
 </div>
 
 <!-- Tabel Riwayat Pembayaran -->
