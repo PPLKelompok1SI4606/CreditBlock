@@ -14,14 +14,22 @@
     <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-10 card-hover transition-all duration-300 hover:shadow-md">
         <div class="relative bg-white rounded-lg p-6 overflow-hidden">
             @if (!$loanApplication)
-                <p class="text-gray-600 text-lg">
-                    Anda belum memiliki ajuan pinjaman. Silakan ke menu 
-                    <a href="{{ route('loan-applications.create') }}" class="text-blue-500 underline">Ajuan Pinjaman</a> terlebih dahulu.
-                </p>
+                <!-- Jika tidak ada pinjaman yang diajukan -->
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-700 mb-4">Belum Ada Pinjaman</h2>
+                    <p class="text-gray-600 text-lg mb-6">
+                        Anda belum memiliki ajuan pinjaman. Silakan ke menu 
+                        <a href="{{ route('loan-applications.create') }}" class="text-blue-500 underline">Ajukan Pinjaman</a> terlebih dahulu.
+                    </p>
+                </div>
             @elseif ($loanApplication->status === 'PENDING')
-                <p class="text-gray-600 text-lg">
-                    Ajuan pinjaman Anda sedang diproses. Silakan tunggu hingga ajuan Anda disetujui.
-                </p>
+                <!-- Jika pinjaman masih dalam status PENDING -->
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-700 mb-4">Ajuan Pinjaman Sedang Diproses</h2>
+                    <p class="text-gray-600 text-lg mb-6">
+                        Ajuan pinjaman Anda sedang diproses. Silakan tunggu hingga ajuan Anda disetujui.
+                    </p>
+                </div>
             @elseif ($loanApplication->status === 'APPROVED')
                 @php
                     // Calculate remaining payment

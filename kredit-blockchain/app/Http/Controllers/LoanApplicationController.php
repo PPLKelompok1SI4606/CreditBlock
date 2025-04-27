@@ -12,9 +12,10 @@ class LoanApplicationController extends Controller
     public function index()
     {
         $loanApplications = LoanApplication::where('user_id', Auth::id())
+            ->where('status', 'APPROVED') // Filter hanya pinjaman yang disetujui
             ->orderBy('created_at', 'desc')
             ->get();
-
+    
         return view('loan-applications.index', compact('loanApplications'));
     }
 

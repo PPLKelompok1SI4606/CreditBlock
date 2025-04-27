@@ -35,4 +35,9 @@ class LoanApplication extends Model
     {
         return $this->hasMany(Payment::class, 'loan_application_id');
     }
+
+    public function getRemainingAmountAttribute()
+    {
+        return $this->total_payment - $this->payments->sum('amount');
+    }
 }

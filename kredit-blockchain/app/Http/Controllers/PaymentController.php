@@ -54,32 +54,55 @@ class PaymentController extends Controller
             'installment_month' => 'required|integer',
             'amount' => 'required|numeric|min:1',
         ]);
-
+    
         $loan = LoanApplication::where('user_id', Auth::id())
             ->where('status', 'APPROVED')
             ->first();
-
+    
         if (!$loan) {
             return redirect()->back()->with('error', 'Tidak ada pinjaman aktif.');
         }
-
+    
+        // Hitung total pembayaran yang sudah dilakukan
+        $paidAmount = $loan->payments()->sum('amount');
+        $remainingAmount = $loan->total_payment - $paidAmount - $request->amount;
+    
+        // Tentukan status pembayaran
+        $status = $remainingAmount <= 0 ? 'LUNAS' : 'Belum Lunas';
+    
+        // Simpan pembayaran baru
         Payment::create([
             'loan_application_id' => $loan->id,
             'user_id' => Auth::id(),
             'amount' => $request->amount,
             'payment_date' => now(),
-            'status' => 'Belum Lunas',
-            'installment_month' => $request->installment_month, // Simpan bulan cicilan yang dipilih
+            'status' => $status,
+            'installment_month' => $request->installment_month,
         ]);
-
+    
         return redirect()->route('payments.history')->with('success', 'Pembayaran berhasil disimpan.');
     }
 
+    public function allHistory()
+    {
+        // Ambil semua pinjaman yang sudah lunas
+        $loanApplications = LoanApplication::where('user_id', Auth::id())
+            ->where('status', 'APPROVED') // Pastikan hanya pinjaman yang disetujui
+            ->with('payments') // Ambil data pembayaran terkait
+            ->get();
+    
+        return view('payments.all-history', compact('loanApplications'));
+    }
+    
     public function history(Request $request)
     {
-        $payments = Payment::where('user_id', Auth::id())
-            ->orderBy('payment_date', $request->get('sort', 'desc'))
-            ->get();
+        // Ambil semua pembayaran untuk pinjaman yang belum lunas
+        $payments = Payment::whereHas('loan', function ($query) {
+            $query->where('user_id', Auth::id())
+                  ->where('status', 'APPROVED')
+                  ->whereColumn('total_payment', '>', 'amount'); // Perbaiki alias kolom
+        })->orderBy('payment_date', $request->get('sort', 'desc'))
+          ->get();
     
         return view('payments.history', compact('payments'));
     }

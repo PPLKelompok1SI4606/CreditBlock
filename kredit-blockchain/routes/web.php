@@ -32,4 +32,6 @@ Route::middleware('auth')->group(function () {
 
     // Rute untuk memeriksa status pinjaman
     Route::get('/payments/check-loan-status', [LoanApplicationController::class, 'checkLoanStatus'])->name('payments.check-loan-status');
+
+    Route::get('/payments/all-history', [PaymentController::class, 'allHistory'])->name('payments.all-history');
 });
