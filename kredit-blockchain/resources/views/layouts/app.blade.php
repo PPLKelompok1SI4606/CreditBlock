@@ -136,7 +136,7 @@
     <header class="navbar">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <img src="https://via.placeholder.com/150x50?text=Logo" alt="Logo"
+                <img src="{{asset('images/logoCB.png')}}" alt="Logo"
                     class="h-10 w-auto transition-transform hover:scale-105">
             </div>
             <form method="POST" action="{{ route('logout') }}">
