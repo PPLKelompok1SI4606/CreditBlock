@@ -51,26 +51,27 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'payment_date' => 'required|date',
+            'installment_month' => 'required|integer',
             'amount' => 'required|numeric|min:1',
         ]);
-    
-        // Cari pinjaman aktif untuk user saat ini
-        $loan = LoanApplication::where('user_id', Auth::id())->where('status', 'APPROVED')->first();
-    
+
+        $loan = LoanApplication::where('user_id', Auth::id())
+            ->where('status', 'APPROVED')
+            ->first();
+
         if (!$loan) {
-            return redirect()->route('payments.create')->with('error', 'Tidak ada pinjaman aktif.');
+            return redirect()->back()->with('error', 'Tidak ada pinjaman aktif.');
         }
-    
-        // Simpan pembayaran ke database
+
         Payment::create([
-            'user_id' => Auth::id(),
             'loan_application_id' => $loan->id,
+            'user_id' => Auth::id(),
             'amount' => $request->amount,
-            'payment_date' => $request->payment_date,
-            'status' => 'Lunas',
+            'payment_date' => now(),
+            'status' => 'Belum Lunas',
+            'installment_month' => $request->installment_month, // Simpan bulan cicilan yang dipilih
         ]);
-    
+
         return redirect()->route('payments.history')->with('success', 'Pembayaran berhasil disimpan.');
     }
 

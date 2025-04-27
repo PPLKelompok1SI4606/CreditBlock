@@ -89,11 +89,17 @@ class LoanApplicationController extends Controller
         $loanApplication = LoanApplication::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->first();
-
-        $remainingAmount = $loanApplication && $loanApplication->status === 'APPROVED'
-            ? $loanApplication->amount // Hitung sisa pembayaran jika ada logika tambahan
-            : 0;
-
+    
+        if ($loanApplication && $loanApplication->status === 'APPROVED') {
+            // Hitung total pembayaran yang sudah dilakukan
+            $totalPaid = $loanApplication->payments->sum('amount');
+    
+            // Hitung sisa pembayaran
+            $remainingAmount = $loanApplication->total_payment - $totalPaid;
+        } else {
+            $remainingAmount = 0;
+        }
+    
         return view('payments.create', compact('loanApplication', 'remainingAmount'));
     }
 }

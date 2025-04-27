@@ -17,27 +17,39 @@
                 <table class="w-full text-gray-700 text-sm">
                     <thead>
                         <tr class="bg-gray-50 text-gray-900">
-                            <th class="px-6 py-4 text-left rounded-tl-lg font-medium tracking-wide">Tanggal</th>
+                            <th class="px-6 py-4 text-left rounded-tl-lg font-medium tracking-wide">Pembayaran Cicilan pada Bulan (Cicilan ke-)</th>
                             <th class="px-6 py-4 text-left font-medium tracking-wide">Nominal</th>
+                            <th class="px-6 py-4 text-left font-medium tracking-wide">Sisa Pembayaran</th>
                             <th class="px-6 py-4 text-left rounded-tr-lg font-medium tracking-wide">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($payments as $payment)
-                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
-                                <td class="px-6 py-4">{{ $payment->payment_date->format('d M Y') }}</td>
-                                <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
-                                        {{ $payment->status }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="px-6 py-4 text-center text-gray-500">Tidak ada riwayat pembayaran.</td>
-                            </tr>
-                        @endforelse
+                    @forelse ($payments as $payment)
+                        @php
+                            $loan = $payment->loan;
+
+                            // Ambil bulan dan tahun berdasarkan installment_month
+                            $startMonth = $loan->start_month;
+                            $startYear = $loan->start_year;
+                            $currentMonth = ($startMonth + $payment->installment_month - 2) % 12 + 1;
+                            $currentYear = $startYear + intdiv($startMonth + $payment->installment_month - 2, 12);
+                            $monthName = \Carbon\Carbon::create()->month($currentMonth)->format('F');
+                        @endphp
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
+                            <td class="px-6 py-4">{{ $monthName }} {{ $currentYear }} - Cicilan ke-{{ $payment->installment_month }}</td>
+                            <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($loan->total_payment - $loan->payments->sum('amount'), 0, ',', '.') }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-block {{ $loan->total_payment - $loan->payments->sum('amount') <= 0 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }} text-xs font-medium px-2.5 py-1 rounded-full">
+                                    {{ $loan->total_payment - $loan->payments->sum('amount') <= 0 ? 'LUNAS' : 'Belum Lunas' }}
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Tidak ada riwayat pembayaran.</td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
             </div>
