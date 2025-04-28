@@ -24,6 +24,39 @@ class WalletController extends Controller
     }
 
     /**
+     * Ambil alamat wallet pengguna
+     */
+    public function getWalletAddress(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                Log::error('Pengguna tidak terautentikasi saat mengambil wallet address');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengguna tidak terautentikasi'
+                ], 401);
+            }
+
+            $walletAddress = $user->wallet_address;
+            Log::info('Mengambil alamat wallet untuk pengguna ID: ' . $user->id . ', wallet_address: ' . ($walletAddress ?? 'null'));
+
+            return response()->json([
+                'success' => true,
+                'wallet_address' => $walletAddress
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Gagal mengambil alamat wallet: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil alamat wallet: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Simpan alamat wallet
      */
     public function store(Request $request)
