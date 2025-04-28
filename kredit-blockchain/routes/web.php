@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\LoanApplicationController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\LoanCalculatorController;
 
 Route::get('/', function () {
@@ -22,6 +18,10 @@ Route::get('/clear-session', function () {
 Route::get('/test-auth', function () {
     return \Illuminate\Support\Facades\Auth::check() ? 'Authenticated' : 'Not authenticated';
 });
+
+Route::get('/test-middleware', function () {
+    return 'Middleware works';
+})->middleware('restrict.unverified');
 
 Route::post('/calculate-loan', [LoanCalculatorController::class, 'calculate'])->name('calculate.loan');
 

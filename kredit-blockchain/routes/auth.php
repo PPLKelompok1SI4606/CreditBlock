@@ -35,7 +35,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Perlu Login
-Route::middleware(['auth', 'restrict.unverified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');

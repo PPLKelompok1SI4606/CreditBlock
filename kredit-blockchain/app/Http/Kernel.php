@@ -13,6 +13,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\RestrictUnverifiedUser::class,
     ];
 
     protected $middlewareGroups = [
@@ -44,4 +45,10 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'restrict.unverified' => \App\Http\Middleware\RestrictUnverifiedUser::class, // Pastikan ini ada
     ];
+
+    public function __construct(\Illuminate\Contracts\Foundation\Application $app, \Illuminate\Routing\Router $router)
+    {
+        \Illuminate\Support\Facades\Log::info('Kernel middleware loaded', ['routeMiddleware' => array_keys($this->routeMiddleware)]);
+        parent::__construct($app, $router);
+    }
 }
