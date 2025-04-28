@@ -55,12 +55,12 @@
                                 </td>
                                 <td class="py-3 px-4">{{ $loan->duration }} Bulan</td>
                                 <td class="py-3 px-4">
-                                    @php
-                                        $endDate = \Carbon\Carbon::create($loan->end_year, $loan->end_month, 1);
-                                        $now = \Carbon\Carbon::now();
-                                        $remainingMonths = $now->greaterThan($endDate) ? 0 : $now->diffInMonths($endDate);
-                                    @endphp
-                                    {{ $remainingMonths }} Bulan
+                                @php
+                                    $endDate = \Carbon\Carbon::create($loan->end_year, $loan->end_month, 1);
+                                    $now = \Carbon\Carbon::now();
+                                    $remainingMonths = $now->greaterThan($endDate) ? 0 : $now->diffInMonths($endDate);
+                                @endphp
+                                {{ round($remainingMonths) }} Bulan
                                 </td>
                                 <td class="py-3 px-4">{{ number_format($loan->interest_rate, 1) }}%</td>
                                 <td class="py-3 px-4">

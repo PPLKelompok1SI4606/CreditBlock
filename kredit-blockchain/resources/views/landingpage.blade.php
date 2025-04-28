@@ -212,28 +212,18 @@
 
     {{-- Loan Calculator --}}
     <section class="flex flex-col items-center w-full h-full px-[100px] py-[60px] text-center relative" id="loan-calculator">
-        <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-lg hidden-animated">LOAN CALCULATOR</h1>
-        <h1 class="text-[40px] w-[900px] tracking-wide font-bold text-[#1167B1] hidden-animated">Hitung Cicilanmu Sekarang & Temukan Cara Lebih Ringan untuk Membayar!</h1>
+    <h1 class="text-[#2A9DF4] font-semibold tracking-widest text-lg hidden-animated">LOAN CALCULATOR</h1>
+    <h1 class="text-[40px] w-[900px] tracking-wide font-bold text-[#1167B1] hidden-animated">Hitung Cicilanmu Sekarang & Temukan Cara Lebih Ringan untuk Membayar!</h1>
 
-        <div class="flex flex-col items-center px-10 py-10 bg-white mt-10 rounded-xl border h-full border-gray-300 shadow-blue-300 shadow-xl ">
+    <div class="flex flex-col items-center px-10 py-10 bg-white mt-10 rounded-xl border h-full border-gray-300 shadow-blue-300 shadow-xl">
+        <x-landingpage.loan-calculator></x-landingpage.loan-calculator>
+        <p class="text-center tracking-wider w-[500px] text-gray-500 hidden-animated mt-4">
+            Anda dapat mensimulasikan cicilan yang akan dipinjam dengan tepat!
+        </p>
+    </div>
 
-            <x-landingpage.loan-calculator></x-landingpage.loan-calculator>
-
-            <a href="{{route('dashboard')}}" class="mt-[80px] mb-4">
-                <button
-                    type="submit"
-                    class="px-[200px] py-4 bg-[#1167B1] text-white rounded-xl border transition ease-in-out hover:-translate-y-1 hover:scale-105 hidden-animated">
-                    Hitung
-                </button>
-            </a>
-
-            <p class="text-center tracking-wider w-[500px] text-gray-500 hidden-animated">Anda dapat mesimulasikan cicilan yang akan dipinjam dengan tepat!</p>
-
-        </div>
-
-        <img src="{{asset('images/blur2.png')}}" alt="" class="absolute right-0 top-200 -z-20">
-
-    </section>
+    <img src="{{ asset('images/blur2.png') }}" alt="" class="absolute right-0 top-200 -z-20">
+</section>
 
     {{-- Apa Kata Pengguna --}}
     <section class="flex flex-col items-center w-full h-full px-[100px] py-[90px] text-center overflow-hidden relative" id="people">

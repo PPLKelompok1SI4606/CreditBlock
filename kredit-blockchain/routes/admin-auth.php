@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\SupportMessageController;
+use App\Http\Controllers\LoanCalculatorController;
 
 // Login As Admin Tidak Perlu Login
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
@@ -30,4 +31,9 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/support', [SupportMessageController::class, 'index'])->name('admin.support.index');
     Route::get('/support/{supportMessage}', [SupportMessageController::class, 'show'])->name('admin.support.show');
     Route::post('/support/{supportMessage}/respond', [SupportMessageController::class, 'respond'])->name('admin.support.respond');
+
+    //Routes untuk mengelola pengguna
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
+    Route::patch('/admin/users/{user}/change-password', [AdminController::class, 'changePassword'])->name('admin.change-password');
 });
