@@ -19,6 +19,10 @@ Route::get('/clear-session', function () {
     return redirect('/admin/login');
 });
 
+Route::get('/test-auth', function () {
+    return \Illuminate\Support\Facades\Auth::check() ? 'Authenticated' : 'Not authenticated';
+});
+
 Route::post('/calculate-loan', [LoanCalculatorController::class, 'calculate'])->name('calculate.loan');
 
 require __DIR__.'/auth.php';

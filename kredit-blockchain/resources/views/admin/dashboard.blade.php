@@ -115,15 +115,15 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 w-32">
-                            <button onclick="openModal('user-modal-{{ $user->id }}')"
-                                    class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
-                                Lihat Detail
-                            </button>
+                            <button onclick="showUserDetail({{ $user }})"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-all duration-300">
+                            Detail Pengguna
+                        </button>
                         </td>
                     </tr>
 
                     <!-- Modal untuk Detail Pengguna -->
-                    <div id="user-modal-{{ $user->id }}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                    {{-- <div id="user-modal-{{ $user->id }}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
                         <div class="bg-white rounded-2xl p-8 max-w-lg w-full">
                             <h3 class="text-2xl font-semibold text-gray-900 mb-6">Detail Pengguna</h3>
                             <div class="space-y-4">
@@ -162,7 +162,7 @@
                                 Tutup
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
                 @empty
                     <tr>
                         <td colspan="6" class="px-6 py-4 text-center text-gray-500">Tidak ada pengguna.</td>
@@ -446,7 +446,7 @@
     @endforeach
 
     <!-- JavaScript untuk Modal -->
-    <script>
+    {{-- <script>
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.style.display = 'flex';
@@ -464,5 +464,97 @@
                 closeModal(event.target.id);
             }
         }
+    </script> --}}
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function showUserDetail(user) {
+            Swal.fire({
+                title: 'Detail Pengguna',
+                html: `
+                    <div style="text-align: left;">
+                        <p><strong>ID:</strong> ${user.id}</p>
+                        <p><strong>Nama:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Status KYC:</strong> Terverifikasi</p>
+                        <p><strong>Tanggal Daftar:</strong> ${new Date(user.created_at).toLocaleDateString('id-ID', {
+                            day: '2-digit', month: 'short', year: 'numeric'
+                        })}</p>
+
+                        <hr class="my-2">
+
+                        <form id="change-password-form-${user.id}" method="POST" action="/admin/change-password/${user.id}">
+                            @csrf
+                            @method('PATCH')
+                            <label for="new_password_${user.id}">Password Baru:</label>
+                            <input type="password" id="new_password_${user.id}" name="new_password" class="swal2-input" required>
+                            <button type="submit" class="swal2-confirm swal2-styled" style="background-color: #22c55e; margin-top: 10px;">
+                                Ganti Password
+                            </button>
+                        </form>
+
+                        <form id="delete-user-form-${user.id}" method="POST" action="/admin/delete-user/${user.id}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="swal2-cancel swal2-styled" style="background-color: #ef4444; margin-top: 10px;">
+                                Hapus Pengguna
+                            </button>
+                        </form>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: {
+                    popup: 'rounded-2xl'
+                }
+            });
+        }
     </script>
+
+    <script>
+        function changePassword(userId) {
+        const newPassword = document.getElementById(`new_password_${userId}`).value;
+
+        fetch(`/admin/change-password/${userId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({
+                new_password: newPassword
+            })
+        }).then(response => {
+            if (response.ok) {
+                Swal.fire('Berhasil', 'Password berhasil diganti', 'success');
+            } else {
+                Swal.fire('Gagal', 'Terjadi kesalahan saat mengganti password', 'error');
+            }
+        });
+    }
+
+    </script>
+
+    <script>
+        function deleteUser(userId) {
+        fetch(`/admin/delete-user/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            }
+        }).then(response => {
+            if (response.ok) {
+                Swal.fire('Berhasil', 'Pengguna berhasil dihapus', 'success').then(() => {
+                    location.reload(); // reload halaman setelah hapus
+                });
+            } else {
+                Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus pengguna', 'error');
+            }
+        });
+    }
+
+    </script>
+
 @endsection

@@ -127,6 +127,7 @@ return [
         // ...
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'Log' => Illuminate\Support\Facades\Log::class,
+        'Auth' => Illuminate\Support\Facades\Auth::class,
         // ...
     ],
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Auth\KYCController;
@@ -33,7 +35,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Perlu Login
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'restrict.unverified'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
@@ -64,4 +66,3 @@ Route::middleware('auth')->group(function () {
     //route Connect Metamask Wallet
     Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
 });
-
