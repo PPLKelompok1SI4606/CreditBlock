@@ -83,28 +83,26 @@ class PaymentController extends Controller
         return redirect()->route('payments.history')->with('success', 'Pembayaran berhasil disimpan.');
     }
 
-    public function allHistory()
-    {
-        // Ambil semua pinjaman yang sudah lunas
-        $loanApplications = LoanApplication::where('user_id', Auth::id())
-            ->where('status', 'APPROVED') // Pastikan hanya pinjaman yang disetujui
-            ->with('payments') // Ambil data pembayaran terkait
-            ->get();
+    // public function allHistory()
+    // {
+    //     // Ambil semua pinjaman yang sudah lunas
+    //     $loanApplications = LoanApplication::where('user_id', Auth::id())
+    //         ->where('status', 'APPROVED') // Pastikan hanya pinjaman yang disetujui
+    //         ->with('payments') // Ambil data pembayaran terkait
+    //         ->get();
     
-        return view('payments.all-history', compact('loanApplications'));
-    }
+    //     return view('payments.all-history', compact('loanApplications'));
+    // }
     
     public function history(Request $request)
     {
-        // Ambil semua pembayaran untuk pinjaman yang belum lunas
         $payments = Payment::whereHas('loan', function ($query) {
             $query->where('user_id', Auth::id())
-                  ->where('status', 'APPROVED')
-                  ->whereColumn('total_payment', '>', 'amount'); // Perbaiki alias kolom
+                  ->where('status', 'APPROVED');
         })->orderBy('payment_date', $request->get('sort', 'desc'))
+          ->orderBy('installment_month', 'asc') // Ensure payments are ordered by installment
           ->get();
     
         return view('payments.history', compact('payments'));
     }
-
 }

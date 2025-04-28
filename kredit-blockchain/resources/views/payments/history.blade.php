@@ -7,10 +7,10 @@
         <div class="relative bg-white rounded-lg p-6 overflow-hidden">
             <div class="mb-4 flex justify-between items-center">
                 <!-- Tombol Riwayat Pembayaran Seluruh Pinjaman -->
-                <a href="{{ route('payments.all-history') }}" 
+                <!--<a href="{{ route('payments.all-history') }}" 
                    class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm tracking-wider leading-relaxed transition-all duration-300 hover:bg-blue-700 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
                     Riwayat Pembayaran Seluruh Pinjaman
-                </a>
+                </a>-->
 
                 <!-- Dropdown untuk pengurutan -->
                 <form method="GET" action="{{ route('payments.history') }}">
@@ -31,9 +31,19 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @php
+                        $cumulativePaid = 0; // Track cumulative payments for the current loan
+                        $currentLoanId = null; // Track the current loan to reset cumulative when loan changes
+                    @endphp
                     @forelse ($payments as $payment)
                         @php
                             $loan = $payment->loan;
+
+                            // Reset cumulative paid if the loan changes
+                            if ($currentLoanId !== $loan->id) {
+                                $cumulativePaid = 0;
+                                $currentLoanId = $loan->id;
+                            }
 
                             // Ambil bulan dan tahun berdasarkan installment_month
                             $startMonth = $loan->start_month;
@@ -42,9 +52,13 @@
                             $currentYear = $startYear + intdiv($startMonth + $payment->installment_month - 2, 12);
                             $monthName = \Carbon\Carbon::create()->month($currentMonth)->format('F');
 
+                            // Tambahkan pembayaran saat ini ke total kumulatif
+                            $cumulativePaid += $payment->amount;
+
+                            // Hitung sisa pembayaran
+                            $remainingAmount = $loan->total_payment - $cumulativePaid;
+
                             // Tentukan status berdasarkan sisa pembayaran
-                            $paidAmount = $loan->payments->sum('amount');
-                            $remainingAmount = $loan->total_payment - $paidAmount;
                             $status = $remainingAmount <= 0 ? 'LUNAS' : 'Belum Lunas';
                         @endphp
                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
