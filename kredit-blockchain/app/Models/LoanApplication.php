@@ -20,6 +20,7 @@ class LoanApplication extends Model
         'end_year',
         'status',
         'document_path',
+        'total_payment',
     ];
 
     /**
@@ -33,5 +34,10 @@ class LoanApplication extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class, 'loan_application_id');
+    }
+
+    public function getRemainingAmountAttribute()
+    {
+        return $this->total_payment - $this->payments->sum('amount');
     }
 }

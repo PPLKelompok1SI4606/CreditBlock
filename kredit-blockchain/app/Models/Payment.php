@@ -9,7 +9,7 @@ class Payment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'loan_application_id', 'amount', 'payment_date', 'status'];
+    protected $fillable = ['user_id', 'loan_application_id', 'amount', 'payment_date', 'status', 'installment_month',];
 
     // Pastikan kolom payment_date di-cast menjadi objek Carbon
     protected $casts = [

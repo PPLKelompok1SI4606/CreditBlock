@@ -8,123 +8,101 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
-    // Menampilkan halaman pembuatan pembayaran
-    
     public function create()
     {
         // Cari pinjaman aktif untuk user saat ini
-        $loan = LoanApplication::where('user_id', Auth::id())->where('status', 'APPROVED')->first();
-
-        // Jika tidak ada pinjaman aktif, buat pinjaman dummy
+        $loan = LoanApplication::where('user_id', Auth::id())
+            ->whereIn('status', ['APPROVED', 'PENDING']) // Periksa status pinjaman
+            ->orderBy('created_at', 'DESC')
+            ->first();
+    
+        
+        \Log::info('Loan Query Result:', ['loan' => $loan]);
+        
+        // Jika tidak ada pinjaman aktif
         if (!$loan) {
-            $loan = LoanApplication::create([
-                'user_id' => Auth::id(),
-                'amount' => 5000000, // Jumlah pinjaman dummy (Rp 5.000.000)
-                'duration' => 12, // Durasi pinjaman dummy (12 bulan)
-                'status' => 'APPROVED', // Status pinjaman dummy
-            ]);
+            \Log::info('Tidak ada pinjaman aktif untuk user:', ['user_id' => Auth::id()]);
+            return view('payments.create', ['loanApplication' => null]);
         }
+    
+        \Log::info('Status Pinjaman:', ['status' => $loan->status]);
 
-        // Hitung sisa pembayaran
-        $paidAmount = $loan->payments()->sum('amount');
-        $remainingAmount = $loan->amount - $paidAmount;
+        // Jika status pinjaman adalah PENDING
+        if ($loan->status === 'PENDING') {
+            \Log::info('Pinjaman dengan status PENDING ditemukan:', ['loan' => $loan]);
+            return view('payments.create', ['loanApplication' => $loan]);
+        }
+    
+        // Jika status pinjaman adalah APPROVED
+        $paidAmount = $loan->payments()->sum('amount'); // Total pembayaran yang sudah dilakukan
+        $remainingAmount = $loan->amount - $paidAmount; // Sisa pembayaran
 
-        return view('payments.create', compact('remainingAmount'));
+        // Jika sisa pembayaran adalah 0, perlakukan seolah-olah tidak ada pinjaman aktif
+        if ($remainingAmount <= 0) {
+            return view('payments.create', ['loanApplication' => null]);
+        }
+    
+        return view('payments.create', [
+            'loanApplication' => $loan,
+            'remainingAmount' => $remainingAmount,
+        ]);
     }
-    /* public function create()
-    {
-        $loan = LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
-
-        if (!$loan) {
-            // Tetap tampilkan halaman dengan pesan bahwa tidak ada pinjaman aktif
-            return view('payments.create', ['remainingAmount' => 0])
-                ->with('error', 'Tidak ada pinjaman aktif.');
-        }
-
-        $paidAmount = $loan->payments()->sum('amount');
-        $remainingAmount = $loan->amount - $paidAmount;
-
-        return view('payments.create', compact('remainingAmount'));
-    }*/
 
     public function store(Request $request)
     {
         $request->validate([
-            'payment_date' => 'required|date',
+            'installment_month' => 'required|integer',
             'amount' => 'required|numeric|min:1',
         ]);
     
-        // Cari pinjaman aktif untuk user saat ini
-        $loan = LoanApplication::where('user_id', Auth::id())->where('status', 'APPROVED')->first();
+        $loan = LoanApplication::where('user_id', Auth::id())
+            ->where('status', 'APPROVED')
+            ->first();
     
         if (!$loan) {
-            return redirect()->route('payments.create')->with('error', 'Tidak ada pinjaman aktif.');
+            return redirect()->back()->with('error', 'Tidak ada pinjaman aktif.');
         }
     
-        // Simpan pembayaran ke database
+        // Hitung total pembayaran yang sudah dilakukan
+        $paidAmount = $loan->payments()->sum('amount');
+        $remainingAmount = $loan->total_payment - $paidAmount - $request->amount;
+    
+        // Tentukan status pembayaran
+        $status = $remainingAmount <= 0 ? 'LUNAS' : 'Belum Lunas';
+    
+        // Simpan pembayaran baru
         Payment::create([
-            'user_id' => Auth::id(),
             'loan_application_id' => $loan->id,
+            'user_id' => Auth::id(),
             'amount' => $request->amount,
-            'payment_date' => $request->payment_date,
-            'status' => 'Lunas',
+            'payment_date' => now(),
+            'status' => $status,
+            'installment_month' => $request->installment_month,
         ]);
     
         return redirect()->route('payments.history')->with('success', 'Pembayaran berhasil disimpan.');
     }
 
-    // Menyimpan data pembayaran
-    /* public function store(Request $request)
-    {
-        $request->validate([
-            'payment_date' => 'required|date',
-        ]);
-
-        $loan = LoanApplication::where('user_id', Auth::id())->where('status', 'Aktif')->first();
-
-        if (!$loan) {
-            return redirect()->route('dashboard')->with('error', 'Tidak ada pinjaman aktif.');
-        }
-
-        $paymentAmount = $loan->duration > 0 ? $loan->amount / $loan->duration : 0; // Cicilan per bulan
-        $paidAmount = $loan->payments()->sum('amount');
-        $remainingAmount = $loan->amount - $paidAmount;
-
-        if ($paymentAmount > $remainingAmount) {
-            $paymentAmount = $remainingAmount; // Jika sisa lebih kecil dari cicilan
-        }
-
-        Payment::create([
-            'user_id' => Auth::id(),
-            'loan_id' => $loan->id,
-            'amount' => $paymentAmount,
-            'payment_date' => $request->payment_date,
-            'status' => 'Lunas',
-        ]);
-
-        if ($paidAmount + $paymentAmount >= $loan->amount) {
-            $loan->update(['status' => 'Lunas']);
-        }
-
-        return redirect()->route('dashboard')->with('success', 'Pembayaran cicilan berhasil!');
-    }*/
-
+    // public function allHistory()
+    // {
+    //     // Ambil semua pinjaman yang sudah lunas
+    //     $loanApplications = LoanApplication::where('user_id', Auth::id())
+    //         ->where('status', 'APPROVED') // Pastikan hanya pinjaman yang disetujui
+    //         ->with('payments') // Ambil data pembayaran terkait
+    //         ->get();
+    
+    //     return view('payments.all-history', compact('loanApplications'));
+    // }
+    
     public function history(Request $request)
     {
-        $payments = Payment::where('user_id', Auth::id())
-            ->orderBy('payment_date', $request->get('sort', 'desc'))
-            ->get();
+        $payments = Payment::whereHas('loan', function ($query) {
+            $query->where('user_id', Auth::id())
+                  ->where('status', 'APPROVED');
+        })->orderBy('payment_date', $request->get('sort', 'desc'))
+          ->orderBy('installment_month', 'asc') // Ensure payments are ordered by installment
+          ->get();
     
         return view('payments.history', compact('payments'));
     }
-
-    // Menampilkan riwayat pembayaran
-    /*public function history(Request $request)
-    {
-        $payments = Payment::where('user_id', Auth::id())
-        ->orderBy('payment_date', $request->get('sort', 'desc'))
-        ->get();
-
-        return view('payments.history', compact('payments'));
-    }*/
 }

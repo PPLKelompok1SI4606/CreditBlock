@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
+    // Form Pengajuan Pinjaman
     Route::get('/loan-applications/create', [LoanApplicationController::class, 'create'])
         ->name('loan-applications.create');
 

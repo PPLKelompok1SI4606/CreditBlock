@@ -12,9 +12,10 @@ class LoanApplicationController extends Controller
     public function index()
     {
         $loanApplications = LoanApplication::where('user_id', Auth::id())
+            ->where('status', 'APPROVED') // Filter hanya pinjaman yang disetujui
             ->orderBy('created_at', 'desc')
             ->get();
-
+    
         return view('loan-applications.index', compact('loanApplications'));
     }
 
@@ -58,11 +59,16 @@ class LoanApplicationController extends Controller
         try {
             $documentPath = $request->file('document')->store('documents', 'public');
 
+                // Hitung total pembayaran (pokok + bunga)
+            $interestAmount = ($request->amount * $request->interest_rate) / 100; // Bunga
+            $totalPayment = $request->amount + $interestAmount; // Total pembayaran
+
             LoanApplication::create([
                 'user_id' => Auth::id(),
                 'amount' => $request->amount,
                 'duration' => $request->duration,
                 'interest_rate' => $request->interest_rate,
+                'total_payment' => $totalPayment,
                 'start_month' => $request->start_month,
                 'start_year' => $request->start_year,
                 'end_month' => $request->end_month,
@@ -77,5 +83,24 @@ class LoanApplicationController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal menyimpan pengajuan: ' . $e->getMessage());
         }
+    }
+
+    public function checkLoanStatus()
+    {
+        $loanApplication = LoanApplication::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->first();
+    
+        if ($loanApplication && $loanApplication->status === 'APPROVED') {
+            // Hitung total pembayaran yang sudah dilakukan
+            $totalPaid = $loanApplication->payments->sum('amount');
+    
+            // Hitung sisa pembayaran
+            $remainingAmount = $loanApplication->total_payment - $totalPaid;
+        } else {
+            $remainingAmount = 0;
+        }
+    
+        return view('payments.create', compact('loanApplication', 'remainingAmount'));
     }
 }
