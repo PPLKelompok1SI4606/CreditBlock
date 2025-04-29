@@ -27,7 +27,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         session()->regenerate();
-        session()->flash('status', 'Login berhasil!');
+        session()->flash('status', 'Login berhasil! Selamat datang di CreditBlock!');
 
 
         return redirect()->route('dashboard');

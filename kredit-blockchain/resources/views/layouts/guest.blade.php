@@ -35,5 +35,28 @@
                 {{ $slot }}
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+                @if (session('status'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '{{ session('status') }}',
+                        confirmButtonText: 'OK'
+                    });
+                @endif
+
+                @if (session('error'))
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Gagal🥺',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'OK'
+                    });
+                @endif
+            });
+        </script>
     </body>
 </html>
