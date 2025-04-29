@@ -1,4 +1,3 @@
-```php
 <div class="w-full max-w-3xl">
     <form id="loan-calculator-form" action="{{ route('calculate.loan') }}" method="POST" class="space-y-6">
         @csrf
@@ -223,4 +222,3 @@
         });
     });
 </script>
-```
