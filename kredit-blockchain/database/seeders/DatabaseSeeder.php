@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             LoanApplicationSeeder::class,
-            PaymentSeeder::class,
         ]);
 
         // Only run AdminSeeder if no admins exist
