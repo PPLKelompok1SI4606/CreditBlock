@@ -2,10 +2,6 @@
 
 @section('title', 'Pembayaran Cicilan')
 
-@php
-    \Log::info('Loan Application di View:', ['loanApplication' => $loanApplication]);
-@endphp
-
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <h1 class="text-3xl font-bold text-sky-600 mb-8 drop-shadow-md tracking-tight animate-fade-in text-center">
@@ -19,7 +15,7 @@
                 <p class="text-gray-600 text-base mb-6 max-w-md mx-auto">
                     Anda belum memiliki ajuan pinjaman. Silakan ajukan pinjaman terlebih dahulu untuk memulai.
                 </p>
-                <a href="{{ route('loan-applications.create') }}" 
+                <a href="{{ route('loan-applications.create') }}"
                    class="inline-block bg-sky-600 text-white px-6 py-3 rounded-lg font-medium text-sm tracking-wide transition-all duration-300 hover:bg-sky-700 hover:ring-2 hover:ring-sky-200">
                     Ajukan Pinjaman Sekarang
                 </a>
@@ -38,7 +34,34 @@
                     </svg>
                 </div>
             </div>
-        @elseif ($loanApplication->status === 'APPROVED')
+        @elseif ($loanApplication->status === 'REJECTED')
+            <!-- Jika pinjaman ditolak -->
+            <div class="text-center py-12">
+                <h2 class="text-2xl font-semibold text-red-600 mb-4">Pinjaman Ditolak</h2>
+                <p class="text-gray-600 text-base mb-6 max-w-md mx-auto">
+                    Ajuan pinjaman Anda telah ditolak. Silakan hubungi administrator atau ajukan pinjaman baru.
+                </p>
+                <a href="{{ route('loan-applications.create') }}"
+                   class="inline-block bg-sky-600 text-white px-6 py-3 rounded-lg font-medium text-sm tracking-wide transition-all duration-300 hover:bg-sky-700 hover:ring-2 hover:ring-sky-200">
+                    Ajukan Pinjaman Baru
+                </a>
+            </div>
+        @elseif ($loanApplication->status === 'Lunas')
+            <!-- Jika pinjaman sudah lunas -->
+            <div class="text-center py-12">
+                <h2 class="text-2xl font-semibold text-green-600 mb-4">Semua Cicilan Lunas</h2>
+                <p class="text-gray-600 text-base mb-6 max-w-md mx-auto">
+                    Terima kasih! Semua cicilan pinjaman Anda telah lunas.
+                </p>
+                <svg class="mx-auto h-12 w-12 text-green-500 mt-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <a href="{{ route('loan-applications.create') }}"
+                   class="inline-block bg-sky-600 text-white px-6 py-3 rounded-lg font-medium text-sm tracking-wide transition-all duration-300 hover:bg-sky-700 hover:ring-2 hover:ring-sky-200 mt-6">
+                    Ajukan Pinjaman Baru
+                </a>
+            </div>
+        @elseif ($loanApplication->status === 'APPROVED' || $loanApplication->status === 'Belum Lunas')
             @php
                 // Calculate remaining payment
                 $remainingPayment = $loanApplication->total_payment - $loanApplication->payments->sum('amount');
@@ -63,12 +86,12 @@
                         <label for="payment_date" class="block text-sm font-medium text-gray-700 mb-2">
                             Tanggal Pembayaran
                         </label>
-                        <input 
-                            type="date" 
-                            name="payment_date" 
-                            id="payment_date" 
-                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-lg py-4 px-5 bg-gray-100 cursor-not-allowed" 
-                            value="{{ now()->format('Y-m-d') }}" 
+                        <input
+                            type="date"
+                            name="payment_date"
+                            id="payment_date"
+                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-lg py-4 px-5 bg-gray-100 cursor-not-allowed"
+                            value="{{ now()->format('Y-m-d') }}"
                             readonly
                         >
                     </div>
@@ -76,10 +99,10 @@
                         <label for="installment_month" class="block text-sm font-medium text-gray-700 mb-2">
                             Pilih Bulan Cicilan
                         </label>
-                        <select 
-                            name="installment_month" 
-                            id="installment_month" 
-                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-lg py-4 px-5" 
+                        <select
+                            name="installment_month"
+                            id="installment_month"
+                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-lg py-4 px-5"
                             required
                         >
                             @for ($i = 0; $i < $loanApplication->duration; $i++)
@@ -90,7 +113,7 @@
                                     $installmentNumber = $i + 1;
                                     $isPaid = in_array($installmentNumber, $paidInstallments);
                                 @endphp
-                                <option value="{{ $installmentNumber }}" 
+                                <option value="{{ $installmentNumber }}"
                                         data-amount="{{ $monthlyInstallment }}"
                                         @if ($isPaid) disabled @endif
                                         class="{{ $isPaid ? 'text-gray-400' : 'text-gray-800' }}">
@@ -100,8 +123,8 @@
                         </select>
                     </div>
                     <input type="hidden" name="amount" id="amount" value="{{ $monthlyInstallment }}">
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         class="w-full bg-sky-600 text-white px-6 py-4 rounded-xl font-semibold text-base tracking-wide transition-all duration-300 hover:bg-sky-700 hover:ring-2 hover:ring-sky-200"
                     >
                         Bayar Cicilan Sekarang
@@ -124,13 +147,18 @@
                     <svg class="mx-auto h-12 w-12 text-green-500 mt-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
+                    <a href="{{ route('loan-applications.create') }}"
+                       class="inline-block bg-sky-600 text-white px-6 py-3 rounded-lg font-medium text-sm tracking-wide transition-all duration-300 hover:bg-sky-700 hover:ring-2 hover:ring-sky-200 mt-6">
+                        Ajukan Pinjaman Baru
+                    </a>
                 </div>
             @endif
         @else
+            <!-- Jika status benar-benar tidak dikenali -->
             <div class="text-center py-12">
-                <h3 class="text-xl font-semibold text-red-600 mb-4">Status Tidak Dikenali</h3>
+                <h3 class="text-xl font-semibold text-red-600 mb-4">Status Tidak Valid</h3>
                 <p class="text-gray-600 text-base">
-                    Status pinjaman tidak dikenali. Silakan hubungi administrator untuk bantuan.
+                    Status pinjaman tidak valid. Silakan hubungi administrator untuk bantuan.
                 </p>
             </div>
         @endif

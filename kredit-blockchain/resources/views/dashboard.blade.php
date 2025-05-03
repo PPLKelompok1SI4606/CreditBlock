@@ -179,12 +179,16 @@
                     $statusLabels = [
                         'PENDING' => 'Menunggu',
                         'APPROVED' => 'Disetujui',
-                        'REJECTED' => 'Ditolak'
+                        'REJECTED' => 'Ditolak',
+                        'Belum Lunas' => 'Belum Lunas',
+                        'Lunas' => 'Lunas'
                     ];
                     $statusStyles = [
-                        'PENDING' => 'bg-yellow-100 text-yellow-700',
-                        'APPROVED' => 'bg-green-100 text-green-700',
-                        'REJECTED' => 'bg-red-100 text-red-700'
+                        'PENDING' => 'bg-yellow-100 text-yellow-800',
+                        'APPROVED' => 'bg-green-100 text-green-800',
+                        'REJECTED' => 'bg-red-100 text-red-800',
+                        'Belum Lunas' => 'bg-orange-100 text-orange-800',
+                        'Lunas' => 'bg-blue-100 text-blue-800'
                     ];
                 @endphp
                 <p class="text-2xl font-bold text-gray-900 mt-1">Rp {{ number_format($remainingAmount, 0, ',', '.') }}</p>

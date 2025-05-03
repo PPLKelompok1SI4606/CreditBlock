@@ -15,6 +15,16 @@
 
         <!-- Form Card -->
         <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg transition-all duration-300">
+            <!-- Unpaid Loan Message -->
+            @if (isset($hasUnpaidLoan) && $hasUnpaidLoan)
+                <div class="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-800 rounded-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    <span>Pinjaman Anda, Belum Lunas. Tolong lunasi terlebih dahulu sebelum mengajukan pinjaman lagi.</span>
+                </div>
+            @endif
+
             <!-- Success Message -->
             @if (session('success'))
                 <div class="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-800 rounded-lg flex items-center">
@@ -35,7 +45,7 @@
                 </div>
             @endif
 
-            <form id="loanForm" action="{{ route('loan-applications.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="loanForm" action="{{ route('loan-applications.store') }}" method="POST" enctype="multipart/form-data" @if (isset($hasUnpaidLoan) && $hasUnpaidLoan) class="pointer-events-none opacity-50" @endif>
                 @csrf
                 <div class="space-y-6">
                     <!-- Amount -->
@@ -46,7 +56,9 @@
                         <div class="relative group">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-hover:text-blue-600 transition-colors duration-200">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c
+
+-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </span>
                             <input type="text" name="amount_display" id="amount_display" required

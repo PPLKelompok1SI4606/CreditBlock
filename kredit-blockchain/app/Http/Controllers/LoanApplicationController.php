@@ -21,16 +21,11 @@ class LoanApplicationController extends Controller
     public function create()
     {
         // Check if user has an existing unpaid loan
-        $existingLoan = LoanApplication::where('user_id', Auth::id())
+        $hasUnpaidLoan = LoanApplication::where('user_id', Auth::id())
             ->whereIn('status', ['PENDING', 'APPROVED', 'Belum Lunas'])
-            ->first();
+            ->exists();
 
-        if ($existingLoan) {
-            return redirect()->route('dashboard')
-                ->with('error', 'Anda tidak dapat mengajukan pinjaman baru karena masih memiliki pinjaman yang belum lunas atau sedang diproses.');
-        }
-
-        return view('loan-applications.create');
+        return view('loan-applications.create', compact('hasUnpaidLoan'));
     }
 
     public function store(Request $request)
@@ -110,6 +105,8 @@ class LoanApplicationController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
+        $remainingAmount = 0;
+
         if ($loanApplication && in_array($loanApplication->status, ['APPROVED', 'Belum Lunas'])) {
             // Hitung total pembayaran yang sudah dilakukan
             $totalPaid = $loanApplication->payments->sum('amount');
@@ -118,11 +115,9 @@ class LoanApplicationController extends Controller
             $remainingAmount = $loanApplication->total_payment - $totalPaid;
 
             // Update status to Lunas if fully paid
-            if ($remainingAmount <= 0 && $loanApplication->status != 'Lunas') {
+            if ($remainingAmount <= 0 && $loanApplication->status !== 'Lunas') {
                 $loanApplication->update(['status' => 'Lunas']);
             }
-        } else {
-            $remainingAmount = 0;
         }
 
         return view('payments.create', compact('loanApplication', 'remainingAmount'));
