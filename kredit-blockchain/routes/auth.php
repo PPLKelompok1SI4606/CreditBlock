@@ -38,7 +38,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Perlu Login
-Route::middleware(['auth', 'univerified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     // Dashboard untuk pengguna yang sudah login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

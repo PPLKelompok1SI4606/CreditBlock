@@ -32,16 +32,17 @@
             @endif
 
             <!-- Table -->
-            <div class="overflow-x-auto rounded-lg">
-                <table class="w-full text-left text-sm font-medium text-gray-900">
+            <div class="relative overflow-x-auto rounded-lg">
+                <table class="w-full text-left text-sm font-medium text-gray-900 table-auto">
                     <thead>
                         <tr class="bg-gray-50 text-gray-700 uppercase text-xs tracking-wider">
-                            <th class="py-4 px-6 rounded-tl-lg">Mulai Peminjaman</th>
-                            <th class="py-4 px-6">Akhir Peminjaman</th>
-                            <th class="py-4 px-6">Durasi</th>
-                            <th class="py-4 px-6">Sisa Bulan</th>
-                            <th class="py-4 px-6">Bunga</th>
-                            <th class="py-4 px-6 rounded-tr-lg">Status</th>
+                            <th class="py-4 px-6 rounded-tl-lg min-w-[120px]">Mulai Peminjaman</th>
+                            <th class="py-4 px-6 min-w-[120px]">Akhir Peminjaman</th>
+                            <th class="py-4 px-6 min-w-[150px]">Nominal Peminjaman</th>
+                            <th class="py-4 px-6 min-w-[100px]">Durasi</th>
+                            <th class="py-4 px-6 min-w-[100px]">Sisa Bulan</th>
+                            <th class="py-4 px-6 min-w-[80px]">Bunga</th>
+                            <th class="py-4 px-6 rounded-tr-lg min-w-[100px]">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -52,6 +53,9 @@
                                 </td>
                                 <td class="py-4 px-6">
                                     {{ \Carbon\Carbon::create($loan->end_year, $loan->end_month, 1)->translatedFormat('F Y') }}
+                                </td>
+                                <td class="py-4 px-6">
+                                    Rp {{ number_format($loan->amount, 0, ',', '.') }}
                                 </td>
                                 <td class="py-4 px-6">{{ $loan->duration }} Bulan</td>
                                 <td class="py-4 px-6">
@@ -68,12 +72,16 @@
                                         $statusLabels = [
                                             'PENDING' => 'Menunggu',
                                             'APPROVED' => 'Disetujui',
-                                            'REJECTED' => 'Ditolak'
+                                            'REJECTED' => 'Ditolak',
+                                            'Belum Lunas' => 'Belum Lunas',
+                                            'Lunas' => 'Lunas'
                                         ];
                                         $statusStyles = [
                                             'PENDING' => 'bg-yellow-100 text-yellow-800',
                                             'APPROVED' => 'bg-green-100 text-green-800',
-                                            'REJECTED' => 'bg-red-100 text-red-800'
+                                            'REJECTED' => 'bg-red-100 text-red-800',
+                                            'Belum Lunas' => 'bg-orange-100 text-orange-800',
+                                            'Lunas' => 'bg-blue-100 text-blue-800'
                                         ];
                                         $status = $statusLabels[$loan->status] ?? $loan->status;
                                         $style = $statusStyles[$loan->status] ?? 'bg-gray-100 text-gray-800';
@@ -85,7 +93,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="py-6 px-6 text-center text-gray-500 text-sm">
+                                <td colspan="7" class="py-6 px-6 text-center text-gray-500 text-sm">
                                     Tidak ada riwayat peminjaman.
                                 </td>
                             </tr>

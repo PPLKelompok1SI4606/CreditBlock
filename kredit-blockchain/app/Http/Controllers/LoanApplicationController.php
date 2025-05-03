@@ -12,20 +12,39 @@ class LoanApplicationController extends Controller
     public function index()
     {
         $loanApplications = LoanApplication::where('user_id', Auth::id())
-            ->where('status', 'APPROVED') // Filter hanya pinjaman yang disetujui
             ->orderBy('created_at', 'desc')
             ->get();
-    
+
         return view('loan-applications.index', compact('loanApplications'));
     }
 
     public function create()
     {
+        // Check if user has an existing unpaid loan
+        $existingLoan = LoanApplication::where('user_id', Auth::id())
+            ->whereIn('status', ['PENDING', 'APPROVED', 'Belum Lunas'])
+            ->first();
+
+        if ($existingLoan) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Anda tidak dapat mengajukan pinjaman baru karena masih memiliki pinjaman yang belum lunas atau sedang diproses.');
+        }
+
         return view('loan-applications.create');
     }
 
     public function store(Request $request)
     {
+        // Check again to prevent race conditions
+        $existingLoan = LoanApplication::where('user_id', Auth::id())
+            ->whereIn('status', ['PENDING', 'APPROVED', 'Belum Lunas'])
+            ->first();
+
+        if ($existingLoan) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Anda tidak dapat mengajukan pinjaman baru karena masih memiliki pinjaman yang belum lunas atau sedang diproses.');
+        }
+
         $request->validate([
             'amount' => 'required|numeric|min:1000000',
             'duration' => 'required|integer|min:1|max:60',
@@ -59,7 +78,7 @@ class LoanApplicationController extends Controller
         try {
             $documentPath = $request->file('document')->store('documents', 'public');
 
-                // Hitung total pembayaran (pokok + bunga)
+            // Hitung total pembayaran (pokok + bunga)
             $interestAmount = ($request->amount * $request->interest_rate) / 100; // Bunga
             $totalPayment = $request->amount + $interestAmount; // Total pembayaran
 
@@ -90,17 +109,22 @@ class LoanApplicationController extends Controller
         $loanApplication = LoanApplication::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->first();
-    
-        if ($loanApplication && $loanApplication->status === 'APPROVED') {
+
+        if ($loanApplication && in_array($loanApplication->status, ['APPROVED', 'Belum Lunas'])) {
             // Hitung total pembayaran yang sudah dilakukan
             $totalPaid = $loanApplication->payments->sum('amount');
-    
+
             // Hitung sisa pembayaran
             $remainingAmount = $loanApplication->total_payment - $totalPaid;
+
+            // Update status to Lunas if fully paid
+            if ($remainingAmount <= 0 && $loanApplication->status != 'Lunas') {
+                $loanApplication->update(['status' => 'Lunas']);
+            }
         } else {
             $remainingAmount = 0;
         }
-    
+
         return view('payments.create', compact('loanApplication', 'remainingAmount'));
     }
 }
