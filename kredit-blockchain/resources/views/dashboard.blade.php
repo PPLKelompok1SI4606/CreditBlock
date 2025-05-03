@@ -256,7 +256,8 @@
                                 Rp {{ number_format($payment->amount, 0, ',', '.') }}
                             </td>
                             <td class="px-6 py-4">
-                                <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
+                                <span class="inline-block text-xs font-medium px-2.5 py-1 rounded-full 
+                                    {{ $payment->status === 'LUNAS' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
                                     {{ $payment->status }}
                                 </span>
                             </td>
