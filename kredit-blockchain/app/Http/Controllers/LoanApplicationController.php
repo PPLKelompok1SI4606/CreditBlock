@@ -122,4 +122,19 @@ class LoanApplicationController extends Controller
 
         return view('payments.create', compact('loanApplication', 'remainingAmount'));
     }
+
+    public function getLoanHistoryChartData()
+{
+    $data = LoanApplication::where('status', 'APPROVED')
+        ->selectRaw('start_month, start_year, SUM(total_payment) as total_payment')
+        ->groupBy('start_month', 'start_year')
+        ->orderByRaw('start_year, start_month')
+        ->get()
+        ->map(function ($item) {
+            $item->formatted_date = date('F Y', mktime(0, 0, 0, $item->start_month, 1, $item->start_year));
+            return $item;
+        });
+
+    return response()->json($data);
+}
 }
