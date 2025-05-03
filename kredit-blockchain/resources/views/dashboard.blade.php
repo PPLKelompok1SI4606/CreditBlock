@@ -64,19 +64,11 @@
     </div>
 </div>
 
-<!-- Grafik Tren Riwayat Pembayaran -->
+<!-- Grafik Riwayat Peminjaman -->
 <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-10 card-hover transition-all duration-300 hover:shadow-md">
     <div class="relative bg-white rounded-lg p-6 overflow-hidden">
-        <div class="flex items-center mb-6">
-            <span class="mr-3 text-blue-500">
-                <!-- Ikon Chart dari Heroicons -->
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4v17h16"></path>
-                </svg>
-            </span>
-            <h2 class="text-2xl font-semibold text-gray-900 tracking-wide leading-relaxed">Tren Riwayat Pembayaran</h2>
-        </div>
-        <canvas id="paymentTrendChart" class="w-full h-80"></canvas>
+        <h2 class="text-2xl font-semibold text-gray-900 tracking-wide leading-relaxed mb-6">Grafik Riwayat Peminjaman</h2>
+        <canvas id="loanHistoryChart" class="w-full h-80"></canvas>
     </div>
 </div>
 
@@ -295,44 +287,74 @@
 <!-- Chart.js CDN dan Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('paymentTrendChart').getContext('2d');
-    const paymentTrendChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan 2025', 'Feb 2025', 'Mar 2025','April 2025'],
-            datasets: [{
-                label: 'Jumlah Pembayaran (Rp)',
-                data: [1500000, 1600000, 1700000,1600000],
-                borderColor: '#2A9DF4',
-                backgroundColor: 'rgba(42, 157, 244, 0.1)',
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#D0EFFF',
-                pointBorderColor: '#2A9DF4',
-                pointRadius: 6,
-                pointHoverRadius: 8,
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    grid: { color: 'rgba(42, 157, 244, 0.1)' },
-                    ticks: { color: '#D0EFFF', font: { size: 12 } }
-                },
-                y: {
-                    grid: { color: 'rgba(42, 157, 244, 0.1)' },
-                    ticks: { color: '#D0EFFF', beginAtZero: true, font: { size: 12 } }
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('loanHistoryChart').getContext('2d');
+
+        fetch('{{ route('loan-applications.loan-history-chart-data') }}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            },
-            plugins: {
-                legend: { labels: { color: '#D0EFFF', font: { size: 14 } } }
-            },
-            animation: {
-                duration: 1500,
-                easing: 'easeInOutQuart'
-            }
-        }
+                return response.json();
+            })
+            .then(data => {
+                if (!data || data.length === 0) {
+                    throw new Error('Data grafik kosong.');
+                }
+
+                // Format label periode (bulan-tahun) berdasarkan data dari endpoint
+                const labels = data.map(item => item.formatted_date);
+
+                // Ambil nilai total_payment dari data
+                const values = data.map(item => parseFloat(item.total_payment));
+
+                // Buat grafik menggunakan Chart.js
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels, // Gunakan label dari data endpoint
+                        datasets: [{
+                            label: 'Total Peminjaman (Rp)',
+                            data: values, // Gunakan nilai dari data endpoint
+                            borderColor: '#2A9DF4',
+                            backgroundColor: 'rgba(42, 157, 244, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#2A9DF4',
+                            pointBorderColor: '#2A9DF4',
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(42, 157, 244, 0.1)' },
+                                ticks: { color: '#2A9DF4', font: { size: 12 } }
+                            },
+                            y: {
+                                grid: { color: 'rgba(42, 157, 244, 0.1)' },
+                                ticks: { color: '#2A9DF4', beginAtZero: true, font: { size: 12 } }
+                            }
+                        },
+                        plugins: {
+                            legend: { labels: { color: '#2A9DF4', font: { size: 14 } } }
+                        },
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching chart data:', error);
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = 'Gagal memuat data grafik.';
+                errorMessage.className = 'text-red-500 text-center mt-4';
+                document.querySelector('.relative.bg-white').appendChild(errorMessage);
+            });
     });
 </script>
 

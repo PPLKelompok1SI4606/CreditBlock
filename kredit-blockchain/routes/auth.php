@@ -38,7 +38,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Perlu Login
-Route::middleware(['auth', 'univerified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     // Dashboard untuk pengguna yang sudah login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -63,6 +63,8 @@ Route::middleware(['auth', 'univerified'])->group(function () {
         ->name('loan-applications.store');
     Route::get('/loan-applications/index', [LoanApplicationController::class, 'index'])
     ->name('loan-applications.index');
+    Route::get('/loan-applications/loan-history-chart-data', [LoanApplicationController::class, 'getLoanHistoryChartData'])
+    ->name('loan-applications.loan-history-chart-data');
 
     //routes kontak dukungan (user)
     Route::get('/support', [SupportMessageController::class, 'index'])->name('support.index');
