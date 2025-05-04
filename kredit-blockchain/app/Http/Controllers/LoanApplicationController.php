@@ -6,16 +6,32 @@ use App\Models\LoanApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class LoanApplicationController extends Controller
 {
     public function index()
     {
         $loanApplications = LoanApplication::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
+            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas'])
+            ->orderBy('start_year', 'desc')
+            ->orderBy('start_month', 'desc')
             ->get();
 
-        return view('loan-applications.index', compact('loanApplications'));
+        // Siapkan data untuk grafik
+        $chartData = $loanApplications->map(function ($loan) {
+            return [
+                'label' => \Carbon\Carbon::create($loan->start_year, $loan->start_month, 1)->translatedFormat('F Y'),
+                'amount' => (float) $loan->amount,
+                'status' => (string) $loan->status,
+                'duration' => (int) $loan->duration,
+                'end_label' => \Carbon\Carbon::create($loan->end_year, $loan->end_month, 1)->translatedFormat('F Y'),
+            ];
+        })->values()->toArray();
+
+        Log::info('Chart data for user ' . Auth::id() . ': ' . json_encode($chartData));
+
+        return view('dashboard', compact('loanApplications', 'chartData')); // Asumsi grafik ada di dashboard
     }
 
     public function create()
@@ -124,17 +140,22 @@ class LoanApplicationController extends Controller
     }
 
     public function getLoanHistoryChartData()
-{
-    $data = LoanApplication::where('status', 'APPROVED')
-        ->selectRaw('start_month, start_year, SUM(total_payment) as total_payment')
-        ->groupBy('start_month', 'start_year')
-        ->orderByRaw('start_year, start_month')
-        ->get()
-        ->map(function ($item) {
-            $item->formatted_date = date('F Y', mktime(0, 0, 0, $item->start_month, 1, $item->start_year));
-            return $item;
-        });
+    {
+        $data = LoanApplication::where('user_id', Auth::id())
+            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas'])
+            ->orderBy('start_year', 'asc')
+            ->orderBy('start_month', 'asc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'label' => \Carbon\Carbon::create($item->start_year, $item->start_month, 1)->translatedFormat('F Y'),
+                    'amount' => (float) $item->amount,
+                    'status' => (string) $item->status,
+                    'duration' => (int) $item->duration,
+                    'end_label' => \Carbon\Carbon::create($item->end_year, $item->end_month, 1)->translatedFormat('F Y'),
+                ];
+            })->values()->toArray();
 
-    return response()->json($data);
-}
+        return response()->json($data);
+    }
 }
