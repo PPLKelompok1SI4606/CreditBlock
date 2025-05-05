@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class KYCController extends Controller
 {
@@ -14,38 +15,59 @@ class KYCController extends Controller
         return view('auth.kyc');
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
-        $request->validate([
-            'id_type' => ['required', 'in:ktp,SIM'],
-            'id_document' => ['required', 'file', 'mimes:jpeg,png', 'max:2048'],
-            'check' => ['required', 'accepted'],
-        ]);
+        try {
+            // Validasi input
+            $request->validate([
+                'id_type' => ['required', 'in:ktp,sim'],
+                'id_document' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            ]);
 
-        $user = User::where('email', $request->session()->get('email'))->first();
+            // Ambil ID pengguna dari sesi
+            $userId = $request->session()->get('pending_user_id');
 
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Please register first.'
-            ], 422);
+            if (!$userId) {
+                Log::error('No pending_user_id found in session');
+                return redirect()->route('welcome')->with('error', 'Sesi registrasi telah berakhir. Silakan registrasi ulang.');
+            }
+
+            $user = User::find($userId);
+
+            if (!$user) {
+                Log::error('User not found for ID: ' . $userId);
+                return redirect()->route('welcome')->with('error', 'Pengguna tidak ditemukan. Silakan registrasi ulang.');
+            }
+
+            // Simpan dokumen KYC
+            if ($request->hasFile('id_document')) {
+                $file = $request->file('id_document');
+                $fileName = 'kyc/' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('public', $fileName);
+
+                if (!$path) {
+                    Log::error('Failed to store file for user ID: ' . $userId);
+                    return redirect()->back()->with('error', 'Gagal menyimpan dokumen. Silakan coba lagi.');
+                }
+
+                // Perbarui data pengguna
+                $user->update([
+                    'id_type' => $request->id_type,
+                    'id_document' => $fileName,
+                    'status_kyc' => 'pending',
+                ]);
+
+                Log::info('KYC uploaded successfully for user ID: ' . $userId);
+            }
+
+            // Hapus ID pengguna dari sesi setelah KYC selesai
+            $request->session()->forget('pending_user_id');
+
+            // Arahkan ke landing page dengan pesan sukses
+            return redirect()->route('landing')->with('status', 'Dokumen KYC berhasil diunggah! Silakan login setelah KYC Anda disetujui oleh admin.');
+        } catch (\Exception $e) {
+            Log::error('Exception in KYCController@store: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
         }
-
-        // Store the uploaded document
-        $path = $request->file('id_document')->store('kyc_documents', 'public');
-
-        // Update user with KYC details
-        $user->update([
-            'id_type' => $request->id_type,
-            'id_document' => $path,
-        ]);
-
-        // Remove email from session
-        $request->session()->forget('email');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Akun Anda telah berhasil diregistrasi! Silakan tunggu verifikasi dari admin untuk dapat login.'
-        ]);
     }
 }

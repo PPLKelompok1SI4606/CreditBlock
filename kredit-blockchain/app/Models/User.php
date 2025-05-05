@@ -21,11 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status_kyc',
         'id_type',
         'id_document',
         'is_verified',
         'email_verified_at',
-        'wallet_address',
+        'wallet_address',   
     ];
 
     // Relationship with LoanApplication
