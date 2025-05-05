@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LoanCalculatorController;
-use App\Http\Controllers\LoanApplicationController;
 
 Route::get('/', function () {
     return view('landingpage');
