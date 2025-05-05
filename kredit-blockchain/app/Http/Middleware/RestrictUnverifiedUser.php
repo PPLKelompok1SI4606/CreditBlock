@@ -9,20 +9,25 @@ use Illuminate\Support\Facades\Log;
 
 class RestrictUnverifiedUser
 {
-
     public function handle(Request $request, Closure $next)
     {
         Log::info('RestrictUnverifiedUser middleware called', [
             'user_id' => Auth::id(),
-            'is_verified' => Auth::check() ? Auth::user()->is_verified : null,
+            'status_kyc' => Auth::check() ? Auth::user()->status_kyc : null,
+            'path' => $request->path(),
         ]);
 
-        if (Auth::check() && !Auth::user()->is_verified) {
+        // Izinkan akses ke halaman KYC untuk semua pengguna (guest atau login)
+        if ($request->path() === 'kyc') {
+            return $next($request);
+        }
+
+        // Batasi akses ke halaman lain jika KYC belum disetujui
+        if (Auth::check() && Auth::user()->status_kyc != 'approved') {
             Auth::logout();
-            return redirect()->route('login')->with('error', 'Akun Anda belum diverifikasi. Harap menunggu persetujuan admin.');
+            return redirect()->route('login')->with('error', 'Akun Anda belum diverifikasi atau telah ditolak. Harap hubungi admin.');
         }
 
         return $next($request);
     }
-
 }
