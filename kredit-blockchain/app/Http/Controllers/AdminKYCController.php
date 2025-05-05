@@ -15,13 +15,13 @@ class AdminKYCController extends Controller
 
     public function approve(Request $request, User $user): RedirectResponse
     {
-        $user->update(['status_kyc' => 'approved']);
-        return redirect()->route('admin.dashboard')->with('status', 'KYC approved successfully.');
+        $user->update(['is_verified' => true]);
+        return redirect()->route('admin.kyc.verify', $user->id)->with('status', 'KYC approved successfully.');
     }
 
     public function reject(Request $request, User $user): RedirectResponse
     {
-        $user->update(['status_kyc' => 'rejected']);
-        return redirect()->route('admin.dashboard')->with('status', 'KYC rejected.');
+        $user->update(['id_type' => null, 'id_document' => null]);
+        return redirect()->route('admin.kyc.verify', $user->id)->with('status', 'KYC rejected.');
     }
 }

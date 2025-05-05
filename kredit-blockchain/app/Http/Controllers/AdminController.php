@@ -37,9 +37,6 @@ class AdminController extends Controller
             })
             ->paginate(10);
 
-        // Fetch KYC verifications (users with status_kyc = 'pending')
-        $kycVerifications = User::where('status_kyc', 'pending')->get();
-
         // Pass data to the view
         return view('admin.dashboard', compact(
             'users',
@@ -47,8 +44,7 @@ class AdminController extends Controller
             'activeLoans',
             'pendingLoans',
             'loanApplications',
-            'search',
-            'kycVerifications'
+            'search'
         ));
     }
 
@@ -76,6 +72,7 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Password pengguna berhasil diubah.');
     }
 
+    // Existing methods
     public function loanApplications()
     {
         // Your existing logic for loan applications

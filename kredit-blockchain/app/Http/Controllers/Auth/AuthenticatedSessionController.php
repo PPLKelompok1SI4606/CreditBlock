@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -22,30 +22,15 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $request->authenticate();
 
-        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-            $user = Auth::user();
+        session()->regenerate();
+        session()->flash('status', 'Login berhasil! Selamat datang di CreditBlock!');
 
-            // Periksa status_kyc
-            if ($user->status_kyc !== 'approved') {
-                Auth::logout();
-                return redirect()->route('login')->with('error', 'Akun Anda belum diverifikasi. Harap tunggu konfirmasi dari admin.');
-            }
 
-            $request->session()->regenerate();
-
-            return redirect()->intended(route('dashboard'));
-        }
-
-        throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
-        ]);
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -53,11 +38,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
+        session()->invalidate();
+        session()->regenerateToken();
 
         return redirect('/');
     }
