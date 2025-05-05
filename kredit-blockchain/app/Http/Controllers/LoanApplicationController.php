@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LoanApplication;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -12,10 +13,19 @@ class LoanApplicationController extends Controller
 {
     public function index()
     {
+        // Ambil data pinjaman untuk user saat ini
         $loanApplications = LoanApplication::where('user_id', Auth::id())
             ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas'])
             ->orderBy('start_year', 'desc')
             ->orderBy('start_month', 'desc')
+            ->get();
+
+        // Ambil data pembayaran untuk user saat ini
+        $payments = Payment::whereHas('loan', function ($query) {
+            $query->where('user_id', Auth::id())
+                ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas']);
+        })->orderBy('payment_date', 'desc')
+            ->orderBy('installment_month', 'asc')
             ->get();
 
         // Siapkan data untuk grafik
@@ -31,7 +41,18 @@ class LoanApplicationController extends Controller
 
         Log::info('Chart data for user ' . Auth::id() . ': ' . json_encode($chartData));
 
-        return view('dashboard', compact('loanApplications', 'chartData')); // Asumsi grafik ada di dashboard
+        // Kirim variabel ke view dashboard
+        return view('dashboard', compact('loanApplications', 'chartData', 'payments'));
+    }
+    public function history()
+    {
+        // Ambil data pinjaman untuk user saat ini
+        $loanApplications = LoanApplication::where('user_id', Auth::id())
+            ->orderBy('start_year', 'desc')
+            ->orderBy('start_month', 'desc')
+            ->get();
+
+        return view('loan-applications.index', compact('loanApplications'));
     }
 
     public function create()
