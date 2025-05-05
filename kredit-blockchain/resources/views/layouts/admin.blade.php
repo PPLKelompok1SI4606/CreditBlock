@@ -7,12 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Onest:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <style>
         body {
-            background: #F7FAFC;
+            background: linear-gradient(to bottom, #F0F7FF, #E5E7EB);
             color: #1A202C;
-            font-family: 'Onest', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             overflow-x: hidden;
         }
@@ -21,10 +21,11 @@
             top: 0;
             left: 0;
             width: 100%;
-            background: #FFFFFF;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             z-index: 50;
-            border-bottom: 1px solid #EDF2F7;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.3);
         }
         .sidebar-fixed {
             position: fixed;
@@ -32,8 +33,9 @@
             left: 0;
             height: calc(100vh - 5rem);
             width: 16rem;
-            background: #FFFFFF;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
             z-index: 40;
         }
         .sidebar-menu {
@@ -47,32 +49,49 @@
             border-radius: 0.5rem;
         }
         .sidebar-menu:hover {
-            background: #F1F5F9;
+            background: rgba(59, 130, 246, 0.1);
             color: #1A202C;
             padding-left: 1.75rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
         }
         .sidebar-menu-active {
-            background: #3182CE;
+            background: linear-gradient(to right, #3B82F6, #2A9DF4);
             color: #FFFFFF;
             padding-left: 1.75rem;
-            box-shadow: 0 2px 8px rgba(49, 130, 206, 0.2);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
         .sidebar-menu-active:hover {
-            background: #2B6CB0;
+            background: linear-gradient(to right, #2563EB, #1D4ED8);
             color: #FFFFFF;
         }
         .navbar-button {
-            background: #3182CE;
+            background: linear-gradient(to right, #3B82F6, #2A9DF4);
             color: #FFFFFF;
             padding: 0.625rem 1.75rem;
             border-radius: 0.5rem;
             font-weight: 500;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         .navbar-button:hover {
-            background: #2B6CB0;
-            box-shadow: 0 2px 8px rgba(43, 108, 176, 0.2);
+            background: linear-gradient(to right, #2563EB, #1D4ED8);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transform: scale(1.05);
+        }
+        .navbar-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .navbar-button:hover::before {
+            opacity: 1;
         }
         .content-wrapper {
             padding-top: 5rem;
@@ -89,9 +108,11 @@
             border-radius: 9999px;
             object-fit: cover;
             transition: transform 0.3s ease;
+            border: 2px solid #E5E7EB;
         }
         .profile-img:hover {
             transform: scale(1.05);
+            border-color: #3B82F6;
         }
         .modal {
             display: none;
@@ -110,7 +131,8 @@
             opacity: 1;
         }
         .modal-content {
-            background: #FFFFFF;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 0.5rem;
             padding: 1.5rem;
             width: 100%;
@@ -125,6 +147,33 @@
             background: none;
             border: none;
             cursor: pointer;
+            color: #4A5568;
+            transition: color 0.3s ease;
+        }
+        .modal-close:hover {
+            color: #1A202C;
+        }
+        /* Animasi Partikel */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.3);
+            animation: float 15s infinite ease-in-out;
+        }
+        .particle-1 { width: 20px; height: 20px; top: 10%; left: 20%; animation-delay: 0s; }
+        .particle-2 { width: 15px; height: 15px; top: 50%; left: 70%; animation-delay: 5s; }
+        .particle-3 { width: 25px; height: 25px; top: 80%; left: 40%; animation-delay: 10s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.6; }
+        }
+        /* Animasi Fade-In */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
         }
     </style>
     <script>
@@ -132,19 +181,27 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        poppins: ['Poppins', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'light-gray': '#F7FAFC',
+                        'light-blue': '#F0F7FF',
                         'dark-gray': '#1A202C',
-                        'blue-primary': '#3182CE',
+                        'blue-primary': '#3B82F6',
+                        'blue-secondary': '#2A9DF4',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="antialiased">
+<body class="antialiased relative">
+    <!-- Animasi Partikel Latar -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+    </div>
+
     <!-- Navbar -->
     <header class="navbar">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -167,7 +224,7 @@
         <!-- Sidebar -->
         <aside class="sidebar-fixed">
             <div class="mt-6 px-4">
-                <div class="flex items-center space-x-3 mb-8">
+                <div class="flex items-center space-x-3 mb-8 animate-fade-in">
                     <img src="https://via.placeholder.com/48" alt="Foto Profil" class="profile-img">
                     <div>
                         <span class="text-gray-900 font-semibold text-lg tracking-tight">{{ Auth::guard('admin')->user()->name ?? 'Admin' }}</span>
@@ -202,9 +259,10 @@
                     @foreach (['Dashboard', 'Pengguna', 'Pinjaman', 'KYC Menunggu', 'Kontak Dukungan'] as $menu)
                         <li>
                             <a href="{{ isset($menuRoutes[$menu]) && $menuRoutes[$menu] !== '#' ? route($menuRoutes[$menu]) : '#' }}"
-                               class="sidebar-menu {{ $activeMenu === $menu ? 'sidebar-menu-active' : '' }}">
-                                <span class="mr-3 w-5 {{ $activeMenu === $menu ? 'text-white' : 'text-blue-primary' }}">{!! $icons[$menu] !!}</span>
+                               class="sidebar-menu {{ $activeMenu === $menu ? 'sidebar-menu-active' : '' }} group animate-fade-in">
+                                <span class="mr-3 w-5 {{ $activeMenu === $menu ? 'text-white' : 'text-blue-primary group-hover:text-blue-secondary' }} transition-colors duration-300">{!! $icons[$menu] !!}</span>
                                 {{ $menu }}
+                                <span class="absolute hidden group-hover:block -right-8 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white text-xs rounded py-1 px-2 animate-slide-up">{{ $menu }}</span>
                             </a>
                         </li>
                     @endforeach
@@ -213,14 +271,20 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-8 bg-light-gray">
+        <main class="flex-1 p-8 bg-transparent relative">
             @if (session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6">
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6 flex items-center animate-pulse">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
                     <p>{{ session('success') }}</p>
                 </div>
             @endif
             @if (session('error'))
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6">
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 flex items-center animate-pulse">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     <p>{{ session('error') }}</p>
                 </div>
             @endif
