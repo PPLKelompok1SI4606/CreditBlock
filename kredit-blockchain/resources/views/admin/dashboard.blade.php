@@ -1,8 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Dashboard Admin')
 
 @section('content')
+
+    @if (session('status'))
+        <div class="mb-6 p-4 bg-green-100 text-green-700 rounded-lg">
+            {{ session('status') }}
+        </div>
+    @endif
 
     <!-- Card Ringkasan -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
@@ -48,6 +54,73 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Card KYC Menunggu -->
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-10 transition-all duration-300 card-hover hover:shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 tracking-tight">Verifikasi KYC</h2>
+        <ul class="space-y-4">
+            @forelse ($pendingKycUsers ?? [] as $user)
+                <li class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all duration-200">
+                    <div class="flex items-center space-x-4">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <div>
+                            <span class="text-gray-900 font-medium text-base">{{ $user->name }}</span>
+                            <p class="text-gray-500 text-sm">Uploaded: {{ $user->updated_at->format('d M Y') }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="bg-yellow-100 text-yellow-700 text-xs font-medium px-3 py-1 rounded-full">Menunggu</span>
+                        <button onclick="openModal('kyc-modal-{{ $user->id }}')"
+                                class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-600">
+                            Verifikasi Sekarang
+                        </button>
+                    </div>
+                </li>
+                <!-- Modal untuk Verifikasi KYC -->
+                <div id="kyc-modal-{{ $user->id }}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+                    <div class="bg-white rounded-2xl p-8 max-w-lg w-full transform transition-all duration-300 scale-95 opacity-0 modal-content">
+                        <button onclick="closeModal('kyc-modal-{{ $user->id }}')"
+                                class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-6">Verifikasi KYC - {{ $user->name }}</h3>
+                        <div class="space-y-4 text-sm text-gray-700">
+                            <div><span class="font-medium">Nama:</span> {{ $user->name }}</div>
+                            <div><span class="font-medium">Email:</span> {{ $user->email }}</div>
+                            <div><span class="font-medium">Tipe ID:</span> {{ $user->id_type }}</div>
+                            <div>
+                                <span class="font-medium">Dokumen KYC:</span>
+                                <div class="mt-2 border border-gray-200 rounded-lg p-4">
+                                    <img src="{{ Storage::url($user->id_document) }}" alt="Dokumen KYC" class="max-w-full h-auto rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex space-x-4">
+                            <form action="{{ route('admin.kyc.approve', $user->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600">
+                                    Setujui KYC
+                                </button>
+                            </form>
+                            <form action="{{ route('admin.kyc.reject', $user->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600"
+                                        onclick="return confirm('Apakah Anda yakin ingin menolak KYC ini? Dokumen akan dihapus.')">
+                                    Tolak KYC
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <li class="p-4 text-center text-gray-500 text-sm">Tidak ada verifikasi KYC menunggu.</li>
+            @endforelse
+        </ul>
     </div>
 
     <!-- Tabel Daftar Pengguna -->
@@ -103,7 +176,13 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 w-32">
-                                <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">Terverifikasi</span>
+                                @if ($user->is_verified)
+                                    <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">Terverifikasi</span>
+                                @elseif ($user->id_document)
+                                    <span class="inline-block bg-yellow-100 text-yellow-700 text-xs font-medium px-3 py-1 rounded-full">Menunggu</span>
+                                @else
+                                    <span class="inline-block bg-red-100 text-red-700 text-xs font-medium px-3 py-1 rounded-full">Belum Upload</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 w-48">
                                 <div class="flex items-center space-x-3">
@@ -122,7 +201,6 @@
                                 </button>
                             </td>
                         </tr>
-
                         <!-- Modal untuk Detail Pengguna -->
                         <div id="user-modal-{{ $user->id }}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
                             <div class="bg-white rounded-2xl p-8 max-w-lg w-full transform transition-all duration-300 scale-95 opacity-0 modal-content">
@@ -158,7 +236,15 @@
                                         </svg>
                                         <div>
                                             <span class="text-sm font-medium text-gray-700">Status KYC</span>
-                                            <p class="text-gray-900">Terverifikasi</p>
+                                            <p class="text-gray-900">
+                                                @if ($user->is_verified)
+                                                    Terverifikasi
+                                                @elseif ($user->id_document)
+                                                    Menunggu Verifikasi
+                                                @else
+                                                    Belum Upload
+                                                @endif
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="flex items-center space-x-3">
@@ -172,7 +258,6 @@
                                     </div>
                                 </div>
                                 <div class="mt-6 space-y-4">
-                                    <!-- Form untuk Ganti Password -->
                                     <form action="{{ route('admin.change-password', $user->id) }}" method="POST" class="space-y-3">
                                         @csrf
                                         @method('PATCH')
@@ -184,7 +269,6 @@
                                             Ganti Password
                                         </button>
                                     </form>
-                                    <!-- Form untuk Hapus Pengguna -->
                                     <form action="{{ route('admin.delete-user', $user->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -327,37 +411,6 @@
         <div class="mt-6 flex justify-center">
             {{ $loanApplications->links('vendor.pagination.tailwind') }}
         </div>
-    </div>
-
-    <!-- Card KYC Menunggu -->
-    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 transition-all duration-300 card-hover hover:shadow-lg">
-        <h2 class="text-xl font-semibold text-gray-900 mb-6 tracking-tight">Verifikasi KYC</h2>
-        <ul class="space-y-4">
-            @forelse ($kycVerifications ?? [] as $kyc)
-                <li class="flex items-center justify-between p-4 bg-gray-50 rounded-lg transition-all duration-200 hover:bg-gray-100">
-                    <div class="flex items-center space-x-4">
-                        <span class="text-blue-500">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </span>
-                        <div>
-                            <span class="text-gray-900 font-medium text-base">{{ $kyc->user->name }}</span>
-                            <p class="text-gray-500 text-sm">Uploaded: {{ $kyc->created_at->format('d M Y') }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <span class="bg-yellow-100 text-yellow-700 text-xs font-medium px-3 py-1 rounded-full">Menunggu</span>
-                        <button onclick="openModal('kyc-modal-{{ $kyc->id }}')"
-                                class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 hover:bg-blue-600 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
-                            Verifikasi Sekarang
-                        </button>
-                    </div>
-                </li>
-            @empty
-                <li class="p-4 text-center text-gray-500 text-sm">Tidak ada verifikasi KYC menunggu.</li>
-            @endforelse
-        </ul>
     </div>
 
     <!-- Modal untuk Pengajuan Pinjaman -->

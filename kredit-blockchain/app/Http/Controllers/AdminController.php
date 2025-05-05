@@ -2,44 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\LoanApplication;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    public function dashboard(Request $request)
+    public function dashboard(Request $request): View
     {
-        // Handle search query for users
         $search = $request->query('search');
-        $usersQuery = User::query();
 
-        if ($search) {
-            $usersQuery->where('name', 'like', '%' . $search . '%')
-                ->orWhere('email', 'like', '%' . $search . '%');
-        }
+        $users = User::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        })->where('is_admin', false)->paginate(10);
 
-        // Fetch users with pagination
-        $users = $usersQuery->paginate(10);
+        $pendingKycUsers = User::whereNotNull('id_document')
+            ->where('is_verified', false)
+            ->get();
 
-        // Fetch summary data
-        $totalUsers = User::count();
+        $totalUsers = User::where('is_admin', false)->count();
         $activeLoans = LoanApplication::where('status', 'APPROVED')->count();
         $pendingLoans = LoanApplication::where('status', 'PENDING')->count();
 
-        // Fetch loan applications with user relationship
-        $loanApplications = LoanApplication::with('user')
-            ->when($search, function ($query, $search) {
-                return $query->whereHas('user', function ($q) use ($search) {
-                    $q->where('name', 'like', '%' . $search . '%');
-                })->orWhere('id', 'like', '%' . $search . '%');
-            })
-            ->paginate(10);
+        $loanApplications = LoanApplication::when($search, function ($query, $search) {
+            return $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        })->with('user')->paginate(10);
 
-        // Pass data to the view
         return view('admin.dashboard', compact(
             'users',
+            'pendingKycUsers',
             'totalUsers',
             'activeLoans',
             'pendingLoans',
@@ -48,42 +45,43 @@ class AdminController extends Controller
         ));
     }
 
-    public function deleteUser(User $user)
+    public function loanApplications(): View
     {
-        // Hapus semua aplikasi pinjaman terkait pengguna
-        $user->loanApplications()->delete();
-        // Hapus pengguna
-        $user->delete();
-
-        return redirect()->route('admin.dashboard')->with('success', 'Pengguna berhasil dihapus.');
+        $loanApplications = LoanApplication::with('user')->paginate(10);
+        return view('admin.loan-applications', compact('loanApplications'));
     }
 
-    public function changePassword(Request $request, User $user)
+    public function updateStatus(Request $request, LoanApplication $loanApplication): RedirectResponse
     {
-        // Validasi input
         $request->validate([
-            'new_password' => ['required', 'string', 'min:8'],
+            'status' => ['required', 'in:APPROVED,REJECTED'],
         ]);
 
-        // Update password pengguna
-        $user->password = Hash::make($request->new_password);
-        $user->save();
+        $loanApplication->update(['status' => $request->status]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Password pengguna berhasil diubah.');
+        return redirect()->route('admin.loan-applications')->with('status', 'Status pinjaman berhasil diperbarui.');
     }
 
-    // Existing methods
-    public function loanApplications()
+    public function deleteUser(User $user): RedirectResponse
     {
-        // Your existing logic for loan applications
+        if ($user->is_admin) {
+            return redirect()->route('admin.dashboard')->with('error', 'Tidak dapat menghapus akun admin.');
+        }
+
+        $user->delete();
+        return redirect()->route('admin.dashboard')->with('status', 'Pengguna berhasil dihapus.');
     }
 
-    public function updateStatus(Request $request, LoanApplication $loanApplication)
+    public function changePassword(Request $request, User $user): RedirectResponse
     {
-        // Your existing logic for updating loan status
-        $loanApplication->status = $request->status;
-        $loanApplication->save();
+        $request->validate([
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Status pinjaman berhasil diperbarui.');
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        return redirect()->route('admin.dashboard')->with('status', 'Password pengguna berhasil diubah.');
     }
 }
