@@ -37,6 +37,6 @@ class RegisteredUserController extends Controller
         // Simpan email ke session untuk KYC
         $request->session()->put('email', $request->email);
 
-        return redirect()->route('kyc')->with('status', 'Please complete KYC verification.');
+        return redirect()->route('kyc');
     }
 }
