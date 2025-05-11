@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\KYCVerificationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Support\Facades\Config;
 class KYCController extends Controller
 {
     public function create()
@@ -38,7 +39,11 @@ class KYCController extends Controller
         $user->update([
             'id_type' => $request->id_type,
             'id_document' => $path,
+            'is_verified' => false
         ]);
+
+        // Send email notification
+        $user->notify(new KYCVerificationNotification($user));
 
         // Remove email from session
         $request->session()->forget('email');
