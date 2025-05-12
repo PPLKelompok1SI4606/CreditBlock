@@ -295,8 +295,8 @@
         <aside class="sidebar-fixed" id="sidebar">
             <div class="mt-6 px-4">
                 <!-- Profil Pengguna -->
-                <div class="flex items-center space-x-3 mb-10">
-                    <img src="https://via.placeholder.com/48" alt="Foto Profil" class="profile-img">
+                <div class="flex items-center space-x-5 justify-center mb-10">
+                    <img src="{{asset('images/man.png')}}" alt="Foto Profil" class="profile-img">
                     <div>
                         <span class="text-blue-800 font-bold text-base tracking-tight">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</span>
                         <p class="text-blue-600 text-xs font-medium">{{ auth()->check() ? 'Pengguna' : 'Tamu' }}</p>
