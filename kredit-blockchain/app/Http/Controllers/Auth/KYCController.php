@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Notifications\KYCVerificationNotification;
 use Illuminate\Http\Request;
+use App\Mail\KYCVerificationMail;
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use App\Notifications\KYCVerificationNotification;
+
 class KYCController extends Controller
 {
     public function create()
@@ -42,8 +45,18 @@ class KYCController extends Controller
             'is_verified' => false
         ]);
 
-        // Send email notification
-        $user->notify(new KYCVerificationNotification($user));
+        try {
+            // Send email to admin using Mailable
+            $adminEmail = Config::get('mail.admin_email', 'acreditblock@gmail.com');
+            Mail::to($adminEmail)->send(new KYCVerificationMail($user, $adminEmail));
+        } catch (\Exception $e) {
+            // Log the error and return a response indicating the issue
+            \Log::error('Failed to send KYC email: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'KYC submitted, but failed to send email. Please contact support.'
+            ], 500);
+        }
 
         // Remove email from session
         $request->session()->forget('email');

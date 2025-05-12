@@ -14,5 +14,10 @@ Route::get('/clear-session', function () {
     return redirect('/admin/login');
 });
 
+Route::get('/preview-email', function () {
+    $user = App\Models\User::first();
+    return new App\Mail\KYCVerificationMail($user, 'admin@acreditblock.com');
+});
+
 require __DIR__.'/auth.php';
 require __DIR__.'/admin-auth.php';
