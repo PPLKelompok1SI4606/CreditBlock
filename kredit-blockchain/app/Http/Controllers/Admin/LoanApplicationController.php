@@ -19,7 +19,7 @@ class LoanApplicationController extends Controller
     public function approveLoan($id)
     {
         $loan = LoanApplication::findOrFail($id);
-        $loan->status = 'disetujui';
+        $loan->status = 'APPROVED'; // Ubah dari 'disetujui' ke 'APPROVED'
         $loan->save();
 
         return redirect()->route('admin.dashboard')->with('success', 'Pengajuan pinjaman berhasil disetujui.');
@@ -28,7 +28,7 @@ class LoanApplicationController extends Controller
     public function rejectLoan($id)
     {
         $loan = LoanApplication::findOrFail($id);
-        $loan->status = 'ditolak';
+        $loan->status = 'REJECTED'; // Ubah dari 'ditolak' ke 'REJECTED'
         $loan->save();
 
         return redirect()->route('admin.dashboard')->with('success', 'Pengajuan pinjaman berhasil ditolak.');

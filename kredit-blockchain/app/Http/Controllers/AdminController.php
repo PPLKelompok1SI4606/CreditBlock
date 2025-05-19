@@ -57,9 +57,19 @@ class AdminController extends Controller
             'status' => ['required', 'in:APPROVED,REJECTED'],
         ]);
 
-        $loanApplication->update(['status' => $request->status]);
+        if ($loanApplication->status !== 'PENDING') {
+            return redirect()->route('admin.dashboard')->with('error', 'Pinjaman ini sudah diproses.');
+        }
 
-        return redirect()->route('admin.loan-applications')->with('status', 'Status pinjaman berhasil diperbarui.');
+        $updateData = ['status' => $request->status];
+        if ($request->status === 'APPROVED') {
+            $updateData['approved_at'] = now();
+        }
+
+        $loanApplication->update($updateData);
+
+        $message = $request->status === 'APPROVED' ? 'Pinjaman berhasil disetujui.' : 'Pinjaman berhasil ditolak.';
+        return redirect()->route('admin.dashboard')->with('status', $message);
     }
 
     public function deleteUser(User $user): RedirectResponse

@@ -13,6 +13,9 @@
     };
 </script>
 
+<!-- Add Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
 <div class="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 relative overflow-hidden">
     <!-- Subtle Particle Background -->
     <div class="absolute inset-0 pointer-events-none">
@@ -60,7 +63,7 @@
                 <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-xs rounded py-1 px-2 animate-slide-up">Copy Address</span>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="connect-metamask" class="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium shadow-lg overflow-hidden group">
+                <button id="connect-metamask" class="relative bg-blue-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium shadow-lg overflow-hidden group">
                     <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                     Hubungkan Wallet
                 </button>
@@ -112,7 +115,7 @@
                     </p>
                 @endif
                 <div class="mt-6 flex space-x-4">
-                    <a href="{{ route('payments.create') }}" class="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium shadow-lg overflow-hidden group">
+                    <a href="{{ route('payments.create') }}" class="relative bg-blue-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium shadow-lg overflow-hidden group">
                         <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                         Bayar Cicilan
                     </a>
@@ -178,7 +181,7 @@
                     </p>
                 @endif
                 <div class="mt-6 flex space-x-4">
-                    <a href="{{ route('loan-applications.index') }}" class="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium shadow-lg overflow-hidden group">
+                    <a href="{{ route('loan-applications.index') }}" class="relative bg-blue-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium shadow-lg overflow-hidden group">
                         <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                         Riwayat Peminjaman
                     </a>
@@ -193,10 +196,13 @@
         <!-- Loan History Chart -->
         <div class="relative bg-white bg-opacity-95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-10 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl -mt-4 z-10">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Grafik Riwayat Peminjaman</h2>
-            <div x-data="{ hasData: @json(!empty($chartData)) }">
-                <div x-show="!hasData" class="text-gray-600 text-center py-8 text-base">Tidak ada riwayat peminjaman untuk ditampilkan.</div>
-                <canvas id="loanHistoryChart" class="w-full h-72" x-show="hasData" x-cloak></canvas>
-            </div>
+            @if (empty($chartData))
+                <div class="text-gray-600 text-center py-8 text-base">Tidak ada riwayat peminjaman yang disetujui untuk ditampilkan.</div>
+            @else
+                <div class="h- w-full">
+                    <canvas id="loanHistoryChart"></canvas>
+                </div>
+            @endif
         </div>
 
         <!-- Payment History Table -->
@@ -250,100 +256,76 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
-        const loanData = @json($chartData ?? []);
-        console.log('Loan Data:', loanData);
+        document.addEventListener('DOMContentLoaded', function() {
+            const loanData = @json($chartData ?? []);
+            console.log('Loan Data:', loanData);
 
-        if (loanData.length > 0) {
-            const ctx = document.getElementById('loanHistoryChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: loanData.map(item => item.label),
-                    datasets: [{
-                        label: 'Nominal Peminjaman (Rp)',
-                        data: loanData.map(item => item.amount),
-                        backgroundColor: loanData.map(item => {
-                            switch (item.status) {
-                                case 'APPROVED': return 'rgba(59, 130, 246, 0.7)';
-                                case 'Belum Lunas': return 'rgba(249, 115, 22, 0.7)';
-                                case 'Lunas': return 'rgba(16, 185, 129, 0.7)';
-                                default: return 'rgba(156, 163, 175, 0.7)';
-                            }
-                        }),
-                        borderColor: loanData.map(item => {
-                            switch (item.status) {
-                                case 'APPROVED': return '#3B82F6';
-                                case 'Belum Lunas': return '#F97316';
-                                case 'Lunas': return '#10B981';
-                                default: return '#9CA3AF';
-                            }
-                        }),
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        hoverBackgroundColor: loanData.map(item => {
-                            switch (item.status) {
-                                case 'APPROVED': return 'rgba(59, 130, 246, 0.9)';
-                                case 'Belum Lunas': return 'rgba(249, 115, 22, 0.9)';
-                                case 'Lunas': return 'rgba(16, 185, 129, 0.9)';
-                                default: return 'rgba(156, 163, 175, 0.9)';
-                            }
-                        }),
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                            titleColor: '#111827',
-                            bodyColor: '#111827',
+            if (loanData && loanData.length > 0) {
+                const ctx = document.getElementById('loanHistoryChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: loanData.map(item => item.label),
+                        datasets: [{
+                            label: 'Jumlah Pinjaman',
+                            data: loanData.map(item => item.amount),
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             borderColor: '#3B82F6',
-                            borderWidth: 1,
-                            cornerRadius: 8,
-                            padding: 12,
-                            callbacks: {
-                                label: function(context) {
-                                    const data = loanData[context.dataIndex];
-                                    const statusLabels = {
-                                        'APPROVED': 'Disetujui',
-                                        'Belum Lunas': 'Belum Lunas',
-                                        'Lunas': 'Lunas'
-                                    };
-                                    return [
-                                        `Nominal: Rp ${context.parsed.y.toLocaleString('id-ID')}`,
-                                        `Status: ${statusLabels[data.status] || data.status}`,
-                                        `Durasi: ${data.duration} Bulan`,
-                                        `Selesai: ${data.end_label}`
-                                    ];
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#3B82F6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'Rp ' + value.toLocaleString('id-ID');
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
                                 }
                             }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#6B7280', font: { size: 12, family: 'Inter' } }
                         },
-                        y: {
-                            grid: { color: 'rgba(209, 213, 219, 0.2)' },
-                            ticks: {
-                                color: '#6B7280',
-                                font: { size: 12, family: 'Inter' },
-                                callback: function(value) {
-                                    return 'Rp ' + value.toLocaleString('id-ID');
+                        plugins: {
+                            tooltip: {
+                                backgroundColor: 'rgba(59, 130, 246, 0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#3B82F6',
+                                borderWidth: 1,
+                                padding: 10,
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Rp ' + context.raw.toLocaleString('id-ID');
+                                    }
                                 }
+                            },
+                            legend: {
+                                display: false
                             }
                         }
-                    },
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeOutQuart'
                     }
-                }
-            });
-        }
+                });
+            } else {
+                console.log('No loan data available for chart.');
+            }
+        });
     </script>
 
     <style>

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\LoanApplication;
@@ -8,45 +7,93 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class LoanApplicationController extends Controller
 {
     public function index()
     {
-        // Ambil data pinjaman untuk user saat ini
         $loanApplications = LoanApplication::where('user_id', Auth::id())
-            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas'])
             ->orderBy('start_year', 'desc')
             ->orderBy('start_month', 'desc')
             ->get();
 
-        // Ambil data pembayaran untuk user saat ini
-        $payments = Payment::whereHas('loan', function ($query) {
-            $query->where('user_id', Auth::id())
-                ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas']);
-        })->orderBy('payment_date', 'desc')
-            ->orderBy('installment_month', 'asc')
+        return view('loan-applications.index', compact('loanApplications'));
+    }
+
+    public function dashboard(Request $request)
+    {
+        $user = Auth::user();
+
+        // Ambil pinjaman untuk grafik
+        $loanApplications = LoanApplication::where('user_id', $user->id)
+            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas'])
+            ->whereNotNull('approved_at')
+            ->orderBy('approved_at', 'desc')
             ->get();
 
-        // Siapkan data untuk grafik
+        // Format data untuk grafik
         $chartData = $loanApplications->map(function ($loan) {
             return [
-                'label' => \Carbon\Carbon::create($loan->start_year, $loan->start_month, 1)->translatedFormat('F Y'),
-                'amount' => (float) $loan->amount,
-                'status' => (string) $loan->status,
-                'duration' => (int) $loan->duration,
-                'end_label' => \Carbon\Carbon::create($loan->end_year, $loan->end_month, 1)->translatedFormat('F Y'),
+                'label' => $loan->approved_at->translatedFormat('d M Y'),
+                'amount' => $loan->amount,
+                'status' => $loan->status,
+                'duration' => $loan->duration,
+                'end_label' => Carbon::create($loan->end_year, $loan->end_month, 1)->translatedFormat('M Y'),
             ];
-        })->values()->toArray();
+        })->toArray();
 
-        Log::info('Chart data for user ' . Auth::id() . ': ' . json_encode($chartData));
+        // Data untuk "Pinjaman Saya"
+        $loans = LoanApplication::where('user_id', $user->id)
+            ->where('status', 'APPROVED')
+            ->get();
+        $totalAmount = $loans->sum('amount');
+        $totalPaid = $loans->sum(function ($loan) {
+            return $loan->payments()->sum('amount');
+        });
+        $remainingAmount = $totalAmount - $totalPaid;
+        $monthlyInstallment = $loans->sum(function ($loan) {
+            return $loan->amount / $loan->duration;
+        });
+        $nextDueDate = $loans->isNotEmpty() ? now()->addMonth()->format('d M Y') : '-';
+        $loanStatus = $loans->isNotEmpty() ? 'Aktif' : 'Tidak Aktif';
+        $loanStatusStyle = $loans->isNotEmpty() ? 'bg-blue-100 text-blue-700 animate-pulse' : 'bg-gray-100 text-gray-700';
 
-        // Kirim variabel ke view dashboard
-        return view('dashboard', compact('loanApplications', 'chartData', 'payments'));
+        // Data untuk "Pengajuan Pinjaman"
+        $latestLoan = LoanApplication::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $latestLoanData = $latestLoan ? [
+            'remainingAmount' => $latestLoan->status === 'APPROVED' ? ($latestLoan->amount - $latestLoan->payments()->sum('amount')) : $latestLoan->amount,
+            'monthlyInstallment' => $latestLoan->status === 'APPROVED' ? ($latestLoan->amount / $latestLoan->duration) : 0,
+            'nextDueDate' => $latestLoan->status === 'APPROVED' ? now()->addMonth()->format('d M Y') : '-',
+            'duration' => $latestLoan->duration,
+            'status' => $latestLoan->status,
+        ] : null;
+
+        // Ambil riwayat pembayaran
+        $payments = Payment::whereHas('loanApplication', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->orderBy('payment_date', 'desc')->get();
+
+        return view('dashboard', compact(
+            'chartData',
+            'payments',
+            'loans',
+            'totalAmount',
+            'remainingAmount',
+            'monthlyInstallment',
+            'nextDueDate',
+            'loanStatus',
+            'loanStatusStyle',
+            'latestLoan',
+            'latestLoanData'
+        ));
     }
+
     public function history()
     {
-        // Ambil data pinjaman untuk user saat ini
+        // Ambil semua data pinjaman untuk user saat ini, termasuk PENDING dan REJECTED
         $loanApplications = LoanApplication::where('user_id', Auth::id())
             ->orderBy('start_year', 'desc')
             ->orderBy('start_month', 'desc')
@@ -128,8 +175,8 @@ class LoanApplicationController extends Controller
                 'status' => 'PENDING',
             ]);
 
-            return redirect()->route('dashboard')
-                ->with('success', 'Pengajuan pinjaman berhasil dikirim.');
+            return redirect()->route('loan-applications.history') // Ubah redirect ke halaman riwayat
+                ->with('success', 'Pengajuan pinjaman berhasil dikirim dan menunggu persetujuan admin.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Gagal menyimpan pengajuan: ' . $e->getMessage());
@@ -163,7 +210,7 @@ class LoanApplicationController extends Controller
     public function getLoanHistoryChartData()
     {
         $data = LoanApplication::where('user_id', Auth::id())
-            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas'])
+            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas']) // Hanya ambil status yang disetujui
             ->orderBy('start_year', 'asc')
             ->orderBy('start_month', 'asc')
             ->get()
