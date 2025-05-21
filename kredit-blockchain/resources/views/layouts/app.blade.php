@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,14 +13,31 @@
         }
     </script>
     <script src="{{ asset('js/dashboard.js') }}" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Onest:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            background: #F7FAFC;
-            color: #1A202C;
-            font-family: 'Onest', sans-serif;
+            background: linear-gradient(to bottom, #F0F7FF, #E6F0FA);
+            color: #1E3A8A;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Particle Animation */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.3);
+            animation: float 15s infinite ease-in-out;
+            pointer-events: none;
+        }
+        .particle-1 { width: 20px; height: 20px; top: 10%; left: 20%; animation-delay: 0s; }
+        .particle-2 { width: 15px; height: 15px; top: 50%; left: 70%; animation-delay: 5s; }
+        .particle-3 { width: 25px; height: 25px; top: 80%; left: 40%; animation-delay: 10s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.6; }
         }
 
         .navbar {
@@ -29,88 +45,201 @@
             top: 0;
             left: 0;
             width: 100%;
-            background: #FFFFFF;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
             z-index: 50;
-            border-bottom: 1px solid #EDF2F7;
+            animation: fadeIn 0.8s ease-out;
         }
 
         .sidebar-fixed {
             position: fixed;
-            top: 5rem;
+            top: 4rem; /* Aligns flush with navbar bottom */
             left: 0;
-            height: calc(100vh - 5rem);
-            width: 16rem;
-            background: #FFFFFF;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            height: calc(100vh - 4rem);
+            width: 14rem;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(59, 130, 246, 0.1));
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 2px 0 20px rgba(59, 130, 246, 0.1);
             z-index: 40;
+            animation: fadeInUp 0.8s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-fixed.hidden {
+            transform: translateX(-100%);
         }
 
         .sidebar-menu {
             font-size: 0.875rem;
-            padding: 1.25rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
-            color: #4A5568;
-            font-weight: 500;
+            color: #2A9DF4;
+            font-weight: 600;
             border-radius: 0.5rem;
+            position: relative;
+            margin: 0.5rem 0.75rem;
         }
 
         .sidebar-menu:hover {
-            background: #F1F5F9;
-            color: #1A202C;
+            background: rgba(59, 130, 246, 0.15);
+            color: #1E3A8A;
             padding-left: 1.75rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            transform: translateX(4px);
         }
 
         .sidebar-menu-active {
-            background: #3182CE;
+            background: linear-gradient(to right, #2A9DF4, #3B82F6);
             color: #FFFFFF;
             padding-left: 1.75rem;
-            box-shadow: 0 2px 8px rgba(49, 130, 206, 0.2);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            animation: pulse 2s infinite;
         }
 
         .sidebar-menu-active:hover {
-            background: #2B6CB0;
+            background: linear-gradient(to right, #2563EB, #1E40AF);
             color: #FFFFFF;
         }
 
         .navbar-button {
-            background: #3182CE;
+            background: linear-gradient(to right, #2A9DF4, #3B82F6);
             color: #FFFFFF;
-            padding: 0.625rem 1.75rem;
+            padding: 0.5rem 1.5rem;
             border-radius: 0.5rem;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.875rem;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
 
         .navbar-button:hover {
-            background: #2B6CB0;
-            box-shadow: 0 2px 8px rgba(43, 108, 176, 0.2);
+            background: linear-gradient(to right, #2563EB, #1E40AF);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+            transform: scale(1.05);
+        }
+
+        .navbar-button span {
+            position: absolute;
+            inset: 0;
+            background: #FFFFFF;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar-button:hover span {
+            opacity: 0.1;
         }
 
         .content-wrapper {
-            padding-top: 5rem;
-            padding-left: 17rem;
+            padding-top: 4rem; /* Matches navbar height */
+            padding-left: 14.5rem;
             min-height: 100vh;
+            background: transparent;
+            transition: padding-left 0.3s ease;
         }
 
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .content-wrapper.sidebar-hidden {
+            padding-left: 0;
+            padding-top: 4rem;
         }
 
         .profile-img {
-            width: 3rem;
-            height: 3rem;
+            width: 2.75rem;
+            height: 2.75rem;
             border-radius: 9999px;
             object-fit: cover;
             transition: transform 0.3s ease;
+            border: 2px solid rgba(59, 130, 246, 0.3);
         }
 
         .profile-img:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .tooltip {
+            position: absolute;
+            top: -2.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2563EB;
+            color: #FFFFFF;
+            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .sidebar-menu:hover .tooltip {
+            opacity: 1;
+            top: -2.75rem;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #2A9DF4;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            color: #2563EB;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-fixed {
+                transform: translateX(-100%);
+                top: 0;
+                height: 100vh;
+                z-index: 60; /* Above navbar on mobile */
+            }
+            .sidebar-fixed.active {
+                transform: translateX(0);
+            }
+            .content-wrapper {
+                padding-left: 0;
+                padding-top: 4rem;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .navbar {
+                z-index: 70; /* Ensure navbar stays above sidebar */
+            }
         }
     </style>
     <script>
@@ -118,30 +247,42 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        poppins: ['Poppins', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'light-gray': '#F7FAFC',
-                        'dark-gray': '#1A202C',
-                        'blue-primary': '#3182CE',
+                        'light-gray': '#F0F7FF',
+                        'dark-blue': '#1E3A8A',
+                        'blue-primary': '#2A9DF4',
+                        'blue-hover': '#2563EB',
                     }
                 }
             }
         }
     </script>
 </head>
-
 <body class="antialiased">
+    <!-- Particle Background -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+    </div>
+
     <!-- Navbar Fixed -->
     <header class="navbar">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <img src="{{asset('images/logoCB.png')}}" alt="Logo"
-                    class="h-10 w-auto transition-transform hover:scale-105">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <img src="{{ asset('images/logoCB.png') }}" alt="Logo" class="h-7 w-auto transition-transform duration-300 hover:scale-110 hover:drop-shadow-[0_4px_12px_rgba(59,130,246,0.3)]">
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="navbar-button">
+                    <span></span>
                     {{ __('Log Out') }}
                 </button>
             </form>
@@ -149,22 +290,22 @@
     </header>
 
     <!-- Sidebar dan Konten Utama -->
-    <div class="flex content-wrapper">
+    <div class="flex content-wrapper relative z-10">
         <!-- Sidebar Fixed -->
-        <aside class="sidebar-fixed">
+        <aside class="sidebar-fixed" id="sidebar">
             <div class="mt-6 px-4">
                 <!-- Profil Pengguna -->
-                <div class="flex items-center space-x-3 mb-8">
+                <div class="flex items-center space-x-3 mb-10">
                     <img src="https://via.placeholder.com/48" alt="Foto Profil" class="profile-img">
                     <div>
-                        <span class="text-gray-900 font-semibold text-lg tracking-tight">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</span>
-                        <p class="text-gray-500 text-sm">{{ auth()->check() ? 'Pengguna' : 'Tamu' }}</p>
+                        <span class="text-blue-800 font-bold text-base tracking-tight">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</span>
+                        <p class="text-blue-600 text-xs font-medium">{{ auth()->check() ? 'Pengguna' : 'Tamu' }}</p>
                     </div>
                 </div>
             </div>
             <!-- Bagian <nav> -->
             <nav class="px-4">
-                <ul class="space-y-2">
+                <ul class="space-y-1">
                     @php
                         $icons = [
                             'Dashboard' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>',
@@ -182,11 +323,11 @@
                             $activeMenu = 'Pembayaran Cicilan';
                         } elseif ($activeMenu === 'payments.history') {
                             $activeMenu = 'Riwayat Pembayaran';
-                        }elseif($activeMenu === 'loan-applications.index'){
+                        } elseif ($activeMenu === 'loan-applications.index') {
                             $activeMenu = 'Riwayat Peminjaman';
-                        }elseif($activeMenu === 'support.index'){
+                        } elseif ($activeMenu === 'support.index') {
                             $activeMenu = 'Kontak Dukungan';
-                        }else {
+                        } else {
                             $activeMenu = 'Dashboard';
                         }
                         $menuRoutes = [
@@ -203,9 +344,9 @@
                         <li>
                             <a href="{{ $route ? route($route) : 'javascript:void(0)' }}"
                                 class="sidebar-menu {{ $activeMenu === $menu ? 'sidebar-menu-active' : '' }}">
-                                <span
-                                    class="mr-3 w-5 {{ $activeMenu === $menu ? 'text-white' : 'text-blue-primary' }}">{!! $icons[$menu] !!}</span>
+                                <span class="mr-3 w-5 {{ $activeMenu === $menu ? 'text-white' : 'text-blue-primary' }}">{!! $icons[$menu] !!}</span>
                                 {{ $menu }}
+                                <span class="tooltip">{{ $menu }}</span>
                             </a>
                         </li>
                     @endforeach
@@ -214,9 +355,18 @@
         </aside>
 
         <!-- Konten Utama -->
-        <main class="flex-1 p-8 bg-light-gray">
+        <main class="flex-1 p-6 sm:p-8 bg-transparent">
             @yield('content')
         </main>
     </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const contentWrapper = document.querySelector('.content-wrapper');
+            sidebar.classList.toggle('active');
+            contentWrapper.classList.toggle('sidebar-hidden');
+        }
+    </script>
 </body>
 </html>

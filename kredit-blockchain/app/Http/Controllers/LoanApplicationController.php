@@ -1,18 +1,102 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\LoanApplication;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class LoanApplicationController extends Controller
 {
     public function index()
     {
         $loanApplications = LoanApplication::where('user_id', Auth::id())
+            ->orderBy('start_year', 'desc')
+            ->orderBy('start_month', 'desc')
+            ->get();
+
+        return view('loan-applications.index', compact('loanApplications'));
+    }
+
+    public function dashboard(Request $request)
+    {
+        $user = Auth::user();
+
+        // Ambil pinjaman untuk grafik
+        $loanApplications = LoanApplication::where('user_id', $user->id)
+            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas'])
+            ->whereNotNull('approved_at')
+            ->orderBy('approved_at', 'desc')
+            ->get();
+
+        // Format data untuk grafik
+        $chartData = $loanApplications->map(function ($loan) {
+            return [
+                'label' => $loan->approved_at->translatedFormat('d M Y'),
+                'amount' => $loan->amount,
+                'status' => $loan->status,
+                'duration' => $loan->duration,
+                'end_label' => Carbon::create($loan->end_year, $loan->end_month, 1)->translatedFormat('M Y'),
+            ];
+        })->toArray();
+
+        // Data untuk "Pinjaman Saya"
+        $loans = LoanApplication::where('user_id', $user->id)
+            ->where('status', 'APPROVED')
+            ->get();
+        $totalAmount = $loans->sum('amount');
+        $totalPaid = $loans->sum(function ($loan) {
+            return $loan->payments()->sum('amount');
+        });
+        $remainingAmount = $totalAmount - $totalPaid;
+        $monthlyInstallment = $loans->sum(function ($loan) {
+            return $loan->amount / $loan->duration;
+        });
+        $nextDueDate = $loans->isNotEmpty() ? now()->addMonth()->format('d M Y') : '-';
+        $loanStatus = $loans->isNotEmpty() ? 'Aktif' : 'Tidak Aktif';
+        $loanStatusStyle = $loans->isNotEmpty() ? 'bg-blue-100 text-blue-700 animate-pulse' : 'bg-gray-100 text-gray-700';
+
+        // Data untuk "Pengajuan Pinjaman"
+        $latestLoan = LoanApplication::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
+            ->first();
+        $latestLoanData = $latestLoan ? [
+            'remainingAmount' => $latestLoan->status === 'APPROVED' ? ($latestLoan->amount - $latestLoan->payments()->sum('amount')) : $latestLoan->amount,
+            'monthlyInstallment' => $latestLoan->status === 'APPROVED' ? ($latestLoan->amount / $latestLoan->duration) : 0,
+            'nextDueDate' => $latestLoan->status === 'APPROVED' ? now()->addMonth()->format('d M Y') : '-',
+            'duration' => $latestLoan->duration,
+            'status' => $latestLoan->status,
+        ] : null;
+
+        // Ambil riwayat pembayaran
+        $payments = Payment::whereHas('loanApplication', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->orderBy('payment_date', 'desc')->get();
+
+        return view('dashboard', compact(
+            'chartData',
+            'payments',
+            'loans',
+            'totalAmount',
+            'remainingAmount',
+            'monthlyInstallment',
+            'nextDueDate',
+            'loanStatus',
+            'loanStatusStyle',
+            'latestLoan',
+            'latestLoanData'
+        ));
+    }
+
+    public function history()
+    {
+        // Ambil semua data pinjaman untuk user saat ini, termasuk PENDING dan REJECTED
+        $loanApplications = LoanApplication::where('user_id', Auth::id())
+            ->orderBy('start_year', 'desc')
+            ->orderBy('start_month', 'desc')
             ->get();
 
         return view('loan-applications.index', compact('loanApplications'));
@@ -91,8 +175,8 @@ class LoanApplicationController extends Controller
                 'status' => 'PENDING',
             ]);
 
-            return redirect()->route('dashboard')
-                ->with('success', 'Pengajuan pinjaman berhasil dikirim.');
+            return redirect()->route('loan-applications.history') // Ubah redirect ke halaman riwayat
+                ->with('success', 'Pengajuan pinjaman berhasil dikirim dan menunggu persetujuan admin.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Gagal menyimpan pengajuan: ' . $e->getMessage());
@@ -124,17 +208,22 @@ class LoanApplicationController extends Controller
     }
 
     public function getLoanHistoryChartData()
-{
-    $data = LoanApplication::where('status', 'APPROVED')
-        ->selectRaw('start_month, start_year, SUM(total_payment) as total_payment')
-        ->groupBy('start_month', 'start_year')
-        ->orderByRaw('start_year, start_month')
-        ->get()
-        ->map(function ($item) {
-            $item->formatted_date = date('F Y', mktime(0, 0, 0, $item->start_month, 1, $item->start_year));
-            return $item;
-        });
+    {
+        $data = LoanApplication::where('user_id', Auth::id())
+            ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas']) // Hanya ambil status yang disetujui
+            ->orderBy('start_year', 'asc')
+            ->orderBy('start_month', 'asc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'label' => \Carbon\Carbon::create($item->start_year, $item->start_month, 1)->translatedFormat('F Y'),
+                    'amount' => (float) $item->amount,
+                    'status' => (string) $item->status,
+                    'duration' => (int) $item->duration,
+                    'end_label' => \Carbon\Carbon::create($item->end_year, $item->end_month, 1)->translatedFormat('F Y'),
+                ];
+            })->values()->toArray();
 
-    return response()->json($data);
-}
+        return response()->json($data);
+    }
 }
