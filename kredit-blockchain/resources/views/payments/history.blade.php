@@ -6,6 +6,12 @@
     <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 transition-all duration-300 card-hover hover:shadow-md">
         <div class="relative bg-white rounded-lg p-6 overflow-hidden">
             <div class="mb-4 flex justify-between items-center">
+                <!-- Tombol Export PDF -->
+                <a href="{{ route('payments.export-pdf') }}" 
+                   class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm tracking-wider leading-relaxed transition-all duration-300 hover:bg-blue-700 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
+                    Export PDF
+                </a>
+
                 <!-- Tombol Riwayat Pembayaran Seluruh Pinjaman -->
                 <!--<a href="{{ route('payments.all-history') }}" 
                    class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm tracking-wider leading-relaxed transition-all duration-300 hover:bg-blue-700 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">

@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use App\Models\LoanApplication;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -96,13 +99,89 @@ class PaymentController extends Controller
     
     public function history(Request $request)
     {
-        $payments = Payment::whereHas('loan', function ($query) {
-            $query->where('user_id', Auth::id())
-                  ->where('status', 'APPROVED');
-        })->orderBy('payment_date', $request->get('sort', 'desc'))
-          ->orderBy('installment_month', 'asc') // Ensure payments are ordered by installment
-          ->get();
-    
-        return view('payments.history', compact('payments'));
+        try {
+            $payments = Payment::whereHas('loan', function ($query) {
+                $query->where('user_id', Auth::id())
+                      ->where('status', 'APPROVED');
+            })
+            ->with(['loan' => function($query) {
+                $query->select('id', 'amount', 'total_payment', 'start_month', 'start_year', 'end_month', 'end_year');
+            }])
+            ->orderBy('payment_date', $request->get('sort', 'desc'))
+            ->orderBy('installment_month', 'asc')
+            ->get();
+
+            // Calculate summary data for the view
+            $summary = [
+                'total_paid' => $payments->sum('amount'),
+                'total_installments' => $payments->count(),
+                'last_payment_date' => $payments->first() ? $payments->first()->payment_date->format('d F Y') : '-',
+            ];
+
+            return view('payments.history', compact('payments', 'summary'));
+
+        } catch (\Exception $e) {
+            Log::error('Payment History Error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat mengambil data pembayaran. Silakan coba lagi.');
+        }
+    }
+
+    public function exportPdf(Request $request)
+    {
+        try {
+            // Get user's payments with loan information
+            $payments = Payment::whereHas('loan', function ($query) {
+                $query->where('user_id', Auth::id())
+                      ->where('status', 'APPROVED');
+            })
+            ->with(['loan' => function($query) {
+                $query->select('id', 'amount', 'total_payment', 'start_month', 'start_year', 'end_month', 'end_year');
+            }])
+            ->orderBy('payment_date', 'desc')
+            ->orderBy('installment_month', 'asc')
+            ->get();
+
+            if ($payments->isEmpty()) {
+                return redirect()->route('payments.history')
+                    ->with('error', 'Tidak ada data pembayaran untuk diekspor.');
+            }
+
+            // Calculate summary data
+            $summary = [
+                'total_paid' => $payments->sum('amount'),
+                'total_installments' => $payments->count(),
+                'last_payment_date' => $payments->first()->payment_date->format('d F Y'),
+                'export_date' => Carbon::now()->format('d F Y H:i:s'),
+            ];
+
+            // Get user information
+            $user = Auth::user();
+
+            // Generate PDF
+            $pdf = PDF::loadView('payments.pdf-history', [
+                'payments' => $payments,
+                'summary' => $summary,
+                'user' => $user
+            ]);
+
+            // Set PDF options
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif'
+            ]);
+
+            // Generate filename with date
+            $filename = 'riwayat-pembayaran-' . Carbon::now()->format('Y-m-d') . '.pdf';
+
+            return $pdf->download($filename);
+
+        } catch (\Exception $e) {
+            Log::error('PDF Export Error: ' . $e->getMessage());
+            return redirect()->route('payments.history')
+                ->with('error', 'Terjadi kesalahan saat mengekspor PDF. Silakan coba lagi.');
+        }
     }
 }
