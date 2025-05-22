@@ -5,7 +5,7 @@
     <title>Riwayat Pembayaran</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: DejaVu Sans, sans-serif;
             font-size: 12px;
             line-height: 1.4;
         }
@@ -31,18 +31,6 @@
             padding: 10px;
             background-color: #f8f9fa;
             border-radius: 5px;
-        }
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .summary-item {
-            padding: 5px;
-        }
-        .summary-label {
-            font-weight: bold;
-            color: #2A9DF4;
         }
         table {
             width: 100%;
@@ -74,9 +62,6 @@
             border-top: 1px solid #ddd;
             padding-top: 10px;
         }
-        .page-break {
-            page-break-after: always;
-        }
     </style>
 </head>
 <body>
@@ -87,29 +72,26 @@
 
     <div class="user-info">
         <h2>Informasi Pengguna</h2>
-        <p><strong>Nama:</strong> {{ $user->name }}</p>
-        <p><strong>Email:</strong> {{ $user->email }}</p>
+        <p><strong>Nama:</strong> {{ $user->name ?? 'Tidak tersedia' }}</p>
+        <p><strong>Email:</strong> {{ $user->email ?? 'Tidak tersedia' }}</p>
     </div>
 
     <div class="summary">
         <h2>Ringkasan Pembayaran</h2>
-        <div class="summary-grid">
-            <div class="summary-item">
-                <span class="summary-label">Total Pembayaran:</span>
-                <br>
-                Rp {{ number_format($summary['total_paid'], 0, ',', '.') }}
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">Jumlah Cicilan:</span>
-                <br>
-                {{ $summary['total_installments'] }} kali
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">Pembayaran Terakhir:</span>
-                <br>
-                {{ $summary['last_payment_date'] }}
-            </div>
-        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 5px; font-weight: bold; color: #2A9DF4;">Total Pembayaran:</td>
+                <td style="padding: 5px;">Rp {{ number_format($summary['total_paid'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; font-weight: bold; color: #2A9DF4;">Jumlah Cicilan:</td>
+                <td style="padding: 5px;">{{ $summary['total_installments'] }} kali</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; font-weight: bold; color: #2A9DF4;">Pembayaran Terakhir:</td>
+                <td style="padding: 5px;">{{ $summary['last_payment_date'] }}</td>
+            </tr>
+        </table>
     </div>
 
     <table>
@@ -129,18 +111,15 @@
             @forelse ($payments as $payment)
                 @php
                     $loan = $payment->loan;
-
                     if ($currentLoanId !== $loan->id) {
                         $cumulativePaid = 0;
                         $currentLoanId = $loan->id;
                     }
-
                     $startMonth = $loan->start_month;
                     $startYear = $loan->start_year;
                     $currentMonth = ($startMonth + $payment->installment_month - 2) % 12 + 1;
                     $currentYear = $startYear + intdiv($startMonth + $payment->installment_month - 2, 12);
                     $monthName = \Carbon\Carbon::create()->month($currentMonth)->format('F');
-
                     $cumulativePaid += $payment->amount;
                     $remainingAmount = $loan->total_payment - $cumulativePaid;
                     $status = $remainingAmount <= 0 ? 'LUNAS' : 'Belum Lunas';
@@ -153,7 +132,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" style="text-align: center;">Tidak ada pembayaran yang belum lunas.</td>
+                    <td colspan="4" style="text-align: center;">Tidak ada pembayaran yang ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -164,4 +143,4 @@
         <p>© {{ date('Y') }} CreditBlock. All rights reserved.</p>
     </div>
 </body>
-</html> 
+</html>

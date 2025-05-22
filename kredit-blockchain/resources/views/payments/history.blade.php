@@ -48,44 +48,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @php
-                        $cumulativePaid = 0; // Track cumulative payments for the current loan
-                        $currentLoanId = null; // Track the current loan to reset cumulative when loan changes
-                    @endphp
-                    @forelse ($payments as $payment)
-                        @php
-                            $loan = $payment->loan;
-                            // Reset cumulative paid if the loan changes
-                            if ($currentLoanId !== $loan->id) {
-                                $cumulativePaid = 0;
-                                $currentLoanId = $loan->id;
-                            }
-                            // Ambil bulan dan tahun berdasarkan installment_month
-                            $startMonth = $loan->start_month;
-                            $startYear = $loan->start_year;
-                            $currentMonth = ($startMonth + $payment->installment_month - 2) % 12 + 1;
-                            $currentYear = $startYear + intdiv($startMonth + $payment->installment_month - 2, 12);
-                            $monthName = \Carbon\Carbon::create()->month($currentMonth)->format('F');
-                            // Tambahkan pembayaran saat ini ke total kumulatif
-                            $cumulativePaid += $payment->amount;
-                            // Hitung sisa pembayaran
-                            $remainingAmount = $loan->total_payment - $cumulativePaid;
-                            // Tentukan status berdasarkan sisa pembayaran
-                            $status = $remainingAmount <= 0 ? 'LUNAS' : 'Belum Lunas';
-                        @endphp
+                    @forelse ($paymentDetails as $detail)
                         <tr class="border-b border-gray-100 hover:bg-blue-50/50 transition-all duration-200">
-                            <td class="px-6 py-4">{{ $monthName }} {{ $currentYear }} - Cicilan ke-{{ $payment->installment_month }}</td>
-                            <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($remainingAmount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4">{{ $detail['monthName'] }} {{ $detail['currentYear'] }} - Cicilan ke-{{ $detail['payment']->installment_month }}</td>
+                            <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($detail['payment']->amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($detail['remainingAmount'], 0, ',', '.') }}</td>
                             <td class="px-6 py-4">
-                                <span class="inline-block {{ $status === 'LUNAS' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }} text-xs font-medium px-2.5 py-1 rounded-full">
-                                    {{ $status }}
+                                <span class="inline-block {{ $detail['status'] === 'LUNAS' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }} text-xs font-medium px-2.5 py-1 rounded-full">
+                                    {{ $detail['status'] }}
                                 </span>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Tidak ada pembayaran yang belum lunas.</td>
+                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Tidak ada pembayaran yang ditemukan.</td>
                         </tr>
                     @endforelse
                     </tbody>
@@ -93,33 +69,32 @@
             </div>
         </div>
     </div>
-
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in { animation: fadeIn 0.8s ease-out; }
-        .animate-slide-up { animation: slideUp 0.5s ease-out; }
-
-        /* Particle Animation */
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(59, 130, 246, 0.3);
-            animation: float 15s infinite ease-in-out;
-        }
-        .particle-1 { width: 20px; height: 20px; top: 10%; left: 20%; animation-delay: 0s; }
-        .particle-2 { width: 15px; height: 15px; top: 50%; left: 70%; animation-delay: 5s; }
-        .particle-3 { width: 25px; height: 25px; top: 80%; left: 40%; animation-delay: 10s; }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-            50% { transform: translateY(-50px) translateX(20px); opacity: 0.6; }
-        }
-    </style>
 </div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fadeIn 0.8s ease-out; }
+    .animate-slide-up { animation: slideUp 0.5s ease-out; }
+
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.3);
+        animation: float 15s infinite ease-in-out;
+    }
+    .particle-1 { width: 20px; height: 20px; top: 10%; left: 20%; animation-delay: 0s; }
+    .particle-2 { width: 15px; height: 15px; top: 50%; left: 70%; animation-delay: 5s; }
+    .particle-3 { width: 25px; height: 25px; top: 80%; left: 40%; animation-delay: 10s; }
+    @keyframes float {
+        0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+        50% { transform: translateY(-50px) translateX(20px); opacity: 0.6; }
+    }
+</style>
 @endsection
