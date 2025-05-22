@@ -32,12 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Cek apakah route wallet.store tersedia
-    if (!window.Laravel || !window.Laravel.routes || !window.Laravel.routes.walletStore) {
-        console.error("Route wallet.store tidak didefinisikan di window.Laravel.routes");
-        alert("Konfigurasi aplikasi salah: Route wallet.store tidak ditemukan");
-        return;
-    }
+    // // Cek apakah route wallet.store tersedia
+    // if (!window.Laravel || !window.Laravel.routes || !window.Laravel.routes.walletStore) {
+    //     console.error("Route wallet.store tidak didefinisikan di window.Laravel.routes");
+    //     alert("Konfigurasi aplikasi salah: Route wallet.store tidak ditemukan");
+    //     return;
+    // }
 
     // Fungsi untuk memperbarui UI
     const updateWalletUI = (address, balanceIdr = 0) => {

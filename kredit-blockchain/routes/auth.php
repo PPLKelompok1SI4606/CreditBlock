@@ -64,6 +64,7 @@ Route::middleware(['auth', 'univerified'])->group(function () {
         ->name('loan-applications.store');
     Route::get('/loan-applications/index', [LoanApplicationController::class, 'index'])
     ->name('loan-applications.index');
+    Route::get('/loan-applications', [LoanApplicationController::class, 'history'])->name('loan-applications.index');
 
     //routes kontak dukungan (user)
     Route::get('/support', [SupportMessageController::class, 'index'])->name('support.index');

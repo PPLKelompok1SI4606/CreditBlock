@@ -4,19 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTotalPaymentToLoanApplicationsTable extends Migration
+class AddApprovedAtToLoanApplicationsTable extends Migration
 {
-    public function up(): void
+    public function up()
     {
         Schema::table('loan_applications', function (Blueprint $table) {
-            $table->decimal('total_payment', 15, 2)->nullable()->after('interest_rate');
+            $table->timestamp('approved_at')->nullable()->after('status');
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::table('loan_applications', function (Blueprint $table) {
-            $table->dropColumn('total_payment');
+            $table->dropColumn('approved_at');
         });
     }
 }

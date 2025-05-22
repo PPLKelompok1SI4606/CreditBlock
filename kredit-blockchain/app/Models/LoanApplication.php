@@ -21,11 +21,13 @@ class LoanApplication extends Model
         'status',
         'document_path',
         'total_payment',
+        'approved_at',
     ];
 
-    /**
-     * Define the relationship with the User model.
-     */
+    protected $casts = [
+        'approved_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

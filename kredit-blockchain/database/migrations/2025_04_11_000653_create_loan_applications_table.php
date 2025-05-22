@@ -14,12 +14,13 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->integer('duration');
             $table->decimal('interest_rate', 5, 2)->nullable();
+            $table->decimal('total_payment', 15, 2);
             $table->integer('start_month');
             $table->integer('start_year');
             $table->integer('end_month');
             $table->integer('end_year');
             $table->string('document_path')->nullable();
-            $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED'])->default('PENDING');
+            $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED', 'Belum Lunas', 'Lunas'])->default('PENDING');
             $table->timestamps();
         });
     }

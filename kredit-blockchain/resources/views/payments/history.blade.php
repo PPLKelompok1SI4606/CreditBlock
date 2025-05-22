@@ -1,5 +1,7 @@
 @extends('layouts.app')
+
 @section('title', 'Riwayat Pembayaran')
+
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-4xl font-bold text-sky-blue mb-10 drop-shadow-lg tracking-wide animate-fade-in">Riwayat Pembayaran</h1>
@@ -13,23 +15,32 @@
                 </a>
 
                 <!-- Tombol Riwayat Pembayaran Seluruh Pinjaman -->
-                <!--<a href="{{ route('payments.all-history') }}" 
-                   class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm tracking-wider leading-relaxed transition-all duration-300 hover:bg-blue-700 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
+                <a href="{{ route('payments.all-history') }}"
+                   class="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium text-sm shadow-lg overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_15px_rgba(59,130,246,0.4)]">
+                    <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                     Riwayat Pembayaran Seluruh Pinjaman
-                </a>-->
+                </a>
 
                 <!-- Dropdown untuk pengurutan -->
-                <form method="GET" action="{{ route('payments.history') }}">
-                    <select name="sort" id="sort" onchange="this.form.submit()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <form method="GET" action="{{ route('payments.history') }}" class="relative group">
+                    <select name="sort" id="sort" onchange="this.form.submit()"
+                            class="py-3 pl-10 pr-4 w-full sm:w-48 rounded-lg border border-gray-200 bg-white/80 text-gray-800 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-300 hover:border-blue-300">
                         <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Tanggal Terbaru</option>
                         <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Tanggal Terlama</option>
                     </select>
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-blue-500 group-hover:text-blue-600 transition-colors duration-300">
+                        <svg class="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+                        </svg>
+                    </span>
+                    <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-xs rounded py-1 px-2 animate-slide-up">Urutkan riwayat</span>
                 </form>
             </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-gray-700 text-sm">
                     <thead>
-                        <tr class="bg-gray-50 text-gray-900">
+                        <tr class="bg-blue-50 text-gray-900">
                             <th class="px-6 py-4 text-left rounded-tl-lg font-medium tracking-wide">Pembayaran Cicilan pada Bulan (Cicilan ke-)</th>
                             <th class="px-6 py-4 text-left font-medium tracking-wide">Nominal</th>
                             <th class="px-6 py-4 text-left font-medium tracking-wide">Sisa Pembayaran</th>
@@ -44,30 +55,25 @@
                     @forelse ($payments as $payment)
                         @php
                             $loan = $payment->loan;
-
                             // Reset cumulative paid if the loan changes
                             if ($currentLoanId !== $loan->id) {
                                 $cumulativePaid = 0;
                                 $currentLoanId = $loan->id;
                             }
-
                             // Ambil bulan dan tahun berdasarkan installment_month
                             $startMonth = $loan->start_month;
                             $startYear = $loan->start_year;
                             $currentMonth = ($startMonth + $payment->installment_month - 2) % 12 + 1;
                             $currentYear = $startYear + intdiv($startMonth + $payment->installment_month - 2, 12);
                             $monthName = \Carbon\Carbon::create()->month($currentMonth)->format('F');
-
                             // Tambahkan pembayaran saat ini ke total kumulatif
                             $cumulativePaid += $payment->amount;
-
                             // Hitung sisa pembayaran
                             $remainingAmount = $loan->total_payment - $cumulativePaid;
-
                             // Tentukan status berdasarkan sisa pembayaran
                             $status = $remainingAmount <= 0 ? 'LUNAS' : 'Belum Lunas';
                         @endphp
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
+                        <tr class="border-b border-gray-100 hover:bg-blue-50/50 transition-all duration-200">
                             <td class="px-6 py-4">{{ $monthName }} {{ $currentYear }} - Cicilan ke-{{ $payment->installment_month }}</td>
                             <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4 font-mono text-gray-800">Rp {{ number_format($remainingAmount, 0, ',', '.') }}</td>
@@ -87,5 +93,33 @@
             </div>
         </div>
     </div>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out; }
+        .animate-slide-up { animation: slideUp 0.5s ease-out; }
+
+        /* Particle Animation */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.3);
+            animation: float 15s infinite ease-in-out;
+        }
+        .particle-1 { width: 20px; height: 20px; top: 10%; left: 20%; animation-delay: 0s; }
+        .particle-2 { width: 15px; height: 15px; top: 50%; left: 70%; animation-delay: 5s; }
+        .particle-3 { width: 25px; height: 25px; top: 80%; left: 40%; animation-delay: 10s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.6; }
+        }
+    </style>
 </div>
 @endsection

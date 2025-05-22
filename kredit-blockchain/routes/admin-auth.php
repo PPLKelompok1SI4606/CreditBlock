@@ -33,10 +33,10 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/support/{supportMessage}', [SupportMessageController::class, 'show'])->name('admin.support.show');
     Route::post('/support/{supportMessage}/respond', [SupportMessageController::class, 'respond'])->name('admin.support.respond');
 
-    Route::get('/admin/kyc/{user}/verify', [AdminKYCController::class, 'verify'])->name('admin.kyc.verify');
-    Route::post('/admin/kyc/{user}/approve', [AdminKYCController::class, 'approve'])->name('admin.kyc.approve');
-    Route::post('/admin/kyc/{user}/reject', [AdminKYCController::class, 'reject'])->name('admin.kyc.reject');
-    
+    //Routes Verify KYC
+    Route::post('/kyc/approve/{user}', [AdminKYCController::class, 'approve'])->name('admin.kyc.approve');
+    Route::post('/kyc/reject/{user}', [AdminKYCController::class, 'reject'])->name('admin.kyc.reject');
+
     //Routes untuk mengelola pengguna
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
