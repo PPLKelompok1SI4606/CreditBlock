@@ -265,10 +265,10 @@
                 new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: loanData.map(item => item.label),
+                        labels: loanData.map(item => item.label).reverse(),
                         datasets: [{
                             label: 'Jumlah Pinjaman',
-                            data: loanData.map(item => item.amount),
+                            data: loanData.map(item => item.amount).reverse(),
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             borderColor: '#3B82F6',
                             borderWidth: 2,
