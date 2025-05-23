@@ -15,6 +15,12 @@ Route::get('/clear-session', function () {
     return redirect('/admin/login');
 });
 
+// Preview Image
+Route::get('/preview-email', function () {
+    $user = App\Models\User::first();
+    return new App\Mail\KYCVerificationMail($user, 'admin@acreditblock.com');
+});
+
 Route::get('/loan-history/pdf', [LoanPdfController::class, 'exportPdf'])->name('loan.exportPdf');
 
 require __DIR__.'/auth.php';

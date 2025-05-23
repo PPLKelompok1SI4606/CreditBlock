@@ -167,8 +167,8 @@
         <!-- Sidebar -->
         <aside class="sidebar-fixed">
             <div class="mt-6 px-4">
-                <div class="flex items-center space-x-3 mb-8">
-                    <img src="https://via.placeholder.com/48" alt="Foto Profil" class="profile-img">
+                <div class="flex items-center justify-center space-x-5 mb-8">
+                    <img src="{{asset('images/profile.png')}}" alt="Foto Profil" class="profile-img">
                     <div>
                         <span class="text-gray-900 font-semibold text-lg tracking-tight">{{ Auth::guard('admin')->user()->name ?? 'Admin' }}</span>
                         <p class="text-gray-500 text-sm">Administrator</p>

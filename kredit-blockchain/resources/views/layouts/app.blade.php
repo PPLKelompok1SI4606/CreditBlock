@@ -343,11 +343,15 @@
                          alt="Foto Profil"
                          class="profile-img"
                          title="Ubah Foto Profil">
+                </div>
+                {{-- <!-- Profil Pengguna -->
+                <div class="flex items-center space-x-5 justify-center mb-10">
+                    <img src="{{asset('images/man.png')}}" alt="Foto Profil" class="profile-img">
                     <div>
                         <span class="text-blue-800 font-bold text-base tracking-tight">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</span>
                         <p class="text-blue-600 text-xs font-medium">{{ auth()->check() ? 'Pengguna' : 'Tamu' }}</p>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <nav class="px-4">
                 <ul class="space-y-1">
