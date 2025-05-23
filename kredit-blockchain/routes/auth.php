@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanCalculatorController;
 use App\Http\Controllers\SupportMessageController;
 use App\Http\Controllers\LoanApplicationController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -42,6 +43,12 @@ Route::middleware(['auth', 'univerified'])->group(function () {
 
     // Dashboard untuk pengguna yang sudah login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Untuk mengambil data user (termasuk foto) untuk ditampilkan di modal
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    // Untuk menyimpan foto profil yang baru
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     // Rute untuk pembayaran
     Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create'); // Form pembayaran

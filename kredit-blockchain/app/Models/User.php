@@ -26,6 +26,7 @@ class User extends Authenticatable
         'is_verified',
         'email_verified_at',
         'wallet_address',
+        'profile_picture', 
     ];
 
     // Relationship with LoanApplication
