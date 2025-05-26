@@ -37,17 +37,16 @@ class ProfileController extends Controller
 
             // Simpan foto profil baru
             $file = $request->file('profile_picture');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            Log::info('Saving new profile picture', ['filename' => $filename]);
-            $file->storeAs('public/profile_pictures', $filename);
+            $path = $file->store('profile_pictures', 'public');
+            Log::info('Saving new profile picture', ['path' => $path]);
 
             // Perbarui kolom profile_picture di database
-            $user->profile_picture = $filename;
+            $user->profile_picture = basename($path);
             $user->save();
-            Log::info('Profile picture updated in database', ['user_id' => $user->id, 'new_picture' => $filename]);
+            Log::info('Profile picture updated in database', ['user_id' => $user->id, 'new_picture' => $path]);
 
             // Kembalikan URL dengan timestamp untuk mencegah caching
-            $profilePictureUrl = asset('storage/profile_pictures/' . $filename) . '?t=' . time();
+            $profilePictureUrl = asset('storage/' . $path) . '?t=' . time();
             Log::info('Returning new profile picture URL', ['url' => $profilePictureUrl]);
 
             return response()->json([

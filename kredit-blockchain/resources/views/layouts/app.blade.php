@@ -7,6 +7,7 @@
     <title>@yield('title') - CreditBlock</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         if (typeof ethers === "undefined") {
             document.write('<script src="{{ asset("js/ethers-5.7.2.umd.min.js") }}"><\/script>');
@@ -339,19 +340,15 @@
             <div class="mt-6 px-4">
                 <div class="flex items-center space-x-3 mb-10">
                     <img id="sidebar-profile-image"
-                         src="{{ Auth::user()->profile_picture ? asset('storage/profile_pictures/' . Auth::user()->profile_picture) : asset('images/default-profile.png') }}"
+                         src="{{ Auth::user()->profile_picture ? asset('storage/profile_pictures/' . Auth::user()->profile_picture) : asset('images/man.png') }}"
                          alt="Foto Profil"
                          class="profile-img"
                          title="Ubah Foto Profil">
+                         <div>
+                            <span class="text-blue-800 font-bold text-base tracking-tight">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</span>
+                            <p class="text-blue-600 text-xs font-medium">{{ auth()->check() ? 'Pengguna' : 'Tamu' }}</p>
+                        </div>
                 </div>
-                {{-- <!-- Profil Pengguna -->
-                <div class="flex items-center space-x-5 justify-center mb-10">
-                    <img src="{{asset('images/man.png')}}" alt="Foto Profil" class="profile-img">
-                    <div>
-                        <span class="text-blue-800 font-bold text-base tracking-tight">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</span>
-                        <p class="text-blue-600 text-xs font-medium">{{ auth()->check() ? 'Pengguna' : 'Tamu' }}</p>
-                    </div>
-                </div> --}}
             </div>
             <nav class="px-4">
                 <ul class="space-y-1">
@@ -429,7 +426,7 @@
                         if (data.user.profile_picture) {
                             currentProfilePicture.src = `/storage/profile_pictures/${data.user.profile_picture}`;
                         } else {
-                            currentProfilePicture.src = '/images/default-profile.png';
+                            currentProfilePicture.src = '/images/man.png';
                         }
                         // Tampilkan modal
                         profileModal.classList.remove('hidden');
