@@ -127,7 +127,7 @@ class PaymentController extends Controller
                 ->orderBy('installment_month', 'asc')
                 ->get();
 
-            Log::info('Payments for PDF Export:', ['count' => $payments->count(), 'payments' => $payments->toArray()]);
+            Log::info('Payments for PDF Export:', ['count' => $payments->count(), 'payments' => $payments]);
 
             if ($payments->isEmpty()) {
                 return redirect()->route('payments.history')
@@ -144,6 +144,7 @@ class PaymentController extends Controller
 
             // Get user information
             $user = Auth::user();
+            Log::info('User data for PDF:', ['user_id' => $user->id, 'user_name' => $user->name]);
 
             // Generate PDF
             $pdf = Pdf::loadView('payments.pdf-history', [
