@@ -21,6 +21,11 @@
         <!-- Main Card -->
         <div class="relative bg-white bg-opacity-95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl animate-fade-in">
             <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <!-- Tombol Export PDF -->
+                <a href="{{ route('payments.export-pdf') }}"
+                   class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm tracking-wider leading-relaxed transition-all duration-300 hover:bg-blue-700 hover:ring-2 hover:ring-blue-200 hover:ring-opacity-50">
+                    Export PDF
+                </a>
                 <!-- Tombol Riwayat Pembayaran Seluruh Pinjaman -->
                 <a href="{{ route('payments.all-history') }}"
                    class="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium text-sm shadow-lg overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_15px_rgba(59,130,246,0.4)]">

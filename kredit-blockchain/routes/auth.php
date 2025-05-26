@@ -54,6 +54,7 @@ Route::middleware(['auth', 'univerified'])->group(function () {
     Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create'); // Form pembayaran
     Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store'); // Proses pembayaran
     Route::get('/payments/history', [PaymentController::class, 'history'])->name('payments.history'); // Riwayat pembayaran
+    Route::get('/payments/export-pdf', [PaymentController::class, 'exportPdf'])->name('payments.export-pdf');
 
     // Rute untuk memeriksa status pinjaman
     Route::get('/payments/check-loan-status', [LoanApplicationController::class, 'checkLoanStatus'])->name('payments.check-loan-status');
