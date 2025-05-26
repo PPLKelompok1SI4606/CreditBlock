@@ -13,6 +13,7 @@
             document.write('<script src="{{ asset("js/ethers-5.7.2.umd.min.js") }}"><\/script>');
         }
     </script>
+    <script src="{{asset('js/dashboard.js')}}" ></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Gaya CSS tetap sama -->
     <style>
