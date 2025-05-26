@@ -22,14 +22,14 @@
         <div class="relative bg-white bg-opacity-95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl animate-fade-in">
             <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <!-- Tombol Riwayat Pembayaran Seluruh Pinjaman -->
-                <a href="{{ route('payments.all-history') }}"
+                <!-- <a href="{{ route('payments.all-history') }}"
                    class="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium text-sm shadow-lg overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_15px_rgba(59,130,246,0.4)]">
                     <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                     Riwayat Pembayaran Seluruh Pinjaman
-                </a>
+                </a> -->
 
                 <!-- Dropdown untuk pengurutan -->
-                <form method="GET" action="{{ route('payments.history') }}" class="relative group">
+                <!-- <form method="GET" action="{{ route('payments.history') }}" class="relative group">
                     <select name="sort" id="sort" onchange="this.form.submit()"
                             class="py-3 pl-10 pr-4 w-full sm:w-48 rounded-lg border border-gray-200 bg-white/80 text-gray-800 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-300 hover:border-blue-300">
                         <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Tanggal Terbaru</option>
@@ -41,7 +41,7 @@
                         </svg>
                     </span>
                     <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-xs rounded py-1 px-2 animate-slide-up">Urutkan riwayat</span>
-                </form>
+                </form> -->
             </div>
 
             <div class="overflow-x-auto">
