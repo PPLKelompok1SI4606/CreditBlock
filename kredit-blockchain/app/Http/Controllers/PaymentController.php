@@ -6,6 +6,8 @@ use App\Models\LoanApplication;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentController extends Controller
 {
@@ -107,5 +109,70 @@ class PaymentController extends Controller
           ->get();
 
         return view('payments.history', compact('payments'));
+    }
+    public function exportPdf(Request $request)
+    {
+        try {
+            Log::info('Export PDF diakses oleh user:', ['user_id' => Auth::id()]);
+
+            // Get user's payments with loan information
+            $payments = Payment::whereHas('loan', function ($query) {
+                $query->where('user_id', Auth::id())
+                    ->whereIn('status', ['APPROVED', 'Belum Lunas', 'Lunas']);
+            })
+                ->with(['loan' => function ($query) {
+                    $query->select('id', 'amount', 'total_payment', 'start_month', 'start_year', 'end_month', 'end_year');
+                }])
+                ->orderBy('payment_date', 'desc')
+                ->orderBy('installment_month', 'asc')
+                ->get();
+
+            Log::info('Payments for PDF Export:', ['count' => $payments->count(), 'payments' => $payments]);
+
+            if ($payments->isEmpty()) {
+                return redirect()->route('payments.history')
+                    ->with('error', 'Tidak ada data pembayaran untuk diekspor.');
+            }
+
+            // Calculate summary data
+            $summary = [
+                'total_paid' => $payments->sum('amount'),
+                'total_installments' => $payments->count(),
+                'last_payment_date' => $payments->first() ? $payments->first()->payment_date->format('d F Y') : '-',
+                'export_date' => Carbon::now()->format('d F Y H:i:s'),
+            ];
+
+            // Get user information
+            $user = Auth::user();
+            Log::info('User data for PDF:', ['user_id' => $user->id, 'user_name' => $user->name]);
+
+            // Generate PDF
+            $pdf = Pdf::loadView('payments.pdf-history', [
+                'payments' => $payments,
+                'summary' => $summary,
+                'user' => $user
+            ]);
+
+            // Set PDF options
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'DejaVu Sans',
+                'php' => [
+                    'memory_limit' => '512M',
+                    'max_execution_time' => 120,
+                ]
+            ]);
+
+            // Generate filename with date
+            $filename = 'riwayat-pembayaran-' . Carbon::now()->format('Y-m-d') . '.pdf';
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            Log::error('PDF Export Error: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
+            return redirect()->route('payments.history')
+                ->with('error', 'Terjadi kesalahan saat mengekspor PDF: ' . $e->getMessage());
+        }
     }
 }
