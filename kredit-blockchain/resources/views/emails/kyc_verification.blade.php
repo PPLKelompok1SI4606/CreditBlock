@@ -36,7 +36,7 @@
                     </tr>
                     <tr>
                         <td style="padding: 8px 0; color: #555;"><strong>Submission Date:</strong></td>
-                        <td style="padding: 8px 0; color: #333;">{{ $user->updated_at->format('d M Y H:i') }}</td>
+                        <td style="padding: 8px 0; color: #333;">{{ $user->updated_at->format('d M Y') }}</td>
                     </tr>
                 </table>
 

@@ -20,29 +20,6 @@
 
         <!-- Main Card -->
         <div class="relative bg-white bg-opacity-95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl animate-fade-in">
-            <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <!-- Tombol Riwayat Pembayaran Seluruh Pinjaman -->
-                <a href="{{ route('payments.all-history') }}"
-                   class="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium text-sm shadow-lg overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_15px_rgba(59,130,246,0.4)]">
-                    <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
-                    Riwayat Pembayaran Seluruh Pinjaman
-                </a>
-
-                <!-- Dropdown untuk pengurutan -->
-                <form method="GET" action="{{ route('payments.history') }}" class="relative group">
-                    <select name="sort" id="sort" onchange="this.form.submit()"
-                            class="py-3 pl-10 pr-4 w-full sm:w-48 rounded-lg border border-gray-200 bg-white/80 text-gray-800 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none sm:text-sm transition-all duration-300 hover:border-blue-300">
-                        <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Tanggal Terbaru</option>
-                        <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Tanggal Terlama</option>
-                    </select>
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-blue-500 group-hover:text-blue-600 transition-colors duration-300">
-                        <svg class="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
-                        </svg>
-                    </span>
-                    <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-xs rounded py-1 px-2 animate-slide-up">Urutkan riwayat</span>
-                </form>
-            </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-gray-700 text-sm">
