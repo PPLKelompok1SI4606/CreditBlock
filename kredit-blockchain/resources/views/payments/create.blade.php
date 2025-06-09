@@ -155,7 +155,7 @@
                         <input type="hidden" name="amount" id="amount" value="{{ $monthlyInstallment }}">
                         <button
                             type="submit"
-                            class="relative w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium text-sm shadow-lg overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_15px_rgba(59,130,246,0.4)] focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium text-sm shadow-lg overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_15px_rgba(59,130,246,0.4)] focus:outline-none focus:ring-2 focus:ring-blue-400"
                         >
                             <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                             <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
